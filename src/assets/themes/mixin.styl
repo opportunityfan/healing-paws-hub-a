@@ -1,0 +1,10 @@
+@import "theme.styl"
+
+theme_color()
+  for item in themeList
+    [data-theme = {item.name}] & {
+      --background-color item.background-color
+      --frame-color item.frame-color
+      --font-color-bright item.font-color-bright
+      --font-color-dark item.font-colot-dark
+    }
