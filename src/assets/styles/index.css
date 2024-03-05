@@ -3,12 +3,12 @@
     flex-direction: row;
 }
 .flex-row div {
-    margin: auto;
+    margin: auto 0;
 }
 .flex-column {
     display: flex;
     flex-direction: column;
 }
 .flex-column div{
-    margin: auto;
+    margin: 0 auto;
 }

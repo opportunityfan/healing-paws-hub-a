@@ -1,0 +1,4 @@
+@font-face {
+    font-family: "Readex Pro";
+    src:  url("./ReadexPro-Regular.ttf"), url("./ReadexPro-bold.ttf"), url("./ReadexPro-ExtraLight.ttf"), url("./ReadexPro-Light.ttf"), url("./ReadexPro-Medium.ttf"), url("./ReadexPro-SemiBold.ttf")
+}

@@ -4,9 +4,11 @@
       <div class="icon">
         <img src="../assets/icon.png" alt="icon">
       </div>
-      <div style="margin: auto">{{ store.state.frame_title }}</div>
+      <div>{{ store.state.frame_title }}</div>
     </div>
-    <div class="button-bar"></div>
+    <div class="button-bar flex-row">
+
+    </div>
   </div>
 </template>
 
@@ -25,13 +27,20 @@ import store from "@/store";
 
 .icon-title-bar
   height 100%
+  flex-grow 1
+  justify-content left
+  -webkit-app-region drag
 
 .icon
   height 100%
   width 50px
   display flex
   img
-    width 30px
-    height 30px
+    width 27px
+    height 27px
     margin auto
+
+.button-bar
+  width 150px
+  height 100%
 </style>

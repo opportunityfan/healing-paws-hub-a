@@ -9,9 +9,11 @@
 
 <style lang="stylus">
 @import "assets/themes/mixin.styl"
-@import "@/assets/styles"
+@import "assets/styles"
+@import "assets/font"
+
 #app
-  font-family Avenir, Helvetica, Arial, sans-serif
+  font-family Readex Pro
   -webkit-font-smoothing antialiased
   -moz-osx-font-smoothing grayscale
   text-align center
@@ -19,6 +21,7 @@
 
 body
   margin: 0
+  user-select none
 
 </style>
 
