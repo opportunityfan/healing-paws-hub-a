@@ -1,6 +1,5 @@
 <template>
-  <div class="main-div flex-row border-radius-regular">
-    <div class="full" style="position:absolute; z-index: -1; margin-left: 20px;background-color: var(--background-color)"></div>
+  <div class="main-div flex-row border-radius-regular padding-surround">
     <SideBar></SideBar>
     <div class="flex-column" style="height: 100%;flex-grow: 1">
       <FrameBar></FrameBar>
@@ -33,6 +32,7 @@ body
   width 100%
   height 100%
   overflow hidden
+  background-color var(--background-color)
 </style>
 
 <script setup lang="ts">

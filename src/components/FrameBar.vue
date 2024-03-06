@@ -50,7 +50,7 @@ const onMinimize = () => {
   width 50px
   display flex
   img
-    width 27px
+    width 28px
     height 27px
     margin auto
 

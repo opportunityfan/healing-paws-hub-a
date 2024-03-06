@@ -28,6 +28,16 @@
     width: 100%;
     height: 100%;
 }
+.padding-surround {
+    padding: 10px;
+    box-sizing: border-box;
+}
 .border-radius-regular {
     border-radius: 10px;
+}
+.image-cover1 {
+    --r: 45deg;
+    --d: 5%;
+    -webkit-mask:
+            linear-gradient(var(--r), transparent var(--d),red 0 calc(100% - var(--d)), transparent 0);
 }
