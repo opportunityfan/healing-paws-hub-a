@@ -1,8 +1,12 @@
 <template>
-  <div style="position: absolute;width: 100%; height: 100%;">
-    <FrameBar></FrameBar>
-    <div style="width: 100%; height: 100%">
-      <router-view/>
+  <div class="main-div flex-row border-radius-regular">
+    <div class="full" style="position:absolute; z-index: -1; margin-left: 20px;background-color: var(--background-color)"></div>
+    <SideBar></SideBar>
+    <div class="flex-column" style="height: 100%;flex-grow: 1">
+      <FrameBar></FrameBar>
+      <div style="width: 100%; flex-grow: 1; overflow: hidden">
+        <router-view/>
+      </div>
     </div>
   </div>
 </template>
@@ -24,12 +28,18 @@ body
   margin: 0
   user-select none
 
+.main-div
+  position absolute
+  width 100%
+  height 100%
+  overflow hidden
 </style>
 
 <script setup lang="ts">
 import FrameBar from "@/components/FrameBar";
 import {onMounted} from "vue";
 import {changeTheme} from "@/assets/api";
+import SideBar from "@/components/SideBar.vue";
 
 onMounted(() => {
   changeTheme("bright");
