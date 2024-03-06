@@ -11,6 +11,7 @@
 @import "assets/themes/mixin.styl"
 @import "assets/styles"
 @import "assets/font"
+@import "https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
 
 #app
   font-family Readex Pro

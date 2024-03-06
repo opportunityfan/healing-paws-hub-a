@@ -3,6 +3,8 @@
 import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
+import InitIpcMain from "@/ipc";
+import path from "path";
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Scheme must be registered before the app is ready
@@ -18,7 +20,7 @@ async function createWindow() {
     transparent: true,
     frame: false,
     webPreferences: {
-
+      preload: path.join(__dirname, 'preload.js'),
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: (process.env
@@ -36,6 +38,7 @@ async function createWindow() {
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
   }
+  InitIpcMain(win)
 }
 
 // Quit when all windows are closed.
@@ -59,11 +62,13 @@ app.on('activate', () => {
 app.on('ready', async () => {
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
+    /*
     try {
       await installExtension(VUEJS3_DEVTOOLS)
     } catch (e : any) {
       console.error('Vue Devtools failed to install:', e.toString())
     }
+    */
   }
   createWindow()
 })

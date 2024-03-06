@@ -12,3 +12,15 @@
 .flex-column div{
     margin: 0 auto;
 }
+.box-icon {
+    width: 25px;
+}
+.box-icon i {
+    display: block;
+}
+.button-hover {
+    transition: color 0.1s;
+}
+.button-hover:hover {
+    color: var(--font-color-bright-hover)
+}
