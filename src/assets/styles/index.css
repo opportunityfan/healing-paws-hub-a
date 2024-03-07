@@ -41,3 +41,19 @@
     -webkit-mask:
             linear-gradient(var(--r), transparent var(--d),red 0 calc(100% - var(--d)), transparent 0);
 }
+.center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.title {
+    font-size: 30px;
+    color: var(--font-color-dark);
+    font-weight: 600;
+}
+.hint {
+    font-size: 12px;
+    color: var(--font-color-bright-hover);
+    font-weight: 300;
+}
