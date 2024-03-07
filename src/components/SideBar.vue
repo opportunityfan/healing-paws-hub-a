@@ -32,7 +32,7 @@ onMounted(() => {
 
 <style scoped>
 .sidebar-main {
-  background-color: var(--sidebar-color);
+  /*background-color: var(--sidebar-color);*/
   height: 100%;
   transition: width 0.2s;
 }
