@@ -33,7 +33,7 @@ const onMinimize = () => {
 
 <style scoped lang="stylus">
 .frame-background
-  color var(--font-color-dark)
+  color var(--font-text-color)
   width 100%
   height 35px
   display flex

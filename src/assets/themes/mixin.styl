@@ -4,8 +4,12 @@ theme_color()
   for item in themeList
     [data-theme = {item.name}] & {
       --background-color item.background-color
-      --sidebar-color item.sidebar-color
-      --font-color-bright item.font-color-bright
-      --font-color-dark item.font-colot-dark
-      --font-color-bright-hover item.font-color-bright-hover
+      --theme-color-bright item.theme-color-bright
+      --theme-color item.theme-color
+      --theme-color-dark item.theme-color-dark
+      --font-title-color item.font-title-color
+      --font-subject-color item.font-subject-color
+      --font-inverse-color item.font-inverse-color
+      --font-text-color item.font-text-color
+      --object-unfocus-color item.object-unfocus-color
     }

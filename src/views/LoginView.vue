@@ -3,13 +3,17 @@
     <div class="login-panel center">
       <div class="title">Sign up</div>
       <div class="hint">Please login in to continue to your account</div>
+      <HInput name="email"></HInput>
+      <HInput :password="true" name="password"></HInput>
     </div>
   </div>
 </template>
 
 <script>
+import HInput from "@/components/HInput";
 export default {
-  name: "LoginView"
+  name: "LoginView",
+  components: {HInput}
 }
 </script>
 

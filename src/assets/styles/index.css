@@ -22,7 +22,7 @@
     transition: color 0.1s;
 }
 .button-hover:hover {
-    color: var(--font-color-bright-hover)
+    color: var(--font-subject-color)
 }
 .full {
     width: 100%;
@@ -49,11 +49,11 @@
 }
 .title {
     font-size: 30px;
-    color: var(--font-color-dark);
+    color: var(--font-title-color);
     font-weight: 600;
 }
 .hint {
     font-size: 12px;
-    color: var(--font-color-bright-hover);
+    color: var(--font-subject-color);
     font-weight: 300;
 }
