@@ -3,18 +3,22 @@
     <div class="login-panel center">
       <div class="title">Sign up</div>
       <div class="hint">Please login in to continue to your account</div>
-      <HInput name="email"></HInput>
-      <HInput :password="true" name="password"></HInput>
+      <HInput name="Email" v-model="data.email" style="margin: 20px 0"></HInput>
+      <HInput :password="true" name="Password" v-model="data.password" style="margin: 20px 0"></HInput>
     </div>
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import HInput from "@/components/HInput";
-export default {
-  name: "LoginView",
-  components: {HInput}
-}
+import {reactive} from "vue";
+const data = reactive<{
+  email : string
+  password : string
+}>({
+  email : '',
+  password : ''
+})
 </script>
 
 <style scoped lang="stylus">
