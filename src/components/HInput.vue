@@ -1,5 +1,8 @@
 <template>
-  <div class="input-main"></div>
+  <div class="input-main">
+    <div class="input-name">{{ props.name }}</div>
+    <div class="input-border"></div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -15,7 +18,16 @@ const props = withDefaults(defineProps<{
 <style scoped lang="stylus">
 .input-main
   width 100%
-  height 30px;
-  border var(--theme-color) 1px solid
+  height 50px
+  padding-top 5px
+  padding-bottom 5px
 
+.input-name
+  position absolute
+  color var(--object-unfocus-color)
+  font-size 10px;
+
+.input-border
+  border-radius 5px
+  border var(--object-unfocus)
 </style>
