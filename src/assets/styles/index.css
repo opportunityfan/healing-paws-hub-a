@@ -64,3 +64,19 @@ input {
 input:focus-visible {
     outline: none;
 }
+.clickable-text{
+    font-size: 12px;
+    font-weight: 600;
+    color: #039be5;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+}
+.clickable-text:after{
+    content:'';
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 0em;
+    border-bottom: 1px solid #039be5;
+}
