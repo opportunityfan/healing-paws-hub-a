@@ -57,3 +57,10 @@
     color: var(--font-subject-color);
     font-weight: 300;
 }
+input {
+    border: none;
+    font-family: "Readex Pro", serif;
+}
+input:focus-visible {
+    outline: none;
+}
