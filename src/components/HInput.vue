@@ -19,7 +19,7 @@
 import {defineProps, withDefaults, defineEmits, reactive, watch} from 'vue'
 const props = withDefaults(defineProps<{
   name: string
-  password: boolean
+  password?: boolean
   modelValue: string
 }>() , {
   password: false
@@ -74,6 +74,7 @@ const onFocus = () => {
   width 100%
   height 40px
   position relative
+  margin: 20px 0
 
 .input-name
   position absolute

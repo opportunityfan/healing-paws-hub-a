@@ -1,24 +1,24 @@
 <template>
-  <div class="login-main full padding-surround">
-    <div class="login-panel center">
-      <div class="title">Sign in</div>
-      <div class="hint">Please login in to continue to your account</div>
-      <HInput name="Email" v-model="data.email" style="margin: 20px 0"></HInput>
-      <HInput :password="true" name="Password" v-model="data.password" style="margin: 20px 0"></HInput>
-
-      <div style="text-align: center">
-        <span class="hint">Need an account? </span>
-        <span class="clickable-text" @click="goRegistry">Sign up</span>
-      </div>
+  <div class="login-panel center">
+    <div class="title">Sign in</div>
+    <div class="hint">Please login in to continue to your account</div>
+    <HInput name="Email" v-model="data.email" style="margin: 20px 0"></HInput>
+    <HInput :password="true" name="Password" v-model="data.password" style="margin: 20px 0"></HInput>
+    <HButton>Sign In</HButton>
+    <HDivider>Or</HDivider>
+    <div style="text-align: center">
+      <span class="hint">Need an account? </span>
+      <span class="clickable-text" @click="goRegistry">Sign up</span>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import HInput from "@/components/HInput";
+import HButton from "@/components/HButton"
 import {reactive} from "vue";
 import HDivider from "@/components/HDivider.vue";
-import {useRouter} from "vue-router";
+import {goto} from "@/assets/api";
 const data = reactive<{
   email : string
   password : string
@@ -27,22 +27,15 @@ const data = reactive<{
   password : ''
 })
 
-const router = useRouter()
 function goRegistry(){
-  router.push({path:'/Registry'})
+  goto('/Registry');
 }
 </script>
 
 <style scoped lang="stylus">
-.login-main
-  padding-left 20px
-  box-sizing border-box
-  position relative
-
 .login-panel
-  width 300px
-  height 600px
-  text-align left
+  width 100%
+  height 100%
   div
     margin 10px 0
 </style>

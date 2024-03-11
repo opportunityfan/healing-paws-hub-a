@@ -77,7 +77,8 @@ const showText = computed(() => {
   .u-text {
     display: inline-block;
     font-size: 12px;
-    color: rgba(0, 0, 0, .58);
+    //color: rgba(0, 0, 0, .58);
+    color: var(--object-unfocus-color)
     font-weight: 500;
     line-height: 1.5714285714285714;
     white-space: nowrap;
