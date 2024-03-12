@@ -89,14 +89,14 @@ const onFocus = () => {
   overflow hidden
   z-index 1
 
-.input-border
+.input-border {
   position relative
   height 100%;
   margin-top 5px
   margin-bottom 5px
   border-radius 5px
   border var(--object-unfocus-color) 1.5px solid
-
+}
 .input-field
   margin-left 10px
   height 100%
