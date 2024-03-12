@@ -1,5 +1,5 @@
 <template>
-  <div class="registry-panel center">
+  <div class="registry-panel">
     <div class="title">Sign up</div>
     <div class="hint">Sign up to enjoy the feature of Paw</div>
     <HInput name="NickName" v-model="data.nickname" style="margin:20px 0"></HInput>

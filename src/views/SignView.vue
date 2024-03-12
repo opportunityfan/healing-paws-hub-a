@@ -1,7 +1,16 @@
 <template>
   <div class="sign-main full padding-surround">
     <div class="sign-panel center">
-      <router-view></router-view>
+      <router-view v-slot="{ Component }">
+        <transition
+          name="animate__animated animate__fade"
+          enter-active-class="animate__fadeInLeft"
+          leave-active-class="animate__fadeOutRight"
+          mode="out-in"
+        >
+          <component :is="Component"></component>
+        </transition>
+      </router-view>
     </div>
   </div>
 </template>
@@ -22,4 +31,5 @@ export default {
   width 300px
   height 500px
   text-align left
+  --animate-duration 0.5s
 </style>

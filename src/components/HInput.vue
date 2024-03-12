@@ -89,6 +89,9 @@ const onFocus = () => {
   overflow hidden
   z-index 1
 
+.input-main:focus-within .input-name
+  color var(--theme-color)
+
 .input-border
   position relative
   height 100%;
@@ -96,6 +99,10 @@ const onFocus = () => {
   margin-bottom 5px
   border-radius 5px
   border var(--object-unfocus-color) 1.5px solid
+  transition border-color 0.1s
+
+.input-border:focus-within
+  border var(--theme-color) 1.5px solid
 
 .input-field
   margin-left 10px

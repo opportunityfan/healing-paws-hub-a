@@ -1,5 +1,5 @@
 <template>
-  <div class="login-panel center">
+  <div class="login-panel">
     <div class="title">Sign in</div>
     <div class="hint">Please login in to continue to your account</div>
     <HInput name="Email" v-model="data.email" style="margin: 20px 0"></HInput>
