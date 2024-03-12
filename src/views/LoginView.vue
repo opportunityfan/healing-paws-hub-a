@@ -4,7 +4,7 @@
     <div class="hint">Please login in to continue to your account</div>
     <HInput name="Email" v-model="data.email" style="margin: 20px 0"></HInput>
     <HInput :password="true" name="Password" v-model="data.password" style="margin: 20px 0"></HInput>
-    <HButton>Sign In</HButton>
+    <HButton @click="signIn">Sign In</HButton>
     <HDivider>Or</HDivider>
     <div style="text-align: center">
       <span class="hint">Need an account? </span>
@@ -19,6 +19,7 @@ import HButton from "@/components/HButton"
 import {reactive} from "vue";
 import HDivider from "@/components/HDivider.vue";
 import {goto} from "@/assets/api";
+import store from "@/store";
 const data = reactive<{
   email : string
   password : string
@@ -29,6 +30,10 @@ const data = reactive<{
 
 function goRegistry(){
   goto('/Registry');
+}
+function signIn(){
+  store.state.sidebar_unlock=!store.state.sidebar_unlock
+  goto('/Main');
 }
 </script>
 
