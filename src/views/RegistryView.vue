@@ -19,7 +19,7 @@ import HInput from "@/components/HInput.vue";
 import HButton from "@/components/HButton"
 import HDivider from "@/components/HDivider.vue";
 import {reactive} from "vue";
-import {goto} from "@/assets/api";
+import {goto,signUp} from "@/assets/api";
 
 const data = reactive<{
   nickname : string
@@ -34,7 +34,7 @@ function backSignIn(){
   goto('/login');
 }
 const onSignUp = () => {
-  goto('/check-email');
+  signUp();
 }
 </script>
 

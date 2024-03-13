@@ -66,7 +66,7 @@ const onSignOut = () => {
 
 .locked-sidebar
   height 100%
-  background-color rgba(255, 255, 255, 0.3)
+  //background-color rgba(255, 255, 255, 0.3)
 
 .locked-sidebar-background
   background-image url('../assets/login-background.png')

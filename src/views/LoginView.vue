@@ -2,7 +2,7 @@
   <div class="login-panel">
     <div class="title">Sign in</div>
     <div class="hint">Please login in to continue to your account</div>
-    <HInput name="Email" v-model="data.email" style="margin: 20px 0"></HInput>
+    <HInput name="Email" v-model="data.account" style="margin: 20px 0"></HInput>
     <HInput :password="true" name="Password" v-model="data.password" style="margin: 20px 0"></HInput>
     <HButton @click="onSignIn">Sign In</HButton>
     <HDivider>Or</HDivider>
@@ -20,10 +20,10 @@ import {reactive} from "vue";
 import HDivider from "@/components/HDivider.vue";
 import {goto, signIn} from "@/assets/api";
 const data = reactive<{
-  email : string
+  account : string
   password : string
 }>({
-  email : '',
+  account : '',
   password : ''
 })
 
@@ -31,7 +31,7 @@ function goRegistry(){
   goto('/Registry');
 }
 function onSignIn(){
-  signIn()
+  signIn(data)
 }
 </script>
 
