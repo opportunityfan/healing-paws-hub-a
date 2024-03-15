@@ -16,33 +16,33 @@
             <div class="title-inverse">Healp</div>
           </div>
           <side-bar-item-group>
-            <side-bar-item>
-              <div class="flex-row subtitle-inverse" style="justify-content: left; gap: 20px">
-                <div class="box-icon" style="color: var(--object-unfocus-color)">
+            <side-bar-item name="study">
+              <div class="flex-row" style="justify-content: left; gap: 20px">
+                <div class="box-icon">
                   <i class='bx bx-book'></i>
                 </div>
                 <div>Study</div>
               </div>
             </side-bar-item>
-            <side-bar-item>
-              <div class="flex-row subtitle-inverse" style="justify-content: left; gap: 20px">
-                <div class="box-icon" style="color: var(--object-unfocus-color)">
+            <side-bar-item name="archive">
+              <div class="flex-row" style="justify-content: left; gap: 20px">
+                <div class="box-icon">
                   <i class='bx bx-archive'></i>
                 </div>
                 <div>Archive</div>
               </div>
             </side-bar-item>
-            <side-bar-item>
-              <div class="flex-row subtitle-inverse" style="justify-content: left; gap: 20px">
-                <div class="box-icon" style="color: var(--object-unfocus-color)">
-                  <i class='bx bxs-analyse' ></i>
+            <side-bar-item name="guide">
+              <div class="flex-row" style="justify-content: left; gap: 20px">
+                <div class="box-icon">
+                  <i class='bx bxs-analyse'></i>
                 </div>
                 <div>Guide</div>
               </div>
             </side-bar-item>
-            <side-bar-item>
-              <div class="flex-row subtitle-inverse" style="justify-content: left; gap: 20px">
-                <div class="box-icon" style="color: var(--object-unfocus-color)">
+            <side-bar-item name="exam">
+              <div class="flex-row" style="justify-content: left; gap: 20px">
+                <div class="box-icon">
                   <i class='bx bx-spreadsheet' ></i>
                 </div>
                 <div>Exam</div>

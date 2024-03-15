@@ -22,7 +22,7 @@
     transition: color 0.1s;
 }
 .button-hover:hover {
-    color: var(--font-subject-color)
+    color: var(--grey-color-dark)
 }
 .full {
     width: 100%;
@@ -95,4 +95,13 @@ input:focus-visible {
     left: 0;
     bottom: 0;
     border-bottom: 1px solid var(--theme-color);
+}
+.pattern1 {
+    --r : 40px;
+    position: absolute;
+    width: var(--r);
+    height: var(--r);
+    clip: rect(calc(var(--r)/2), var(--r), var(--r), calc(var(--r)/2));
+    -webkit-mask: radial-gradient(circle, transparent calc(var(--r)/2 - 1px), #000 calc(var(--r)/2));
+    overflow: hidden;
 }
