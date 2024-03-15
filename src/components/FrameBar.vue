@@ -1,9 +1,7 @@
 <template>
   <div class="frame-background">
     <div class="icon-title-bar flex-row">
-      <div class="icon">
-        <img src="../assets/icon.png" alt="icon">
-      </div>
+      <HIcon></HIcon>
       <div style="font-size: 14px">{{ store.state.frame_title }}</div>
     </div>
     <div class="button-bar flex-row">
@@ -22,6 +20,7 @@
 
 <script setup lang="ts">
 import store from "@/store";
+import HIcon from "@/components/HIcon.vue";
 const onClose = () => {
   console.log('close');
   window.electronAPI.close();
@@ -44,15 +43,6 @@ const onMinimize = () => {
   flex-grow 1
   justify-content flex-start
   -webkit-app-region drag
-
-.icon
-  height 100%
-  width 50px
-  display flex
-  img
-    width 28px
-    height 27px
-    margin auto
 
 .button-bar
   height 100%
