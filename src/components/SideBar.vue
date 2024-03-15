@@ -6,7 +6,7 @@
       leave-active-class="animate__fadeOut"
       mode="out-in"
     >
-      <div v-if="!store.state.sidebar_unlock" class="locked-sidebar border-radius-regular">
+      <div v-if="!store.state.online" class="locked-sidebar border-radius-regular">
         <div class="locked-sidebar-background full border-radius-regular image-cover1"></div>
       </div>
       <div v-else class="unlocked-sidebar flex-column">
@@ -77,7 +77,7 @@ import SideBarItemGroup from "@/components/SideBarItemGroup.vue";
 const sidebarRef = ref<VueElement>();
 onMounted(() => {
   watch(
-      () => store.state.sidebar_unlock,
+      () => store.state.online,
       (val, preval) => {
         if (!sidebarRef.value) return;
         if (val) {

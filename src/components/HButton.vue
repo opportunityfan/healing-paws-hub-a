@@ -6,8 +6,14 @@
   </div>
 </template>
 
-<script>
-
+<script setup lang="ts">
+import{defineProps, withDefaults} from 'vue'
+const props = withDefaults(defineProps<{
+  type: string
+  size: string
+}>(),{
+  type: "primary"
+});
 </script>
 
 <style scoped lang="stylus">
