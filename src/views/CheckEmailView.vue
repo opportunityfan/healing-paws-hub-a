@@ -1,7 +1,7 @@
 <template>
   <div class="check-email-panel">
     <div class="title">Check Your Email</div>
-    <div>We have send an email to xxxxxxxxx@xx.com. Please check in to activate your account.</div>
+    <div>We have send an email to {{store.state.email_for_registry}}. Please check in to activate your account.</div>
     <div class="hint">
       have account activated?
       <div class="clickable-text" @click="goSignIn">Sign In</div>
@@ -11,6 +11,7 @@
 
 <script setup lang="ts">
 import {goto} from "@/assets/api";
+import store from "../store";
 
 const goSignIn = () => {
   goto('/login')

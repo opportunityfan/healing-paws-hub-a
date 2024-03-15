@@ -34,7 +34,8 @@ function backSignIn(){
   goto('/login');
 }
 const onSignUp = () => {
-  signUp();
+
+  signUp(data);
 }
 </script>
 

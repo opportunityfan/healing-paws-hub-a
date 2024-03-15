@@ -12,24 +12,22 @@ export const goto = async (path : string) => {
 
 export const signIn = (data:any) => {
 
-    store.state.sidebar_unlock = true
-    // axios.post('/sysUser/login',data,{
-    //     headers:{
-    //         'Content-Type' : 'application/json'
-    //     }
-    // }).then((res)=>{
-    //     if(res.data.code==200){
-    //         store.state.sidebar_unlock = true
-    //         goto('/main').then()
-    //     }
-    // })
-    goto('/main').then()
+    // store.state.sidebar_unlock = true
+    axios.post('/sysUser/login',data,{
+         headers:{
+             'Content-Type' : 'application/json'
+         }
+     }).then((res)=>{
+         if(res.data.code==200){
+             store.state.sidebar_unlock = true
+            goto('/main').then()
+         }
+     })
+    // goto('/main').then()
 }
-export const signUp = (email : string, password : string, nickName : string)=>{
-    axios.post('/email/register',{
-        email : email,
-        password : password,
-    },{
+export const signUp = (data : any)=>{
+    store.state.email_for_registry = data.email
+    axios.post('/email/register',data,{
         headers:{
             'Content-Type' : 'application/json'
         }
