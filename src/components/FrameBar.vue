@@ -1,8 +1,15 @@
 <template>
   <div class="frame-background">
-    <div class="icon-title-bar flex-row">
-      <HIcon></HIcon>
-      <div style="font-size: 14px">{{ store.state.frame_title }}</div>
+      <transition
+          name="animate__animated animate__fade"
+          enter-active-class="animate__fadeInLeft"
+          leave-active-class="animate__fadeOutRight"
+          mode="out-in"
+      >
+        <HSearch v-if="store.state.online"></HSearch>
+      </transition>
+    <div class="top-bar flex-row">
+
     </div>
     <div class="button-bar flex-row">
       <div class="box-icon button-hover" style="font-size: 16px">
@@ -21,6 +28,7 @@
 <script setup lang="ts">
 import store from "@/store";
 import HIcon from "@/components/HIcon.vue";
+import HSearch from "@/components/HSearch.vue";
 const onClose = () => {
   console.log('close');
   window.electronAPI.close();
@@ -38,11 +46,20 @@ const onMinimize = () => {
   display flex
   justify-content space-between
 
-.icon-title-bar
+.top-bar
   height 100%
   flex-grow 1
   justify-content flex-start
   -webkit-app-region drag
+
+.icon
+  height 100%
+  width 50px
+  display flex
+  img
+    width 28px
+    height 27px
+    margin auto
 
 .button-bar
   height 100%

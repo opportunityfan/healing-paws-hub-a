@@ -19,7 +19,7 @@ export const signIn = (data:any) => {
          }
      }).then((res)=>{
          if(res.data.code==200){
-             store.state.sidebar_unlock = true
+             store.state.online = true
             goto('/main').then()
          }
      })
@@ -38,6 +38,6 @@ export const signUp = (data : any)=>{
     goto('/check-email').then();
 }
 export const signOut = () => {
-    store.state.sidebar_unlock = false
+    store.state.online = false
     goto('/login').then()
 }
