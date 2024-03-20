@@ -38,8 +38,11 @@ const onFocus = () => {
 
 <template>
   <div class="search-main" style="margin: 0 0">
-    <div class="search-border">
 
+    <div class="search-border flex-row">
+      <div class="box-icon">
+        <i class='bx bx-search icon-color' ></i>
+      </div>
       <div class="placeholder" v-if="(data.empty && !data.focus)">Search...</div>
       <input class="search-field" v-model="data.content" @blur="onBlur" @focus="onFocus">
     </div>
@@ -49,30 +52,37 @@ const onFocus = () => {
 <style scoped lang="stylus">
 .search-main
   width 200px
-  height 30px
+  height 25px
   position relative
-  margin 20px 0
+  margin 0 0
+  z-index 0
 
 .search-border
   position relative
   height 100%
-  margin 5px
+  margin 3px 0
   border-radius 5px
   border var(--object-unfocus-color) 1.5px solid
   transition border-color 0.1s
+
 .search-border:focus-within
   border var(--theme-color) 1.5px solid
 
 .search-field
   height 90%
-  margin-left 10px
-  background var(--background-color)
+
+  background rgba(0,0,0,0)
+
 .placeholder
   position absolute
   color var(--font-subject-color)
   font-size 14px
   top: 50%
-  left: 10px
+  left: 22px
   transform  translate(0, -50% - 2px)
-  z-index 1
+  z-index -1
+
+.icon-color
+  color var(--object-unfocus-color)
+
 </style>

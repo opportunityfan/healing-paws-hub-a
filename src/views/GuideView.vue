@@ -3,9 +3,7 @@
 </script>
 
 <template>
-  <div class="full">
-    <router-view/>
-  </div>
+  <div>这是导览界面</div>
 
 </template>
 

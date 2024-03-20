@@ -22,7 +22,9 @@ export const signIn = (data:any) => {
              store.state.online = true
             goto('/main').then()
          }
-     })
+     }).catch(err=>{
+         console.log("network Error！")
+    })
     // goto('/main').then()
 }
 export const signUp = (data : any)=>{

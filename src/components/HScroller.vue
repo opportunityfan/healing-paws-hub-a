@@ -217,7 +217,7 @@ const onTouchMove = (e : any) => {
   transition: top 0.1s, left 0.1s;
 }
 .scrollbar {
-  background-color: var(--scroll-bar-color);
+  background-color: var(--theme-color);
   border-radius: 999px;
 }
 .horizontal {
@@ -240,7 +240,7 @@ const onTouchMove = (e : any) => {
   position: relative;
   width: 100%;
   height: 100%;
-  background-color: var(--wakuwaku-scrollbar-thumb-color);
+  background-color: var(--theme-color-dark);
   border-radius: 999px;
   transition: top 0.1s, left 0.1s;
 }

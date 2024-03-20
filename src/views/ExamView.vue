@@ -3,10 +3,7 @@
 </script>
 
 <template>
-  <div class="full">
-    <router-view/>
-  </div>
-
+  <div>这是考试界面</div>
 </template>
 
 <style scoped lang="stylus">

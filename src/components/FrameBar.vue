@@ -6,7 +6,7 @@
           leave-active-class="animate__fadeOutRight"
           mode="out-in"
       >
-        <HSearch v-if="store.state.online"></HSearch>
+        <HSearch v-if="store.state.online" ></HSearch>
       </transition>
     <div class="top-bar flex-row">
 
