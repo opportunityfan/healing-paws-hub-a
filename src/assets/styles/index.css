@@ -20,9 +20,17 @@
 }
 .button-hover {
     transition: color 0.1s;
+    cursor: pointer;
 }
 .button-hover:hover {
     color: var(--grey-color-dark)
+}
+.button-hover-inverse {
+    transition: color 0.1s;
+    cursor: pointer;
+}
+.button-hover-inverse:hover {
+    color: var(--grey-color)
 }
 .full {
     width: 100%;
@@ -70,6 +78,27 @@
     color: var(--font-subject-color);
     font-weight: 300;
 }
+.hint-inverse {
+    font-size: 12px;
+    color: var(--white-color);
+    font-weight: 300;
+}
+.text {
+    font-size: 14px;
+    color: var(--black-color);
+}
+.text-inverse {
+    font-size: 14px;
+    color: var(--white-color);
+}
+.text-tight {
+    font-size: 12px;
+    color: var(--black-color);
+}
+.text-tight-inverse {
+    font-size: 12px;
+    color: var(--white-color);
+}
 input {
     border: none;
     font-family: "Readex Pro", serif;
@@ -102,6 +131,6 @@ input:focus-visible {
     width: var(--r);
     height: var(--r);
     clip: rect(calc(var(--r)/2), var(--r), var(--r), calc(var(--r)/2));
-    -webkit-mask: radial-gradient(circle, transparent calc(var(--r)/2 - 1px), #000 calc(var(--r)/2));
+    -webkit-mask: radial-gradient(circle, transparent calc(var(--r)/2), #000 calc(var(--r)/2 + 1px));
     overflow: hidden;
 }

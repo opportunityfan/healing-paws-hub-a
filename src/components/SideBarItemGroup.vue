@@ -16,9 +16,9 @@ const keyVNode : Map<string, ComponentInternalInstance> = new Map<string, Compon
 const selectedName  = ref<string>('')
 
 const changeSelect = (name : string) => {
-  keyVNode.get(selectedName.value)?.exposed?.switchSelect()
+  keyVNode.get(selectedName.value)?.exposed?.setSelect(false)
   selectedName.value = name
-  keyVNode.get(selectedName.value)?.exposed?.switchSelect()
+  keyVNode.get(selectedName.value)?.exposed?.setSelect(true)
 }
 
 // eslint-disable-next-line no-undef
@@ -41,7 +41,7 @@ const update = () => {
       }
     })
   }
-  keyVNode.get(selectedName.value)?.exposed?.switchSelect()
+  keyVNode.get(selectedName.value)?.exposed?.setSelect(true)
 }
 
 onMounted(() => {
