@@ -70,7 +70,6 @@ const onBlurEmail = () => {
     correct.account = true
     information.account = ''
   } else {
-    console.log("wrong")
     correct.account = false
     information.account = '非法的邮件格式'
   }
