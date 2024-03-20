@@ -2,7 +2,7 @@
   <div
       class="sidebar-main padding-surround"
       ref="sidebarRef"
-      :class="{'locked': !store.state.online, 'unlock-unfolded': store.state.online && !folded, 'unlock-folded': store.state.online && folded}"
+      :class="{'locked': !store.state.online, 'unlock-unfolded': store.state.online && !store.state.sidebar_fold, 'unlock-folded': store.state.online && store.state.sidebar_fold}"
   >
     <transition
       name="animate__animated animate__fade"
@@ -21,7 +21,7 @@
           </div>
           <side-bar-item-group>
             <side-bar-item name="study">
-              <div class="flex-row" style="justify-content: center; transition: gap 0.5s" :style="{gap: folded?'0':'20px'}">
+              <div class="flex-row" style="justify-content: center; transition: gap 0.5s" :style="{gap: store.state.sidebar_fold?'0':'20px'}">
                 <div class="box-icon">
                   <i class='bx bx-book'></i>
                 </div>
@@ -29,7 +29,7 @@
               </div>
             </side-bar-item>
             <side-bar-item name="archive">
-              <div class="flex-row" style="justify-content: center; transition: gap 0.5s" :style="{gap: folded?'0':'20px'}">
+              <div class="flex-row" style="justify-content: center; transition: gap 0.5s" :style="{gap: store.state.sidebar_fold?'0':'20px'}">
                 <div class="box-icon">
                   <i class='bx bx-archive'></i>
                 </div>
@@ -37,7 +37,7 @@
               </div>
             </side-bar-item>
             <side-bar-item name="guide">
-              <div class="flex-row" style="justify-content: center; transition: gap 0.5s" :style="{gap: folded?'0':'20px'}">
+              <div class="flex-row" style="justify-content: center; transition: gap 0.5s" :style="{gap: store.state.sidebar_fold?'0':'20px'}">
                 <div class="box-icon">
                   <i class='bx bxs-analyse'></i>
                 </div>
@@ -45,7 +45,7 @@
               </div>
             </side-bar-item>
             <side-bar-item name="exam">
-              <div class="flex-row" style="justify-content: center; transition: gap 0.5s" :style="{gap: folded?'0':'20px'}">
+              <div class="flex-row" style="justify-content: center; transition: gap 0.5s" :style="{gap: store.state.sidebar_fold?'0':'20px'}">
                 <div class="box-icon">
                   <i class='bx bx-spreadsheet' ></i>
                 </div>
@@ -58,25 +58,44 @@
           <div class="avatar-bar flex-row">
             <HAvatar></HAvatar>
             <div style="text-align: left">
-              <div class="text-inverse">{{ store.state.nick_name }}</div>
-              <div class="hint" style="font-size: 10px">{{ store.state.email }}</div>
+              <div class="text-inverse foldable">{{ store.state.nick_name }}</div>
+              <div class="hint foldable" style="font-size: 10px">{{ store.state.email }}</div>
             </div>
           </div>
 <!--          <div style="margin: 0 10px;height: 1.5px; background-color: var(&#45;&#45;theme-color)"></div>-->
-          <div class="function-bar flex-row" style="color: var(--grey-color-bright)">
-            <div class="flex-row button-hover-inverse" style="gap: 5px">
-              <div class="box-icon" style="font-size: 15px">
-                <i class='bx bx-edit' ></i>
+          <transition
+              name="animate__animated animate__fade"
+              enter-active-class="animate__fadeIn"
+              leave-active-class="animate__fadeOut"
+              mode="out-in"
+          >
+            <div v-if="!store.state.sidebar_fold" class="function-bar flex-row" style="color: var(--grey-color-bright)">
+              <div class="flex-row button-hover-inverse" style="gap: 5px">
+                <div class="box-icon" style="font-size: 15px">
+                  <i class='bx bx-edit' ></i>
+                </div>
+                <div class="foldable-small" style="font-size: 10px">Edit</div>
               </div>
-              <div style="font-size: 10px">Edit</div>
-            </div>
-            <div class="flex-row button-hover-inverse" style="gap: 5px"  @click="onSignOut">
-              <div class="box-icon">
-                <i class='bx bx-exit' style="font-size: 15px"></i>
+              <div class="flex-row button-hover-inverse" style="gap: 5px"  @click="onSignOut">
+                <div class="box-icon">
+                  <i class='bx bx-exit' style="font-size: 15px"></i>
+                </div>
+                <div class="foldable-small" style="font-size: 10px">Sign Out</div>
               </div>
-              <div style="font-size: 10px">Sign Out</div>
             </div>
-          </div>
+            <div v-else class="function-bar-column flex-column" style="gap: 20px; padding: 10px 0">
+              <div class="button-hover-inverse">
+                <div class="box-icon" style="font-size: 16px">
+                  <i class='bx bx-edit' ></i>
+                </div>
+              </div>
+              <div class="button-hover-inverse" @click="onSignOut">
+                <div class="box-icon" style="font-size: 16px">
+                  <i class='bx bx-exit' ></i>
+                </div>
+              </div>
+            </div>
+          </transition>
         </div>
       </div>
     </transition>
@@ -92,10 +111,8 @@ import {signOut} from "@/assets/api";
 import SideBarItemGroup from "@/components/SideBarItemGroup.vue";
 import HAvatar from "@/components/HAvatar.vue";
 
-const folded = ref<boolean>(false);
-
 const switchFold = () => {
-  folded.value = !folded.value
+  store.state.sidebar_fold = !store.state.sidebar_fold
 }
 
 const onSignOut = () => {
@@ -119,6 +136,16 @@ const onSignOut = () => {
     width 0
     opacity 0
     flex-grow 0
+  .foldable-small
+    width 0
+    opacity 0
+    flex-grow 0
+  .sidebar-bottom-block
+    background-color var(--theme-color)
+    height 150px
+  .avatar-bar
+    margin 0
+    left -5px
 
 .unlock-unfolded
   width 250px
@@ -130,7 +157,14 @@ const onSignOut = () => {
   width 100px
   text-align left
   flex-grow 1
-  transition all 0.5s, width 1s
+  transition flex-grow 1s, opacity 0.5s, width 1s
+
+.foldable-small
+  width 45px
+  text-align left
+  flex-grow 1
+  transition flex-grow 1s, opacity 0.5s, width 1s
+  white-space nowrap
 
 .sidebar-main
   position relative
@@ -162,8 +196,11 @@ const onSignOut = () => {
 .sidebar-bottom-block
   margin 20px 15px
   padding 5px 0
+  height 100px
+  box-sizing border-box
   //background-color rgba(0, 0, 0, 0.2)
   background-color var(--theme-color-dark)
+  transition all 0.5s, height 1s
 
 .icon-app-name-flex
   position relative
@@ -173,15 +210,19 @@ const onSignOut = () => {
   transition all 0.5s
 
 .avatar-bar
+  position relative
   margin 0 10px;
   justify-content left
+  left 0
+  transition all 0.5s
 
 .function-bar
   height 30px
   padding-bottom 5px
   width 100%
   box-sizing border-box
-  justify-content space-around
+  justify-content center
+  gap 20px
   .box-icon
     width fit-content
 </style>
