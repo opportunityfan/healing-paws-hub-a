@@ -60,7 +60,7 @@
 }
 .title {
     font-size: 30px;
-    color: var(--font-title-color);
+    color: var(--black-color);
     font-weight: 600;
 }
 .title-inverse {
@@ -102,6 +102,7 @@
 input {
     border: none;
     font-family: "Readex Pro", serif;
+    color: var(--black-color);
 }
 input:focus-visible {
     outline: none;
