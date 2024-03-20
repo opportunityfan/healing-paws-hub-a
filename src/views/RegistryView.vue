@@ -2,9 +2,9 @@
   <div class="registry-panel">
     <div class="title">Sign up</div>
     <div class="hint">Sign up to enjoy the feature of Paw</div>
-    <HInput name="NickName" v-model="data.nickname" style="margin:20px 0"></HInput>
-    <HInput name="Email" v-model="data.email" style="margin:20px 0"></HInput>
-    <HInput :password="true" v-model="data.password" name="password" style="margin:20px 0"></HInput>
+    <HInput name="NickName" v-model="data.nickname" style="margin:16px 0"></HInput>
+    <HInput name="Email" v-model="data.email" style="margin:16px 0"></HInput>
+    <HInput :password="true" v-model="data.password" name="password" style="margin:16px 0"></HInput>
     <HButton @click="onSignUp">Sign Up</HButton>
     <HDivider>Or</HDivider>
     <div style="text-align: center">

@@ -1,5 +1,5 @@
 <template>
-  <div class="input-main">
+  <div class="input-main" :class="props.state">
     <div
         class="input-name"
         :style="{
@@ -12,6 +12,10 @@
       <div class="placeholder" v-if="(data.empty && !data.focus)">{{ props.name }}</div>
       <input class="input-field" v-model="data.content" @blur="onBlur" :type="props.password?'password':''" @focus="onFocus">
     </div>
+    <div class="information-bar hint" :style="{height: props.information === '' ? '0' : '15px'}">
+      <i v-if="props.state === 'error'" class='bx bxs-error-circle'></i>
+      {{ props.information }}
+    </div>
   </div>
 </template>
 
@@ -21,8 +25,12 @@ const props = withDefaults(defineProps<{
   name: string
   password?: boolean
   modelValue: string
+  state?: string
+  information?: string
 }>() , {
-  password: false
+  password: false,
+  state: 'default',
+  information: ''
 });
 
 const emits = defineEmits(['update:modelValue', 'blur'])
@@ -72,13 +80,11 @@ const onFocus = () => {
 <style scoped lang="stylus">
 .input-main
   width 100%
-  height 40px
   position relative
-  margin: 20px 0
+  margin: 18px 0
 
 .input-name
   position absolute
-  color var(--object-unfocus-color)
   background-color var(--background-color)
   left 10px;
   top -5px
@@ -89,20 +95,36 @@ const onFocus = () => {
   overflow hidden
   z-index 1
 
-.input-main:focus-within .input-name
-  color var(--theme-color)
+.default
+  .input-name
+    color var(--object-unfocus-color)
+  .input-border
+    border var(--object-unfocus-color) 1.5px solid
+  .placeholder
+    color var(--grey-color)
+  &:focus-within
+    .input-name
+      color var(--theme-color)
+    .input-border
+      border var(--theme-color) 1.5px solid
+
+.error
+  .input-name
+    color var(--error-color)
+  .input-border
+    border var(--error-color) 1.5px solid
+  .placeholder
+    color var(--error-color)
+  .information-bar
+    color var(--error-color)
 
 .input-border
   position relative
-  height 100%;
+  height 40px;
   margin-top 5px
   margin-bottom 5px
   border-radius 5px
-  border var(--object-unfocus-color) 1.5px solid
   transition border-color 0.1s
-
-.input-border:focus-within
-  border var(--theme-color) 1.5px solid
 
 .input-field
   margin-left 10px
@@ -111,10 +133,14 @@ const onFocus = () => {
 
 .placeholder
   position absolute
-  color var(--font-subject-color)
   font-size 14px
   top: 50%
   left: 12px
   transform  translate(0, -50% - 2px)
   z-index -1
+
+.information-bar
+  padding-left 10px
+  transition all 0.2s
+  overflow hidden
 </style>
