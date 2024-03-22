@@ -3,7 +3,7 @@
     <SideBar></SideBar>
     <div class="flex-column" style="height: 100%;flex-grow: 1">
       <FrameBar></FrameBar>
-      <div style="width: 100%; flex-grow: 1; overflow: hidden">
+      <div style="width: 100%; overflow: hidden; height: calc(100% - 35px)">
         <router-view/>
       </div>
     </div>

@@ -20,7 +20,7 @@
             <div class="title-inverse foldable" style="flex-grow: 0; text-align: center">Healp</div>
           </div>
           <side-bar-item-group>
-            <side-bar-item name="study">
+            <side-bar-item name="study" @click="goto('/learn')">
               <div class="flex-row" style="justify-content: center; transition: gap 0.5s" :style="{gap: store.state.sidebar_fold?'0':'20px'}">
                 <div class="box-icon">
                   <i class='bx bx-book'></i>
@@ -28,7 +28,7 @@
                 <div class="foldable">Study</div>
               </div>
             </side-bar-item>
-            <side-bar-item name="archive">
+            <side-bar-item name="archive" @click="goto('archive')">
               <div class="flex-row" style="justify-content: center; transition: gap 0.5s" :style="{gap: store.state.sidebar_fold?'0':'20px'}">
                 <div class="box-icon">
                   <i class='bx bx-archive'></i>
@@ -36,7 +36,7 @@
                 <div class="foldable">Archive</div>
               </div>
             </side-bar-item>
-            <side-bar-item name="guide">
+            <side-bar-item name="guide" @click="goto('guide')">
               <div class="flex-row" style="justify-content: center; transition: gap 0.5s" :style="{gap: store.state.sidebar_fold?'0':'20px'}">
                 <div class="box-icon">
                   <i class='bx bxs-analyse'></i>
@@ -44,7 +44,7 @@
                 <div class="foldable">Guide</div>
               </div>
             </side-bar-item>
-            <side-bar-item name="exam">
+            <side-bar-item name="exam" @click="goto('exam')">
               <div class="flex-row" style="justify-content: center; transition: gap 0.5s" :style="{gap: store.state.sidebar_fold?'0':'20px'}">
                 <div class="box-icon">
                   <i class='bx bx-spreadsheet' ></i>
@@ -105,9 +105,8 @@
 <script setup lang="ts">
 import HIcon from "@/components/HIcon.vue";
 import SideBarItem from "@/components/SideBarItem.vue";
-import {ref} from "vue";
 import store from "@/store"
-import {signOut} from "@/assets/api";
+import {signOut, goto} from "@/assets/api";
 import SideBarItemGroup from "@/components/SideBarItemGroup.vue";
 import HAvatar from "@/components/HAvatar.vue";
 

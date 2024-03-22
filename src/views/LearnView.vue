@@ -7,83 +7,83 @@ import HScroller from "@/components/HScroller.vue";
 </script>
 
 <template>
-  <HDivider></HDivider>
-  <HScroller scroll-direction="column" class="full scroller-view">
+  <div class="full">
+    <HScroller scroll-direction="column" class="full scroller-view">
 
-  <div class="main-panel border-radius-regular">
+      <div class="main-panel border-radius-regular">
 
-    <div class = "sub-title" >
-      事务学习
-    </div>
-    <div class = "sub-title" >
-      事务学习
-    </div>
-    <div class = "sub-title" >
-      事务学习
-    </div>
-    <div class = "sub-title" >
-      事务学习
-    </div>
-    <div class = "sub-title" >
-      事务学习
-    </div>
-    <div class = "sub-title" >
-      事务学习
-    </div> <div class = "sub-title" >
-    事务学习
-  </div> <div class = "sub-title" >
-    事务学习
-  </div> <div class = "sub-title" >
-    事务学习
-  </div> <div class = "sub-title" >
-    事务学习
-  </div> <div class = "sub-title" >
-    事务学习
-  </div> <div class = "sub-title" >
-    事务学习
-  </div><div class = "sub-title" >
-    事务学习
-  </div> <div class = "sub-title" >
-    事务学习
-  </div><div class = "sub-title" >
-    事务学习
-  </div> <div class = "sub-title" >
-    事务学习
-  </div><div class = "sub-title" >
-    事务学习
-  </div> <div class = "sub-title" >
-    事务学习
-  </div><div class = "sub-title" >
-    事务学习
-  </div> <div class = "sub-title" >
-    事务学习
-  </div><div class = "sub-title" >
-    事务学习
-  </div> <div class = "sub-title" >
-    事务学习
-  </div><div class = "sub-title" >
-    事务学习
-  </div> <div class = "sub-title" >
-    事务学习
-  </div><div class = "sub-title" >
-    事务学习
-  </div> <div class = "sub-title" >
-    事务学习
-  </div><div class = "sub-title" >
-    事务学习
-  </div> <div class = "sub-title" >
-    事务学习
-  </div><div class = "sub-title" >
-    事务学习
-  </div> <div class = "sub-title" >
-    事务学习
+        <div class = "sub-title" >
+          事务学习
+        </div>
+        <div class = "sub-title" >
+          事务学习
+        </div>
+        <div class = "sub-title" >
+          事务学习
+        </div>
+        <div class = "sub-title" >
+          事务学习
+        </div>
+        <div class = "sub-title" >
+          事务学习
+        </div>
+        <div class = "sub-title" >
+          事务学习
+        </div> <div class = "sub-title" >
+        事务学习
+      </div> <div class = "sub-title" >
+        事务学习
+      </div> <div class = "sub-title" >
+        事务学习
+      </div> <div class = "sub-title" >
+        事务学习
+      </div> <div class = "sub-title" >
+        事务学习
+      </div> <div class = "sub-title" >
+        事务学习
+      </div><div class = "sub-title" >
+        事务学习
+      </div> <div class = "sub-title" >
+        事务学习
+      </div><div class = "sub-title" >
+        事务学习
+      </div> <div class = "sub-title" >
+        事务学习
+      </div><div class = "sub-title" >
+        事务学习
+      </div> <div class = "sub-title" >
+        事务学习
+      </div><div class = "sub-title" >
+        事务学习
+      </div> <div class = "sub-title" >
+        事务学习
+      </div><div class = "sub-title" >
+        事务学习
+      </div> <div class = "sub-title" >
+        事务学习
+      </div><div class = "sub-title" >
+        事务学习
+      </div> <div class = "sub-title" >
+        事务学习
+      </div><div class = "sub-title" >
+        事务学习
+      </div> <div class = "sub-title" >
+        事务学习
+      </div><div class = "sub-title" >
+        事务学习
+      </div> <div class = "sub-title" >
+        事务学习
+      </div><div class = "sub-title" >
+        事务学习
+      </div> <div class = "sub-title" >
+        事务学习
+      </div>
+
+
+
+      </div>
+    </HScroller>
   </div>
-
-
-
-  </div>
-  </HScroller>
-
 </template>
 
 <style scoped lang="stylus">

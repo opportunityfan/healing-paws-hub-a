@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div class="full">
+  <div class="full" style="position: relative">
     <router-view/>
   </div>
 
