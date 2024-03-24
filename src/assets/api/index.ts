@@ -43,3 +43,7 @@ export const signOut = () => {
     store.state.online = false
     goto('/login').then()
 }
+
+export const getRecommendedAffairs = () =>{
+    console.log("s")
+}

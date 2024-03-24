@@ -9,6 +9,7 @@ export default createStore({
     avatar_url: require("@/assets/avatar.jpg"),
     nick_name: "NickName",
     email: "3336970253@qq.com"
+
   },
   getters: {
   },

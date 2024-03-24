@@ -1,123 +1,83 @@
-<template>
-  <div class="image-div" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave" @click="onClick" :class="{'loaded': isLoaded}">
-    <div class="info-div" :style="{opacity: ishover? 1 : 0}">
-      <div class="info-center-div">
-        {{ props.post.title }}
-      </div>
-    </div>
-    <transition name="fade" appear>
-      <div style="width: 100%;height: 100%;position: absolute;background-color: #FFFFFF" v-if="!isLoaded">
-        <div style="position: absolute;top:50%;left: 50%;transform: translate(-50%, -50%)">
-          <div class="spinner-5"></div>
-        </div>
-      </div>
-    </transition>
-    <div
-        :style="{
-           width: props.fixTypes === 'width' ? props.size + 'px' : 'auto',
-           height: props.fixTypes === 'height' ? props.size + 'px' : 'auto'
-         }"
-        style="transition: height 1s, width 1s"
-    >
-      <img
-          @load = "onLoad"
-          v-lazyload="props.post.img.preview_url"
-          :style="{
-             width: props.fixTypes === 'width' ? '100%' : (isLoaded ? '' : props.size * props.post.img.width / props.post.img.height + 'px'),
-             height: props.fixTypes === 'height' ? '100%' : (isLoaded ? '' : props.size * props.post.img.height / props.post.img.width + 'px')
-          }"
-      >
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
-import {onMounted, ref} from "vue";
-
-class image{
-  public preview_url: string
-  public width: number
-  public height: number
-  constructor(_preview_url: string, width: number, height: number) {
-    this.preview_url = _preview_url
-    this.width = width
-    this.height = height
-  }
-}
-class postPreview{
-  public title: string
-  public img: image
-  constructor(title: string,img: image) {
-    this.title = title
-    this.img = img
-  }
-}
-// eslint-disable-next-line no-undef
+import {defineProps, reactive, withDefaults, defineEmits, computed, watch} from 'vue'
+import * as url from "url";
 const props = withDefaults(defineProps<{
-  post: postPreview,
-  size: number,
-  fixTypes: string
-}>(), {
-  size: 100,
-  fixTypes: 'width'
+  name: string,
+  src: string,
+  lazy: boolean,
+  fit: string
+}>(),{
+  name: ' ' ,
+  lazy: false,
+  fit:'cover'
 })
 
+const emits = defineEmits(['load','error'])
 
-const ishover = ref(false)
+const state = reactive({
+  isLoadError: false,
+  loading: true
+})
 
-const isLoaded = ref(false)
+const loadImage = () =>{
+  console.log("load image")
+  state.loading = true
+  state.isLoadError = false
 
-const onMouseEnter = () => {
-  ishover.value = true
+  var image = new Image();
+  image.src = props.src
+  image.onload = (e) => onComplete(e)
+  image.onerror = () => onError(image)
+
 }
 
-const onMouseLeave = () => {
-  ishover.value = false
+
+function onComplete(e: any){
+  state.loading = false
+  state.isLoadError = false
+  emits("load",e)
+}
+function onError(image: HTMLImageElement){
+  state.loading = false
+  state.isLoadError = true
+  emits("error",image)
 }
 
-const showPost=(post: postPreview)=>{
-  console.log("kong")
-}
-const onClick = () => {
-  showPost(props.post)
-}
-
-const onLoad = () => {
-  isLoaded.value = true
-}
+const imgStyle = computed(() =>`object-fit:${props.fit}`)
 </script>
 
-<style scoped>
-.image-div {
-  position: relative;
-  margin: 3px;
-  border-radius: 15px;
-  overflow: hidden;
-}
-.info-div {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: rgb(0,0,0, 0.5);
-  transition: opacity 0.1s;
-}
-.info-center-div {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  max-width: 80%;
-  color: #FFFFFF;
-  font-size: 14px;
-}
-img[src=''],
-img:not([src]) {
-  opacity: 0;
-  min-height: 10px;
-  min-width: 10px;
-}
+<template>
+  <div class="image-block">
+    <span class="img-background full border-radius-regular flex-container" :style="{'background-image': 'url('+ props.src+')'}">
+      <div class="text-inverse">{{ props.name }}</div>
+    </span>
+  </div>
 
-.loaded {
-  animation: shrink 0.5s, fade 0.5s;
-}
+
+</template>
+
+<style scoped lang="stylus">
+
+
+.img-background
+
+  background-repeat no-repeat
+  background-size cover
+  background-position center
+
+.image-block
+  display inline-block
+  float left
+  width 100px
+  height 100px
+  cursor pointer
+  transition all 0.3s ease
+
+.image-block:hover
+  transform scale(1.15)
+  transition all 0.3s ease
+.flex-container
+  display flex
+  flex-direction column
+  justify-content flex-end
 </style>

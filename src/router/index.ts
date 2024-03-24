@@ -56,7 +56,8 @@ const routes: Array<RouteRecordRaw> = [
       },{
         path: '/archive',
         name: 'archivePage',
-        component: ArchiveView
+        component: ArchiveView,
+
       },{
         path: '/exam',
         name: 'examPage',
