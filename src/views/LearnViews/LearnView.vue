@@ -10,9 +10,15 @@ let affairs = ref([{
   name:'手术1',
   src: 'login-background.png'
 },{name:'手术2',src:'login-background.png'},{name:'手术3',src:'login-background.png'}])
-
+let instruments = ref([{
+  name:'手术刀1',
+  src: 'login-background.png'
+},{name:'手术刀2',src:'login-background.png'},{name:'手术刀3',src:'login-background.png'}])
 function goAffair(){
   console.log("进入事务详情")
+}
+function goInstrument(){
+  console.log("进入qixie详情")
 }
 </script>
 
@@ -23,14 +29,18 @@ function goAffair(){
         <div class = "sub-title" >
           事务学习
         </div>
-
-        <div class="image-string">
-
-            <div v-for="affair in affairs" :key="affair.name">
-              <HImage :src="require('../assets/'+affair.src)" :name="affair.name" @click="goAffair"></HImage>
+        <div class="image-string flex-row">
+            <div v-for="affair in affairs" :key="affair.name" >
+              <HImage :src="require('../../assets/'+affair.src)" :name="affair.name" @click="goAffair"></HImage>
             </div>
-
-
+        </div>
+        <div class = "sub-title" >
+          器械学习
+        </div>
+        <div class="image-string flex-row">
+          <div v-for="instrument in instruments" :key="instrument.name">
+            <HImage :src="require('../../assets/'+instrument.src)" :name="instrument.name" @click="goInstrument"></HImage>
+          </div>
         </div>
       </div>
     </HScroller>
@@ -54,6 +64,6 @@ function goAffair(){
 
 .image-string
   div
-    margin 5px 8px
+    margin 5px 4px
 
 </style>

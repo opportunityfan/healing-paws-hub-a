@@ -3,11 +3,13 @@ import LoginView from '../views/LoginView.vue'
 import RegistryView from "@/views/RegistryView.vue";
 import CheckEmailView from "@/views/CheckEmailView.vue"
 import SignView from "@/views/SignView.vue"
-import LearnView from "@/views/LearnView.vue";
+import LearnView from "@/views/LearnViews/LearnView.vue";
 import MainView from "@/views/MainView.vue";
 import GuideView from "@/views/GuideView.vue";
 import ArchiveView from "@/views/ArchiveView.vue";
 import ExamView from "@/views/ExamView.vue";
+import AffairView from "@/views/LearnViews/AffairView.vue";
+import AffairSearchView from "@/views/LearnViews/AffairSearchView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -47,7 +49,19 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '/learn',
         name: 'learnPage',
-        component: LearnView
+        component: LearnView,
+        children:[
+          {
+            path: '/learn/affairSearch',
+            name: 'affairSearchPage',
+            component: AffairSearchView
+          },
+          {
+            path: '/learn/affair',
+            name: 'affairPage',
+            component: AffairView
+          }
+        ]
       },
       {
         path: '/guide',

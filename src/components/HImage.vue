@@ -14,36 +14,6 @@ const props = withDefaults(defineProps<{
 
 const emits = defineEmits(['load','error'])
 
-const state = reactive({
-  isLoadError: false,
-  loading: true
-})
-
-const loadImage = () =>{
-  console.log("load image")
-  state.loading = true
-  state.isLoadError = false
-
-  var image = new Image();
-  image.src = props.src
-  image.onload = (e) => onComplete(e)
-  image.onerror = () => onError(image)
-
-}
-
-
-function onComplete(e: any){
-  state.loading = false
-  state.isLoadError = false
-  emits("load",e)
-}
-function onError(image: HTMLImageElement){
-  state.loading = false
-  state.isLoadError = true
-  emits("error",image)
-}
-
-const imgStyle = computed(() =>`object-fit:${props.fit}`)
 </script>
 
 <template>
@@ -67,7 +37,7 @@ const imgStyle = computed(() =>`object-fit:${props.fit}`)
 
 .image-block
   display inline-block
-  float left
+
   width 100px
   height 100px
   cursor pointer
