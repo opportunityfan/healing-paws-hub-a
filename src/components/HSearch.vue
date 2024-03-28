@@ -51,7 +51,7 @@ const onFocus = () => {
 
 <style scoped lang="stylus">
 .search-main
-  width 200px
+  width 100%
   height 25px
   position relative
   margin 0 0

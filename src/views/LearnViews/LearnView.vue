@@ -6,6 +6,7 @@ import HSearch from "@/components/HSearch.vue";
 import HScroller from "@/components/HScroller.vue";
 import HImage from "@/components/HImage.vue";
 import {ref} from "vue";
+import {goAffairSearchView} from "@/assets/api";
 let affairs = ref([{
   name:'手术1',
   src: 'login-background.png'
@@ -20,6 +21,7 @@ function goAffair(){
 function goInstrument(){
   console.log("进入qixie详情")
 }
+
 </script>
 
 <template>
@@ -33,6 +35,9 @@ function goInstrument(){
             <div v-for="affair in affairs" :key="affair.name" >
               <HImage :src="require('../../assets/'+affair.src)" :name="affair.name" @click="goAffair"></HImage>
             </div>
+        </div>
+        <div>
+          <span class="clickable-text" @click="goAffairSearchView">临时跳转到事务搜索页面</span>
         </div>
         <div class = "sub-title" >
           器械学习

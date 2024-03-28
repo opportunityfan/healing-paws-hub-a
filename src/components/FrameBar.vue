@@ -6,7 +6,8 @@
           leave-active-class="animate__fadeOutRight"
           mode="out-in"
       >
-        <HSearch v-if="store.state.online" ></HSearch>
+
+        <HBackKey v-if="store.state.ifBackKey"></HBackKey>
       </transition>
     <div class="top-bar flex-row">
 
@@ -29,6 +30,10 @@
 import store from "@/store";
 import HIcon from "@/components/HIcon.vue";
 import HSearch from "@/components/HSearch.vue";
+import HBackKey from "@/components/HBackKey.vue";
+import {computed, ref} from "vue";
+import router from "@/router";
+import {useRoute, useRouter} from "vue-router";
 const onClose = () => {
   console.log('close');
   window.electronAPI.close();
@@ -36,6 +41,15 @@ const onClose = () => {
 const onMinimize = () => {
   window.electronAPI.minimize();
 }
+
+const isbackKey = computed(()=>{
+
+  if(store.state.online&&store.state.ifBackKey) {
+    return true
+  }else{
+    return false
+  }
+})
 </script>
 
 <style scoped lang="stylus">
