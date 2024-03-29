@@ -33,24 +33,27 @@ export const changeTheme = (theme : string) => {
 export const goto = async (path : string) => {
     await router.push(path);
 }
+export const goBack = async () =>{
+    await router.back()
+    console.log(router.currentRoute.value.name)
+}
 
 export const signIn = (data:any) => {
 
     // store.state.sidebar_unlock = true
-    // axios.post('/sysUser/login',data,{
-    //      headers:{
-    //          'Content-Type' : 'application/json'
-    //      }
-    //  }).then((res)=>{
-    //      if(res.data.code==200){
-    //          store.state.online = true
-    //         goto('/main').then()
-    //      }
-    //  }).catch(err=>{
-    //      console.log("network Error！")
-    // })
-    store.state.online = true
-    goto('/main').then()
+    axios.post('/sysUser/login',data,{
+         headers:{
+             'Content-Type' : 'application/json'
+         }
+     }).then((res)=>{
+         if(res.data.code==200){
+             store.state.online = true
+            goto('/main').then()
+         }
+     }).catch(err=>{
+         console.log("network Error！")
+    })
+    // goto('/main').then()
 }
 export const signUp = (data : any)=>{
     store.state.email_for_registry = data.email
@@ -71,4 +74,18 @@ export const signOut = () => {
 
 export const getRecommendedAffairs = () =>{
     console.log("s")
+}
+
+export const goAffairSearchView = () =>{
+    goto('/affairSearch').then()
+}
+
+export const autoComplete = ()=>{
+    console.log("自动补全")
+}
+export class tag{
+    name: string;
+    constructor(name:string) {
+        this.name = name
+    }
 }
