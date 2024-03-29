@@ -10,6 +10,7 @@ import ArchiveView from "@/views/ArchiveView.vue";
 import ExamView from "@/views/ExamView.vue";
 import AffairView from "@/views/LearnViews/AffairView.vue";
 import AffairSearchView from "@/views/LearnViews/AffairSearchView.vue";
+import ExamLink from "@/views/ExamLink.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -77,8 +78,13 @@ const routes: Array<RouteRecordRaw> = [
         name: 'examPage',
         component: ExamView
       },
+      {
+        path: '/examLink',
+        name: 'examLink',
+        component: ExamLink
+      },
     ]
-  }
+  },
 ]
 
 const router = createRouter({
