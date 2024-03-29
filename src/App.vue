@@ -1,9 +1,9 @@
 <template>
   <div class="main-div flex-row border-radius-regular padding-surround">
     <SideBar></SideBar>
-    <div class="flex-column" style="height: 100%;flex-grow: 1">
+    <div class="flex-column" style="height: 100%;flex-grow: 1;min-width: 0;min-height: 0;">
       <FrameBar></FrameBar>
-      <div style="width: 100%; overflow: hidden; height: calc(100% - 35px)">
+      <div style="width: 100%; overflow: hidden; height: calc(100% - 35px);max-width: 100%">
         <router-view/>
       </div>
     </div>

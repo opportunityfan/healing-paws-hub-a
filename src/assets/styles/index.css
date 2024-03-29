@@ -71,7 +71,7 @@
 .subtitle-inverse {
     font-size: 18px;
     color: var(--font-inverse-color);
-    font-weight: 300;
+    font-weight: 600;
 }
 .hint {
     font-size: 12px;
@@ -134,4 +134,36 @@ input:focus-visible {
     clip: rect(calc(var(--r)/2), var(--r), var(--r), calc(var(--r)/2));
     -webkit-mask: radial-gradient(circle, transparent calc(var(--r)/2), #000 calc(var(--r)/2 + 1px));
     overflow: hidden;
+}
+.spinner1 {
+    width: 50px;
+    --b: 8px; /* the border thickness */
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--background-color);
+    -webkit-mask:
+            repeating-conic-gradient(#0000 0deg,#000 1deg 70deg,#0000 71deg 90deg),
+            radial-gradient(farthest-side,#0000 calc(100% - var(--b) - 1px),#000 calc(100% - var(--b)));
+    -webkit-mask-composite: destination-in;
+    mask-composite: intersect;
+    animation: s5 1s infinite;
+}
+@keyframes s5 {to{transform: rotate(.5turn)}}
+
+@keyframes fade {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes shrink {
+    from {
+        transform: scale(1.2);
+    }
+    to {
+        transform: scale(1);
+    }
 }

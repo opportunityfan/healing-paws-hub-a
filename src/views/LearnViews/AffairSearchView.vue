@@ -2,11 +2,14 @@
 
 <script setup lang="ts">
 
+import HSearch from "@/components/HSearch.vue";
+import HSearchBar from "@/components/HSearchBar.vue";
 </script>
 
 <template>
-  <div>
-    搜索事务
+  <div style="width: 100%">
+    <HSearchBar style="width: 85%"></HSearchBar>
+
   </div>
 </template>
 

@@ -11,6 +11,7 @@ import ExamView from "@/views/ExamView.vue";
 import AffairView from "@/views/LearnViews/AffairView.vue";
 import AffairSearchView from "@/views/LearnViews/AffairSearchView.vue";
 import ExamLink from "@/views/ExamLink.vue";
+import store from "@/store";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -50,19 +51,17 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '/learn',
         name: 'learnPage',
-        component: LearnView,
-        children:[
-          {
-            path: '/learn/affairSearch',
-            name: 'affairSearchPage',
-            component: AffairSearchView
-          },
-          {
-            path: '/learn/affair',
-            name: 'affairPage',
-            component: AffairView
-          }
-        ]
+        component: LearnView
+      },
+      {
+        path: '/affairSearch',
+        name: 'affairSearchPage',
+        component: AffairSearchView
+      },
+      {
+        path: '/affair',
+        name: 'affairPage',
+        component: AffairView
       },
       {
         path: '/guide',
@@ -84,7 +83,7 @@ const routes: Array<RouteRecordRaw> = [
         component: ExamLink
       },
     ]
-  },
+  }
 ]
 
 const router = createRouter({
@@ -92,4 +91,17 @@ const router = createRouter({
   routes
 })
 
+router.beforeEach((to,from,next)=>{
+  if(store.state.online&&to.name==='login'){
+    next(false)
+  }else{
+    console.log(to.name)
+    if(to.name==='learnPage'||to.name==='guidePage'||to.name==='archivePage'||to.name==='examPage'){
+      store.state.ifBackKey = false
+    }else {
+      store.state.ifBackKey = true
+    }
+    next()
+  }
+})
 export default router

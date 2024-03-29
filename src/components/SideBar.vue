@@ -171,6 +171,7 @@ const onSignOut = () => {
   border-radius 0 0 10px 10px
   --animate-duration 0.5s
   overflow hidden
+  flex-shrink 0
 
 .locked-sidebar
   height 100%
