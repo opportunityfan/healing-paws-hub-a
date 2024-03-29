@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="full scroll-main">
     <div style="display: flex; width: 100%; height: 100%">
       <div ref="scrollRef" class="scroll-wrap">
         <div
@@ -8,7 +8,8 @@
             :style="{
               left: - info.leftPercentage * info.contentWidth / 100 + 'px',
               top: - info.topPercentage * info.contentHeight / 100 + 'px',
-              width: props.scrollDirection === 'row' ? 'fit-content' : '100%'
+              width: props.scrollDirection === 'row' ? 'fit-content' : '100%',
+              height: props.scrollDirection === 'column' ? 'fit-content' : '100%'
             }"
             @wheel="onWheel"
             @touchmove="onTouchMove"
@@ -48,7 +49,7 @@ import {onMounted, onUnmounted, reactive, ref} from "vue";
 
 // eslint-disable-next-line no-undef
 const props = withDefaults(defineProps<{
-      scrollDirection?: string
+      scrollDirection?: 'row'|'column'
     }>(),{
       scrollDirection: 'row'
     }
@@ -87,6 +88,7 @@ onUnmounted(() => {
 
 const updateScroll = () => {
   if (props.scrollDirection === 'row') {
+    info.leftPercentage = (info.leftPercentage * info.contentWidth / 100) / contentRef.value.clientWidth * 100
     info.barWidth = barHorizontalRef.value.clientWidth
     info.contentWidth = contentRef.value.clientWidth
     if (scrollRef.value.clientWidth > contentRef.value.clientWidth)
@@ -219,6 +221,11 @@ const onTouchMove = (e : any) => {
 .scrollbar {
   background-color: var(--theme-color);
   border-radius: 999px;
+  opacity 0
+  transition all 0.2s
+}
+.scroll-main:hover .scrollbar {
+  opacity 1
 }
 .horizontal {
   width: 40%;

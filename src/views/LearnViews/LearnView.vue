@@ -1,66 +1,143 @@
-<script setup lang="ts">
-
-import HInput from "@/components/HInput.vue";
-import HDivider from "@/components/HDivider.vue";
-import HSearch from "@/components/HSearch.vue";
-import HScroller from "@/components/HScroller.vue";
-import HImage from "@/components/HImage.vue";
-import {ref} from "vue";
-let affairs = ref([{
-  name:'手术1',
-  src: 'login-background.png'
-},{name:'手术2',src:'login-background.png'},{name:'手术3',src:'login-background.png'}])
-let instruments = ref([{
-  name:'手术刀1',
-  src: 'login-background.png'
-},{name:'手术刀2',src:'login-background.png'},{name:'手术刀3',src:'login-background.png'}])
-function goAffair(){
-  console.log("进入事务详情")
-}
-function goInstrument(){
-  console.log("进入qixie详情")
-}
-</script>
-
 <template>
-  <div class="full">
-    <HScroller scroll-direction="column" class="full scroller-view">
-      <div class="main-panel">
-        <div class = "sub-title" >
+  <div class="main-panel flex-column full">
+    <div class="affair-bar flex-column" style="height: 50%">
+      <div class="flex-row">
+        <div class = "sub-title">
           事务学习
         </div>
-        <div class="image-string flex-row">
-            <div v-for="affair in affairs" :key="affair.name" >
-              <HImage :src="require('../../assets/'+affair.src)" :name="affair.name" @click="goAffair"></HImage>
-            </div>
-        </div>
-        <div class = "sub-title" >
-          器械学习
-        </div>
-        <div class="image-string flex-row">
-          <div v-for="instrument in instruments" :key="instrument.name">
-            <HImage :src="require('../../assets/'+instrument.src)" :name="instrument.name" @click="goInstrument"></HImage>
-          </div>
+        <div class="box-icon button-hover">
+          <i class='bx bx-dots-horizontal-rounded'></i>
         </div>
       </div>
-    </HScroller>
+      <PostFlow :request-new-post="requestNewAffair" style="flex-grow: 1"></PostFlow>
+    </div>
+    <div class="instrument-bar flex-column" style="height: 35%">
+      <div class="flex-row">
+        <div class = "sub-title">
+          器械学习
+        </div>
+        <div class="box-icon button-hover">
+          <i class='bx bx-dots-horizontal-rounded'></i>
+        </div>
+      </div>
+      <PostFlow :request-new-post="requestNewInstrument" style="flex-grow: 1" :width="120" :show-description="false" :update-post-count="7"></PostFlow>
+    </div>
   </div>
 </template>
 
+<script setup lang="ts">
+import {ref} from "vue";
+import PostBlock from "@/components/PostBlock.vue";
+import PostFlow from "@/components/PostFlow.vue";
+import {Post} from "@/assets/api";
+let affairs = [
+  {
+    id: 0,
+    title:'手术1',
+    description: 'this is description',
+    backgroundImage: {
+      src: require("@/assets/login-background.png"),
+      width: 3035,
+      height: 4299
+    }
+  },
+  {
+    id: 1,
+    title:'手术2',
+    description: 'this is description',
+    backgroundImage: {
+      src: require("@/assets/login-background.png"),
+      width: 3035,
+      height: 4299
+    }
+  },
+  {
+    id: 2,
+    title:'手术3',
+    description: 'this is description',
+    backgroundImage: {
+      src: require("@/assets/login-background.png"),
+      width: 3035,
+      height: 4299
+    }
+  }]
+let instruments = [
+  {
+    id: 3,
+    title:'手术刀1',
+    description: 'this is description',
+    backgroundImage: {
+      src: require("@/assets/login-background.png"),
+      width: 3035,
+      height: 4299
+    }
+  },
+  {
+    id: 4,
+    title:'手术刀2',
+    description: 'this is description',
+    backgroundImage: {
+      src: require("@/assets/login-background.png"),
+      width: 3035,
+      height: 4299
+    }
+  },
+  {
+    id: 5,
+    title:'手术刀3',
+    description: 'this is description',
+    backgroundImage: {
+      src: require("@/assets/login-background.png"),
+      width: 3035,
+      height: 4299
+    }
+  }]
+let affairId = 0
+const requestNewAffair = async (count : number) => {
+  const newPostList = new Array<Post>()
+  for (let i = 0 ; i < count ; ++i) {
+    newPostList.push(affairs[affairId])
+    affairId ++;
+    if (affairId >= 3) affairId = 0;
+  }
+  return newPostList
+}
+let instrumentId = 0
+const requestNewInstrument = async (count : number) => {
+  const newPostList = new Array<Post>()
+  for (let i = 0 ; i < count ; ++i) {
+    newPostList.push(instruments[instrumentId])
+    instrumentId ++;
+    if (instrumentId >= 3) instrumentId = 0;
+  }
+  return newPostList
+}
+</script>
+
 <style scoped lang="stylus">
-.scroller-view
-  padding-top 0px
-
 .main-panel
-  width 100%
+  justify-content space-evenly
 
+.affair-bar,.instrument-bar
+  width 100%
+  .flex-row
+    justify-content space-between
+    width 100%
+  .box-icon
+    padding 10px
+    font-size 30px
+    color var(--grey-color)
+    transition color 0.2s
+  .box-icon:hover
+    color var(--black-color)
 
 .sub-title
   font-size: 26px;
   color: var(--font-title-color);
   font-weight: 550;
   text-align left
-  padding 10px
+  padding 20px
+  margin: 0
 
 .image-string
   div

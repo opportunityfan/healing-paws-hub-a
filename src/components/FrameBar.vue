@@ -1,13 +1,13 @@
 <template>
   <div class="frame-background">
-      <transition
-          name="animate__animated animate__fade"
-          enter-active-class="animate__fadeInLeft"
-          leave-active-class="animate__fadeOutRight"
-          mode="out-in"
-      >
-        <HSearch v-if="store.state.online" ></HSearch>
-      </transition>
+<!--      <transition-->
+<!--          name="animate__animated animate__fade"-->
+<!--          enter-active-class="animate__fadeInLeft"-->
+<!--          leave-active-class="animate__fadeOutRight"-->
+<!--          mode="out-in"-->
+<!--      >-->
+<!--        <HSearch v-if="store.state.online" ></HSearch>-->
+<!--      </transition>-->
     <div class="top-bar flex-row">
 
     </div>
