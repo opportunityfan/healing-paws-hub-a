@@ -12,6 +12,8 @@ import AffairView from "@/views/LearnViews/AffairView.vue";
 import AffairSearchView from "@/views/LearnViews/AffairSearchView.vue";
 import ExamLink from "@/views/ExamLink.vue";
 import store from "@/store";
+import InstrumentSearchView from "@/views/LearnViews/InstrumentSearchView.vue";
+import InstrumentView from "@/views/LearnViews/InstrumentView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -64,6 +66,16 @@ const routes: Array<RouteRecordRaw> = [
         component: AffairView
       },
       {
+        path: '/instrumentSearch',
+        name: 'instrumentSearchPage',
+        component: InstrumentSearchView
+      },
+      {
+        path: '/instrument',
+        name: 'instrumentPage',
+        component: InstrumentView
+      },
+      {
         path: '/guide',
         name: 'guidePage',
         component: GuideView
@@ -95,7 +107,7 @@ router.beforeEach((to,from,next)=>{
   if(store.state.online&&to.name==='login'){
     next(false)
   }else{
-    console.log(to.name)
+
     if(to.name==='learnPage'||to.name==='guidePage'||to.name==='archivePage'||to.name==='examPage'){
       store.state.ifBackKey = false
     }else {

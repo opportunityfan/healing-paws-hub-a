@@ -26,6 +26,33 @@ export class Post {
     }
 }
 
+export class affair{
+    id: string
+    description: string
+    role: string
+    affairNodes: Array<string>
+
+    constructor(id: string, description: string, role: string, affairNodes: Array<string>) {
+        this.id = id
+        this.description = description
+        this.role = role
+        this.affairNodes = affairNodes
+    }
+}
+
+export class affairNode{
+    id: string
+    content: string
+    contentImg: string
+    contentVideo: string
+    constructor(id: string, content: string, contentImg: string, contentVideo: string) {
+        this.id = id
+        this.content = content
+        this.contentImg = contentImg
+        this.contentVideo = contentVideo
+    }
+}
+
 export const changeTheme = (theme : string) => {
     window.document.documentElement.setAttribute("data-theme", theme);
 }
@@ -35,7 +62,7 @@ export const goto = async (path : string) => {
 }
 export const goBack = async () =>{
     await router.back()
-    console.log(router.currentRoute.value.name)
+
 }
 
 export const signIn = (data:any) => {
@@ -78,6 +105,12 @@ export const getRecommendedAffairs = () =>{
 
 export const goAffairSearchView = () =>{
     goto('/affairSearch').then()
+}
+export const goAffair = ()=>{
+    goto('/affair')
+}
+export const goInstrumentSearchView = () =>{
+    goto('/instrumentSearch').then()
 }
 
 export const autoComplete = ()=>{
