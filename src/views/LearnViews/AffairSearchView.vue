@@ -4,18 +4,38 @@
 
 import HSearch from "@/components/HSearch.vue";
 import HSearchBar from "@/components/HSearchBar.vue";
-import {goAffair, goAffairSearchView} from "@/assets/api";
+import {goAffair, goAffairSearchView, testaxios} from "@/assets/api";
 import HpageTable from "@/components/HpageTable.vue";
+import axios from "@/assets/axios";
+import store from "@/store";
+import {reactive} from "vue";
 
-const affairs = [{id:'1',name:'item1'},{id:'2',name:'item2'},{id:'3',name:'item3'}]
+let affairs = reactive<{id:string,name:string}[]>([])
+function getAffairs(pageNum : number, pageSize: number){
+  axios.get('/affair',{
+    params:{
+      pageNum: 1,
+      pageSize: 5
+    },
+    headers:{
+      'token':store.state.token
+    }
+  }).then((res) =>{
+    for(let item of res.data.data){
+      affairs.push({id:item.id as string,name:item.description as string})
+    }
+  })
+}
+getAffairs(1,5)
+
 </script>
 
 <template>
   <div style="width: 100%">
     <HSearchBar style="width: 85%"></HSearchBar>
     <div>
-      <HpageTable :items="affairs" itemsPerPage=2></HpageTable>
-      <span class="clickable-text" @click="goAffair">临时跳转到事务页面</span>
+      <HpageTable :items="affairs" itemsPerPage=2 @itemClick="goAffair"></HpageTable>
+
     </div>
   </div>
 </template>

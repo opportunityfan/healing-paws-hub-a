@@ -42,11 +42,13 @@ export class affair{
 
 export class affairNode{
     id: string
+    name: string
     content: string
     contentImg: string
     contentVideo: string
-    constructor(id: string, content: string, contentImg: string, contentVideo: string) {
+    constructor(id: string, name: string, content: string, contentImg: string, contentVideo: string) {
         this.id = id
+        this.name = name
         this.content = content
         this.contentImg = contentImg
         this.contentVideo = contentVideo
@@ -60,11 +62,20 @@ export const changeTheme = (theme : string) => {
 export const goto = async (path : string) => {
     await router.push(path);
 }
+
 export const goBack = async () =>{
     await router.back()
 
 }
-
+export const testaxios = ()=>{
+    axios.post('testPreAuthorize/hello', {},{
+        headers:{
+            'token' : store.state.token
+        }
+    }).then((res)=>{
+        console.log(res)
+    })
+}
 export const signIn = (data:any) => {
 
     // store.state.sidebar_unlock = true
@@ -74,8 +85,10 @@ export const signIn = (data:any) => {
          }
      }).then((res)=>{
          if(res.data.code==200){
+
+             store.state.token = res.data.data.token
              store.state.online = true
-            goto('/main').then()
+             goto('/main').then()
          }
      }).catch(err=>{
          console.log("network Error！")
@@ -98,7 +111,9 @@ export const signOut = () => {
     store.state.online = false
     goto('/login').then()
 }
-
+export const goEdit = () => {
+    goto('/edit').then()
+}
 export const getRecommendedAffairs = () =>{
     console.log("s")
 }
@@ -106,8 +121,17 @@ export const getRecommendedAffairs = () =>{
 export const goAffairSearchView = () =>{
     goto('/affairSearch').then()
 }
-export const goAffair = ()=>{
-    goto('/affair')
+export const gotoWithProp = async (name : string,prop : string) => {
+    await router.push({name: name,params: {affairId : prop}});
+}
+export const goAffair = (affairId : string)=>{
+    console.log(affairId)
+    gotoWithProp('affairPage',affairId).then()
+}
+export const goAffairNode = async (nodeId: string) =>{
+    console.log(nodeId,'nodeid')
+    await router.push({name: 'affairNodePage',params: {nodeId : nodeId}});
+
 }
 export const goInstrumentSearchView = () =>{
     goto('/instrumentSearch').then()

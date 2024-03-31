@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {reactive, withDefaults, defineProps, ref, computed} from "vue";
+import {reactive, withDefaults, defineProps, defineEmits, ref, computed} from "vue";
 import HDivider from "@/components/HDivider.vue";
 import HInput from "@/components/HInput.vue";
 
@@ -10,6 +10,10 @@ const props = withDefaults(defineProps<{
 }>(),{
   itemsPerPage: 10
 })
+const emit = defineEmits(['itemClick'])
+const itemClick = (id: string)=>{
+  emit('itemClick',id)
+}
 const totalPages = computed(()=>{
   return Math.ceil(props.items.length/props.itemsPerPage)
 })
@@ -33,9 +37,9 @@ const nextPage = ()=>{
 <template>
   <div class="page-Table">
 
-      <div v-for="item in currentPageItems" :key="item.id" class="item-part">
+      <div v-for="item in currentPageItems" :key="item.id" class="item-part" @click="itemClick(item.id)">
         {{item.name}}
-        
+
       </div>
 
 

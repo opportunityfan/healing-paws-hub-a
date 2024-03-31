@@ -14,6 +14,9 @@ import ExamLink from "@/views/ExamLink.vue";
 import store from "@/store";
 import InstrumentSearchView from "@/views/LearnViews/InstrumentSearchView.vue";
 import InstrumentView from "@/views/LearnViews/InstrumentView.vue";
+import {affairNode} from "@/assets/api";
+import AffairNodeView from "@/views/LearnViews/AffairNodeView.vue";
+import EditView from "@/views/UserView/EditView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -61,9 +64,16 @@ const routes: Array<RouteRecordRaw> = [
         component: AffairSearchView
       },
       {
-        path: '/affair',
+        path: '/affair/:affairId',
         name: 'affairPage',
-        component: AffairView
+        component: AffairView,
+        props: true
+      },
+      {
+        path: '/affairNode/:nodeId',
+        name: 'affairNodePage',
+        component: AffairNodeView,
+        props: true
       },
       {
         path: '/instrumentSearch',
@@ -94,6 +104,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'examLink',
         component: ExamLink
       },
+      {
+        path: '/edit',
+        name: 'editPage',
+        component: EditView
+      }
     ]
   }
 ]
