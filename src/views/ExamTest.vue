@@ -10,7 +10,7 @@ const value2=ref(0);
 const router=useRoute();
 const item = ref<any>({});
 const imd = ref<number>(0);
-const ans = ref([]);
+const ans = ref<string[]>([]);
 const answer = ref('');
 async function getData(){
   const res=await axios.get('http://150.158.110.63:8080/exam',{
@@ -60,9 +60,9 @@ function select(){
 }
 
 function record(){
-  console.log(answer);
-  console.log(ans);
-  ans[imd.value]=answer;
+  console.log(answer.value);
+  ans.value[imd.value]=answer.value;
+  console.log(ans.value);
 }
 
 async function submit(item:any){
@@ -73,8 +73,8 @@ async function submit(item:any){
   })
   console.log(ans);
   const datasub = {
-    examId : item.value.id,
-    result : ans,
+    examId : item.id,
+    result : ans.value,
   }
   await axios.post('http://150.158.110.63:8080/exam',datasub)
   goto('/exam/page');
