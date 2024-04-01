@@ -146,7 +146,7 @@ const question = computed(()=>{
   </div>
 </template>
 
-<style scoped lang="scss">
+<style scoped lang="stylus">
 .hang{
   display: flex;
   gap: 10px;

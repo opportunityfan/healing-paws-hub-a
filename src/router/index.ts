@@ -10,6 +10,7 @@ import ArchiveView from "@/views/ArchiveView.vue";
 import ExamView from "@/views/ExamView.vue";
 import AffairView from "@/views/LearnViews/AffairView.vue";
 import AffairSearchView from "@/views/LearnViews/AffairSearchView.vue";
+import PostEditView from "@/views/PostEditView.vue"
 import ArchiveDetailView from "@/views/ArchiveDetailView.vue";
 import ArchiveSearchResultsView from "@/views/ArchiveSearchResultsView.vue";
 import ExamLink from "@/views/ExamLink.vue";
@@ -91,11 +92,13 @@ const routes: Array<RouteRecordRaw> = [
         path: '/guide',
         name: 'guidePage',
         component: GuideView
-      },{
+      },
+      {
         path: '/archive',
         name: 'archivePage',
-        component: ArchiveView
-      },{
+        component: ArchiveView,
+      },
+      {
         path: '/archiveDetail',
         name: 'archiveDetailPage',
         component: ArchiveDetailView
@@ -109,6 +112,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/exam',
         name: 'examPage',
         component: ExamView
+      },
+      {
+        path: '/post-edit',
+        name: 'postEdit',
+        component: PostEditView
       },
       {
         path: '/examLink',
@@ -133,7 +141,6 @@ router.beforeEach((to,from,next)=>{
   if(store.state.online&&to.name==='login'){
     next(false)
   }else{
-
     if(to.name==='learnPage'||to.name==='guidePage'||to.name==='archivePage'||to.name==='examPage'){
       store.state.ifBackKey = false
     }else {

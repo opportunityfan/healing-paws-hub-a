@@ -93,7 +93,7 @@ onMounted(()=>{
   </div>
 </template>
 
-<style scoped lang="scss">
+<style scoped lang="stylus">
 .shang{
   //background-color: #FFFFFF;
   padding: 16px;

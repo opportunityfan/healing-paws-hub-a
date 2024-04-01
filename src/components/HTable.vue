@@ -43,7 +43,7 @@ export default {
 </table>
 </template>
 
-<style scoped lang="scss">
+<style scoped lang="stylus">
 .xtable{
   width: 100%;
   border-collapse: collapse;

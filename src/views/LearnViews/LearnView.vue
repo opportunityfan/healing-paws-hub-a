@@ -5,19 +5,19 @@
         <div class = "sub-title">
           事务学习
         </div>
-        <div class="box-icon button-hover">
-          <i class='bx bx-dots-horizontal-rounded' @click="goAffairSearchView()"></i>
+        <div class="box-icon button-hover" @click="goAffairSearchView()">
+          <i class='bx bx-dots-horizontal-rounded'></i>
         </div>
       </div>
       <PostFlow :request-new-post="requestNewAffair" style="flex-grow: 1"></PostFlow>
     </div>
-    <div class="instrument-bar flex-column" style="height: 35%">
+    <div class="instrument-bar flex-column" style="height: 40%">
       <div class="flex-row">
         <div class = "sub-title">
           器械学习
         </div>
-        <div class="box-icon button-hover">
-          <i class='bx bx-dots-horizontal-rounded' @click="goInstrumentSearchView"></i>
+        <div class="box-icon button-hover" @click="goInstrumentSearchView">
+          <i class='bx bx-dots-horizontal-rounded'></i>
         </div>
       </div>
       <PostFlow :request-new-post="requestNewInstrument" style="flex-grow: 1" :width="120" :show-description="false" :update-post-count="7"></PostFlow>
@@ -116,7 +116,7 @@ const requestNewInstrument = async (count : number) => {
 
 <style scoped lang="stylus">
 .main-panel
-  justify-content: space-evenly
+  justify-content space-evenly
 
 .affair-bar,.instrument-bar
   width 100%
