@@ -15,7 +15,7 @@
           mode="out-in"
       >
 
-        <HBackKey v-if="isBackKey"></HBackKey>
+        <HBackKey v-if="store.state.ifBackKey"></HBackKey>
       </transition>
     <div class="top-bar flex-row">
 
@@ -50,7 +50,7 @@ const onMinimize = () => {
   window.electronAPI.minimize();
 }
 
-const isBackKey = computed(()=>{
+const isbackKey = computed(()=>{
 
   if(store.state.online&&store.state.ifBackKey) {
     return true

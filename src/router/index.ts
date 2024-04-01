@@ -10,15 +10,10 @@ import ArchiveView from "@/views/ArchiveView.vue";
 import ExamView from "@/views/ExamView.vue";
 import AffairView from "@/views/LearnViews/AffairView.vue";
 import AffairSearchView from "@/views/LearnViews/AffairSearchView.vue";
-import ArchiveDetailView from "@/views/ArchiveDetailView.vue";
-import ArchiveSearchResultsView from "@/views/ArchiveSearchResultsView.vue";
 import ExamLink from "@/views/ExamLink.vue";
 import store from "@/store";
-import InstrumentSearchView from "@/views/LearnViews/InstrumentSearchView.vue";
-import InstrumentView from "@/views/LearnViews/InstrumentView.vue";
-import {affairNode} from "@/assets/api";
-import AffairNodeView from "@/views/LearnViews/AffairNodeView.vue";
-import EditView from "@/views/UserView/EditView.vue";
+import ExamStart from "@/views/ExamStart.vue";
+import ExamTest from "@/views/ExamTest.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -66,26 +61,9 @@ const routes: Array<RouteRecordRaw> = [
         component: AffairSearchView
       },
       {
-        path: '/affair/:affairId',
+        path: '/affair',
         name: 'affairPage',
-        component: AffairView,
-        props: true
-      },
-      {
-        path: '/affairNode/:nodeId',
-        name: 'affairNodePage',
-        component: AffairNodeView,
-        props: true
-      },
-      {
-        path: '/instrumentSearch',
-        name: 'instrumentSearchPage',
-        component: InstrumentSearchView
-      },
-      {
-        path: '/instrument',
-        name: 'instrumentPage',
-        component: InstrumentView
+        component: AffairView
       },
       {
         path: '/guide',
@@ -94,18 +72,9 @@ const routes: Array<RouteRecordRaw> = [
       },{
         path: '/archive',
         name: 'archivePage',
-        component: ArchiveView
+        component: ArchiveView,
+
       },{
-        path: '/archiveDetail',
-        name: 'archiveDetailPage',
-        component: ArchiveDetailView
-      },
-      {
-        path: '/archiveSearchResults',
-        name: 'archiveSearchResults',
-        component: ArchiveSearchResultsView
-      },
-      {
         path: '/exam',
         name: 'examPage',
         component: ExamView
@@ -116,10 +85,15 @@ const routes: Array<RouteRecordRaw> = [
         component: ExamLink
       },
       {
-        path: '/edit',
-        name: 'editPage',
-        component: EditView
-      }
+        path: '/examStart/:id',
+        name: 'examStart',
+        component: ExamStart
+      },
+      {
+        path: '/examTest/:id',
+        name: 'examTest',
+        component: ExamTest
+      },
     ]
   }
 ]
@@ -133,7 +107,7 @@ router.beforeEach((to,from,next)=>{
   if(store.state.online&&to.name==='login'){
     next(false)
   }else{
-
+    console.log(to.name)
     if(to.name==='learnPage'||to.name==='guidePage'||to.name==='archivePage'||to.name==='examPage'){
       store.state.ifBackKey = false
     }else {

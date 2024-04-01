@@ -70,7 +70,7 @@
               mode="out-in"
           >
             <div v-if="!store.state.sidebar_fold" class="function-bar flex-row" style="color: var(--grey-color-bright)">
-              <div class="flex-row button-hover-inverse" style="gap: 5px" @click="onEdit">
+              <div class="flex-row button-hover-inverse" style="gap: 5px">
                 <div class="box-icon" style="font-size: 15px">
                   <i class='bx bx-edit' ></i>
                 </div>
@@ -106,7 +106,7 @@
 import HIcon from "@/components/HIcon.vue";
 import SideBarItem from "@/components/SideBarItem.vue";
 import store from "@/store"
-import {signOut, goto, goEdit} from "@/assets/api";
+import {signOut, goto} from "@/assets/api";
 import SideBarItemGroup from "@/components/SideBarItemGroup.vue";
 import HAvatar from "@/components/HAvatar.vue";
 
@@ -114,10 +114,6 @@ const switchFold = () => {
   store.state.sidebar_fold = !store.state.sidebar_fold
 }
 
-const onEdit = () =>{
-  goEdit()
-  switchFold()
-}
 const onSignOut = () => {
   signOut();
 }

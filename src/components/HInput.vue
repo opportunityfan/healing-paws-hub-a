@@ -81,7 +81,7 @@ const onFocus = () => {
 .input-main
   width 100%
   position relative
-  margin: 0 0
+  margin: 18px 0
 
 .input-name
   position absolute
