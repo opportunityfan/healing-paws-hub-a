@@ -65,13 +65,18 @@ function record(){
   ans[imd.value]=answer;
 }
 
-function submit(){
+async function submit(item:any){
   ElMessage({
     showClose: true,
     message: '交卷后不可修改',
     type: 'warning',
   })
   console.log(ans);
+  const datasub = {
+    examId : item.value.id,
+    result : ans,
+  }
+  await axios.post('http://150.158.110.63:8080/exam',datasub)
   goto('/exam/page');
 }
 
@@ -92,7 +97,7 @@ const question = computed(()=>{
 <template>
   <div>
     倒计
-    <vue-countdown v-if="item.totalTime > 0" @end="onCountdownEnd" :time="item.totalTime * 60 * 1000" v-slot="{ hours, minutes, seconds }">
+    <vue-countdown v-if="item.totalTime" @end="onCountdownEnd" :time="item.totalTime * 60 * 1000" v-slot="{ hours, minutes, seconds }">
       {{ hours }} : {{ minutes }} : {{ seconds }}
     </vue-countdown>
   </div>
@@ -100,7 +105,7 @@ const question = computed(()=>{
     {{ item.examName }}
   </h4>
   <div>
-    <el-button @click="submit">
+    <el-button @click="submit(item)">
       交卷
     </el-button>
   </div>

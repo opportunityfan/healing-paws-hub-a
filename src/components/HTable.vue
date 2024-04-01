@@ -37,7 +37,13 @@ export default {
     <td>{{item.examName}}</td>
     <td>{{item.startTime}}-{{item.endTime}}</td>
     <td>{{item.totalScore}}</td>
-    <td>4</td>
+    <td>
+      <router-link :to="'/examStart/'+item.id">
+        <el-button>
+          进入
+        </el-button>
+      </router-link>
+    </td>
   </tr>
   </tbody>
 </table>

@@ -8,6 +8,7 @@ import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
+import VueCountdown from '@chenfengyuan/vue-countdown';
 
 createApp(App)
     .use(store)
@@ -15,4 +16,5 @@ createApp(App)
     .use(lazyload)
     .use(mavonEditor)
     .use(ElementPlus)
+    .component(VueCountdown.name, VueCountdown)
     .mount('#app')

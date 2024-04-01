@@ -20,6 +20,8 @@ import InstrumentView from "@/views/LearnViews/InstrumentView.vue";
 import {affairNode} from "@/assets/api";
 import AffairNodeView from "@/views/LearnViews/AffairNodeView.vue";
 import EditView from "@/views/UserView/EditView.vue";
+import ExamStart from "@/views/ExamStart.vue";
+import ExamTest from "@/views/ExamTest.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -127,6 +129,16 @@ const routes: Array<RouteRecordRaw> = [
         path: '/edit',
         name: 'editPage',
         component: EditView
+      },
+      {
+        path: '/examStart/:id',
+        name: 'examStart',
+        component: ExamStart
+      },
+      {
+        path: '/examTest/:id',
+        name: 'examTest',
+        component: ExamTest
       }
     ]
   }
