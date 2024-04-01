@@ -10,6 +10,8 @@ import ArchiveView from "@/views/ArchiveView.vue";
 import ExamView from "@/views/ExamView.vue";
 import AffairView from "@/views/LearnViews/AffairView.vue";
 import AffairSearchView from "@/views/LearnViews/AffairSearchView.vue";
+import ArchiveDetailView from "@/views/ArchiveDetailView.vue";
+import ArchiveSearchResultsView from "@/views/ArchiveSearchResultsView.vue";
 import ExamLink from "@/views/ExamLink.vue";
 import store from "@/store";
 import InstrumentSearchView from "@/views/LearnViews/InstrumentSearchView.vue";
@@ -92,9 +94,18 @@ const routes: Array<RouteRecordRaw> = [
       },{
         path: '/archive',
         name: 'archivePage',
-        component: ArchiveView,
-
+        component: ArchiveView
       },{
+        path: '/archiveDetail',
+        name: 'archiveDetailPage',
+        component: ArchiveDetailView
+      },
+      {
+        path: '/archiveSearchResults',
+        name: 'archiveSearchResults',
+        component: ArchiveSearchResultsView
+      },
+      {
         path: '/exam',
         name: 'examPage',
         component: ExamView
