@@ -6,9 +6,11 @@ import HTable from "@/components/HTable.vue";
 import HDropdown from "@/components/HDropdown.vue";
 import {goto} from "@/assets/api";
 import {onMounted, ref} from "vue";
-import axios from "axios";
+import axios from "@/assets/axios";
+import {dayjs} from "element-plus";
+
 function ChangeRecord(){
-  goto('/examLink');
+  goto('/examStart');
 }
 
 const text=ref('');
@@ -16,17 +18,36 @@ const choose=ref('');
 const value2=ref('');
 const tabledata=ref([]);
 const pagenum=ref(1);
-const pagesize=ref(1);
-
+const pagesize=ref(7);
+const sort=ref('');
+let c=ref(null);
+let d=ref(null);
 async function getData(){
-  const res=await axios.get('http://150.158.110.63:8080/exam/page',{
+  console.log("value2=");
+  console.log(value2.value);
+  const [a,b]= value2.value;
+  c=dayjs(a).format('YYYY-MM-DD hh:mm:ss');
+  d=dayjs(b).format('YYYY-MM-DD hh:mm:ss');
+  if (value2.value===''){
+    c=null;
+    d=null;
+  }
+  const res=await axios.get('/exam/page/multi',{
     params: {
+      sortTime: sort.value==="sortTime",
+      // // sortScore: sort.value==="sortScore",
+      examName: text.value,
+      type: choose.value,
+      startTime: c,
+      endTime: d,
       pageNum:pagenum.value,
       pageSize:pagesize.value,
     }
-  });
-  console.log(res.data.data);
-  tabledata.value=res.data.data;
+  }).then((result)=>{
+        console.log(result.data.data);
+        tabledata.value=result.data.data;
+      }
+  );
 }
 async function  pagechange(page:number){
   pagenum.value=page;
@@ -35,6 +56,22 @@ async function  pagechange(page:number){
 onMounted(()=>{
   getData();
 })
+
+function search(){
+  console.log("search");
+  getData();
+}
+function operation(order:string){
+  sort.value= order;
+  getData();
+}
+function clearup(){
+  sort.value='';
+  text.value='';
+  choose.value='';
+  value2.value='';
+  getData();
+}
 </script>
 
 <template>
@@ -45,19 +82,16 @@ onMounted(()=>{
 <!--      <HTimePicker></HTimePicker>-->
       <div class="hang">
         <div class="zuo">
-          <el-input v-model="text">
+          <el-input v-model="text" @blur="search">
           </el-input>
         </div>
         <div class="you">
-          <el-select v-model="choose">
-            <el-option value="1">
-              实习生
+          <el-select v-model="choose" @change="search">
+            <el-option value="1" label="实习生">
             </el-option>
-            <el-option value="2">
-              2
+            <el-option value="2" label="教师">
             </el-option>
-            <el-option value="3">
-              3
+            <el-option value="3" label="兽医">
             </el-option>
           </el-select>
         </div>
@@ -70,12 +104,13 @@ onMounted(()=>{
               start-placeholder="Start Date"
               end-placeholder="End Date"
               :default-value="[new Date(2010, 9, 1), new Date(2010, 10, 1)]"
+              @change="search"
           />
-          </div>
+        </div>
       </div>
       <div class="hang">
-        <el-button >按序号顺序</el-button>
-        <el-button >按时间顺序</el-button>
+        <el-button @click="operation('sortTime')">按时间顺序</el-button>
+        <el-button @click="clearup()">清空</el-button>
       </div>
     </div>
     <div class="xia">
@@ -86,7 +121,7 @@ onMounted(()=>{
         background
         layout="prev, pager, next"
         :page-size="pagesize"
-        :total="4"
+        :total="7"
         class="mt-4"
         @current-change="pagechange"
     />

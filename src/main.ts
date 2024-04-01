@@ -6,5 +6,6 @@ import lazyload from "@/plugins/lazyload";
 import "animate.css"
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
+import VueCountdown from '@chenfengyuan/vue-countdown';
 
-createApp(App).use(store).use(router).use(ElementPlus).use(lazyload).mount('#app')
+createApp(App).use(store).use(router).use(ElementPlus).use(lazyload).component(VueCountdown.name, VueCountdown).mount('#app')
