@@ -135,6 +135,9 @@ const question = computed(()=>{
       <div>
         {{ question.statement }}
       </div>
+      <div>
+
+      </div>
       <br>
       <div>
         请输入答案
