@@ -6,7 +6,7 @@
           事务学习
         </div>
         <div class="box-icon button-hover">
-          <i class='bx bx-dots-horizontal-rounded'></i>
+          <i class='bx bx-dots-horizontal-rounded' @click="goAffairSearchView()"></i>
         </div>
       </div>
       <PostFlow :request-new-post="requestNewAffair" style="flex-grow: 1"></PostFlow>
@@ -17,7 +17,7 @@
           器械学习
         </div>
         <div class="box-icon button-hover">
-          <i class='bx bx-dots-horizontal-rounded'></i>
+          <i class='bx bx-dots-horizontal-rounded' @click="goInstrumentSearchView"></i>
         </div>
       </div>
       <PostFlow :request-new-post="requestNewInstrument" style="flex-grow: 1" :width="120" :show-description="false" :update-post-count="7"></PostFlow>
@@ -29,7 +29,7 @@
 import {ref} from "vue";
 import PostBlock from "@/components/PostBlock.vue";
 import PostFlow from "@/components/PostFlow.vue";
-import {Post} from "@/assets/api";
+import {goAffairSearchView, goInstrumentSearchView, Post} from "@/assets/api";
 let affairs = [
   {
     id: 0,
@@ -116,7 +116,7 @@ const requestNewInstrument = async (count : number) => {
 
 <style scoped lang="stylus">
 .main-panel
-  justify-content space-evenly
+  justify-content: space-evenly
 
 .affair-bar,.instrument-bar
   width 100%

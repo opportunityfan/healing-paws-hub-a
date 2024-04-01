@@ -62,7 +62,7 @@ const showText = computed(() => {
 .m-divider-horizontal {
   display: flex;
   //align-items: center;
-  margin: 16px 0;
+  margin: 0 0;
   width: 100%;
   min-width: 100%;
   &::before, &::after {
@@ -70,7 +70,7 @@ const showText = computed(() => {
     width: 50%;
     border-top-width: var(--border-width);
     border-top-style: solid;
-    border-top-color: rgba(5, 5, 5, .06);
+    border-top-color  var(--theme-color);
     transform: translateY(50%);
     content: '';
   }
@@ -121,7 +121,7 @@ const showText = computed(() => {
   }
 }
 .margin24 {
-  margin: 24px 0;
+  margin: 0 0;
 }
 .marginLeft {
   &::before {
