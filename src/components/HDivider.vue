@@ -70,7 +70,7 @@ const showText = computed(() => {
     width: 50%;
     border-top-width: var(--border-width);
     border-top-style: solid;
-    border-top-color  var(--theme-color);
+    border-top-color  var(--grey-color-bright);
     transform: translateY(50%);
     content: '';
   }

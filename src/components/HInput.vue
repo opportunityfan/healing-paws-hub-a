@@ -8,7 +8,7 @@
     >
       {{ props.name }}
     </div>
-    <div class="input-border">
+    <div class="input-border" :style="{height: props.height === '' ? '40px' : props.height}">
       <div class="placeholder" v-if="(data.empty && !data.focus)">{{ props.name }}</div>
       <input class="input-field" v-model="data.content" @blur="onBlur" :type="props.password?'password':''" @focus="onFocus">
     </div>
@@ -27,6 +27,8 @@ const props = withDefaults(defineProps<{
   modelValue: string
   state?: string
   information?: string
+  height?: string
+  width?: string
 }>() , {
   password: false,
   state: 'default',

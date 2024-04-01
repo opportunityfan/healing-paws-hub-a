@@ -1,5 +1,5 @@
 <template>
-  <div class="h-button border-radius-thin">
+  <div class="h-button border-radius-thin" :style="{height: props.height === '' ? '40px' : props.height}">
     <div class="center">
       <slot name="default"></slot>
     </div>
@@ -11,6 +11,7 @@ import{defineProps, withDefaults} from 'vue'
 const props = withDefaults(defineProps<{
   type?: string
   size?: string
+  height?: string
 }>(),{
   type: "primary"
 });

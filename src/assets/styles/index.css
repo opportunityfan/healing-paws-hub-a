@@ -77,6 +77,7 @@
     font-size: 12px;
     color: var(--font-subject-color);
     font-weight: 300;
+    text-align: left;
 }
 .hint-inverse {
     font-size: 12px;
@@ -103,6 +104,7 @@ input {
     border: none;
     font-family: "Readex Pro", serif;
     color: var(--black-color);
+    width: 100%;
 }
 input:focus-visible {
     outline: none;
