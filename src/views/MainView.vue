@@ -14,6 +14,7 @@
         <component :is="Component"></component>
       </transition>
     </router-view>
+<!--    <router-view></router-view>-->
   </div>
 </template>
 

@@ -170,6 +170,8 @@ router.beforeEach((to,from,next)=>{
     }else {
       store.state.ifBackKey = true
     }
+    console.log(from.name)
+    console.log(from.path)
     next()
   }
 })

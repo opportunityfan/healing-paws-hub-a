@@ -7,7 +7,6 @@ import HDivider from "@/components/HDivider.vue";
 import HInput from "@/components/HInput.vue";
 import HButton from "@/components/HButton.vue";
 import HAvatar from "@/components/HAvatar.vue";
-import HRadio from "@/components/HRadio.vue";
 import {goRoleSelect} from "@/assets/api";
 const data = reactive<{
   nickName : string,
@@ -72,10 +71,6 @@ const editAvatar = () =>{
 </script>
 
 <template>
-<!--  <div class="title" style="text-align: left;width: 97%">个人信息-->
-
-<!--  </div>-->
-
   <div class="main-panel full">
     <div class="left-panel">
       <div class="module">
