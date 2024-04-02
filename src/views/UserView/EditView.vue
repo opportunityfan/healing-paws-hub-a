@@ -7,14 +7,18 @@ import HDivider from "@/components/HDivider.vue";
 import HInput from "@/components/HInput.vue";
 import HButton from "@/components/HButton.vue";
 import HAvatar from "@/components/HAvatar.vue";
+import HRadio from "@/components/HRadio.vue";
+import {goRoleSelect} from "@/assets/api";
 const data = reactive<{
   nickName : string,
   password : string,
   confirmPassword : string
+  picked : string
 }>({
   nickName : store.state.nick_name,
   password : '',
-  confirmPassword : ''
+  confirmPassword : '',
+  picked : ''
 })
 const editPanel = reactive({visible : false})
 const chooseRole = () => {
@@ -68,9 +72,9 @@ const editAvatar = () =>{
 </script>
 
 <template>
-  <div class="title" style="text-align: left;width: 97%">个人信息
-    <HDivider></HDivider>
-  </div>
+<!--  <div class="title" style="text-align: left;width: 97%">个人信息-->
+
+<!--  </div>-->
 
   <div class="main-panel full">
     <div class="left-panel">
@@ -92,9 +96,14 @@ const editAvatar = () =>{
 
       <div class="module">
         <div>
-          <HButton height="35px" style="width: 60%">
+          <HButton height="35px" style="width: 200px">
             更新信息
           </HButton>
+          <div style="text-align: left; margin-top: -20px;" >
+            <span class="hint">想要更改您的角色?</span>
+            <span class="clickable-text" @click="goRoleSelect">点击此处!</span>
+          </div>
+
         </div>
       </div>
     </div>

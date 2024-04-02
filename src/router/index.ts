@@ -23,6 +23,7 @@ import EditView from "@/views/UserView/EditView.vue";
 import ExamStart from "@/views/ExamStart.vue";
 import ExamTest from "@/views/ExamTest.vue";
 import ExamRecordView from "@/views/ExamRecordView.vue";
+import RoleSelectView from "@/views/UserView/RoleSelectView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -59,6 +60,11 @@ const routes: Array<RouteRecordRaw> = [
     component: MainView,
     redirect:'/learn',
     children: [
+      {
+        path: '/roleSelect',
+        name: 'roleSelectPage',
+        component: RoleSelectView
+      },
       {
         path: '/learn',
         name: 'learnPage',

@@ -176,6 +176,9 @@ export const goAffairNode = async (nodeId: string) =>{
 export const goInstrumentSearchView = () =>{
     goto('/instrumentSearch').then()
 }
+export const goRoleSelect = () => {
+    goto('/roleSelect').then()
+}
 
 export const autoComplete = async (searchUrl : string,word : string) :Promise<tag[]> => {
     const names = Array<tag>()

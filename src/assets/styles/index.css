@@ -12,6 +12,11 @@
 .flex-column > div {
     margin: 0 auto;
 }
+.item-center{
+    display: flex;
+    justify-content: center;
+
+}
 .box-icon {
     width: 25px;
 }
@@ -77,7 +82,7 @@
     font-size: 12px;
     color: var(--font-subject-color);
     font-weight: 300;
-    text-align: left;
+
 }
 .hint-inverse {
     font-size: 12px;

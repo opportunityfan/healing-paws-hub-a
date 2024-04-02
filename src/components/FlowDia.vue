@@ -88,7 +88,7 @@ onNodeClick((event)=>{
 
 .mid-node:hover
   background var(--theme-color-dark)
-  transition 0.2s
+  transition background-color 0.2s
 
 .start-node
   background var(--accent-color)
@@ -98,7 +98,7 @@ onNodeClick((event)=>{
   width 100px
 .start-node:hover
   background var(--accent-color-dark)
-  transition 0.2s
+  transition background-color 0.2s
 
 .end-node
   background var(--accent-color)
@@ -108,5 +108,5 @@ onNodeClick((event)=>{
   width 100px
 .end-node:hover
   background var(--accent-color-dark)
-  transition 0.2s
+  transition background-color 0.2s
 </style>
