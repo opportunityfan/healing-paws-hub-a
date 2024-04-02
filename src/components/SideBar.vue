@@ -84,7 +84,7 @@
               </div>
             </div>
             <div v-else class="function-bar-column flex-column" style="gap: 20px; padding: 10px 0">
-              <div class="button-hover-inverse">
+              <div class="button-hover-inverse" @click="onEdit">
                 <div class="box-icon" style="font-size: 16px">
                   <i class='bx bx-edit' ></i>
                 </div>
@@ -116,7 +116,7 @@ const switchFold = () => {
 
 const onEdit = () =>{
   goEdit()
-  switchFold()
+  store.state.sidebar_fold = true
 }
 const onSignOut = () => {
   signOut();

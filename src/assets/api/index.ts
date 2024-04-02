@@ -1,6 +1,8 @@
 import router from "@/router";
 import store from "@/store"
 import axios from "@/assets/axios";
+import {ref} from "vue";
+import {string} from "three/examples/jsm/nodes/shadernode/ShaderNode";
 
 export class Image {
     src: string
@@ -80,7 +82,7 @@ export const testaxios = ()=>{
 }
 export const signIn = (data:any) => {
 
-    // store.state.sidebar_unlock = true
+
     axios.post('/sysUser/login',data,{
          headers:{
              'Content-Type' : 'application/json'
@@ -89,13 +91,23 @@ export const signIn = (data:any) => {
          if(res.data.code==200){
 
              store.state.token = res.data.data.token
+             axios.get('/sysUser',{
+                 headers:{
+                     'token' : store.state.token
+                 }
+             }).then((res)=>{
+                 console.log(res.data.data)
+                 store.state.nick_name = res.data.data.username
+                 store.state.avatar_url = res.data.data.avatar
+                 store.state.email = res.data.data.account
+             })
              store.state.online = true
              goto('/main').then()
          }
      }).catch(err=>{
          console.log("network Error！")
     })
-    // goto('/main').then()
+
 }
 export const signUp = (data : any)=>{
     store.state.email_for_registry = data.email
@@ -112,6 +124,14 @@ export const signUp = (data : any)=>{
 export const signOut = () => {
     store.state.online = false
     goto('/login').then()
+    axios.post('/sysUser/logout',{},{
+        headers:{
+            'token' : store.state.token
+        }
+    }).then((res)=>{
+        console.log(res.data)
+    })
+
 }
 export const goEdit = () => {
     goto('/edit').then()
@@ -139,12 +159,32 @@ export const goInstrumentSearchView = () =>{
     goto('/instrumentSearch').then()
 }
 
-export const autoComplete = ()=>{
-    console.log("自动补全")
+export const autoComplete = async (searchUrl : string,word : string) :Promise<tag[]> => {
+    const names = Array<tag>()
+    await axios.get(searchUrl,{
+        params:{
+            input : word
+        },
+        headers:{
+            'token' : store.state.token
+        }
+    }).then((res)=>{
+        const affairs = res.data.data
+        console.log(affairs)
+        if(affairs)
+        affairs.forEach((e:any) => {
+            const tempTag = new tag(e.id,e.name)
+            names.push(tempTag)
+        })
+    })
+    console.log(names)
+    return names
 }
 export class tag{
+    id: string;
     name: string;
-    constructor(name:string) {
+    constructor(id : string,name : string) {
+        this.id = id
         this.name = name
     }
 }

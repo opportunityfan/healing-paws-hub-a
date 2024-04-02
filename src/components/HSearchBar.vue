@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { tag, autoComplete, goto } from '@/assets/api';
+import { ref, defineEmits, withDefaults, defineProps } from 'vue'
+import {tag, autoComplete, goto, goAffair} from '@/assets/api';
 import { onBeforeRouteUpdate, useRoute } from "vue-router";
 
 const isFocus = ref(false)
@@ -11,6 +11,13 @@ const input = ref<HTMLInputElement>()
 const inputValue = ref('')
 
 const autoCompletes = ref<tag[]>([])
+
+const props = withDefaults(defineProps<{
+  searchUrl : string
+}>(),{
+
+})
+const emit = defineEmits(['onEnter'])
 
 inputValue.value = useRoute().query.tags as string || ''
 // 根据路由中tags参数，修改搜索框
@@ -40,12 +47,11 @@ const onInput = (e: any) => {
   isFocus.value = true
   // 补全最后一词
   const value = e.target.value
-  const index = value.lastIndexOf(' ')
-  const lastWord = value.substring(index + 1)
-  // autoComplete(lastWord).then(res => {
-  //   autoCompletes.value = res
-  //   selectedIndex.value = -1
-  // })
+
+  autoComplete(props.searchUrl,value).then((res) => {
+    autoCompletes.value = res
+    selectedIndex.value = -1
+  })
 }
 
 const onKeyDown = (e: any) => {
@@ -73,8 +79,12 @@ const onEnter = (e: any) => {
   if (selectedIndex.value >= 0) {
     onSelected(autoCompletes.value[selectedIndex.value])
   }
+  const id = autoCompletes.value[selectedIndex.value].id
+
+  emit('onEnter',id)
+  //goAffair(id)
   // 转义+号等特殊字符
-  goto('/search?tags=' + encodeURIComponent(input.value!.value))
+  //goto('/search?tags=' + encodeURIComponent(input.value!.value))
 }
 
 const onSelected = (item: tag) => {

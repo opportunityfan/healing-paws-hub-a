@@ -159,7 +159,7 @@ router.beforeEach((to,from,next)=>{
   if(store.state.online&&to.name==='login'){
     next(false)
   }else{
-    if(to.name==='learnPage'||to.name==='guidePage'||to.name==='archivePage'||to.name==='examPage'){
+    if(to.name==='learnPage'||to.name==='guidePage'||to.name==='archivePage'||to.name==='examPage'||to.name==='editPage'){
       store.state.ifBackKey = false
     }else {
       store.state.ifBackKey = true

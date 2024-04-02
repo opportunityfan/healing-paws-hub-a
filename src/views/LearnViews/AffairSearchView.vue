@@ -32,7 +32,7 @@ getAffairs(1,5)
 
 <template>
   <div style="width: 100%">
-    <HSearchBar style="width: 85%"></HSearchBar>
+    <HSearchBar style="width: 85%" searchUrl="/affair/fuzzy" @onEnter="goAffair"></HSearchBar>
     <div>
       <HpageTable :items="affairs" itemsPerPage=2 @itemClick="goAffair"></HpageTable>
 
