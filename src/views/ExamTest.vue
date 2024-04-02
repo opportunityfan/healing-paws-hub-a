@@ -5,6 +5,7 @@ import axios from "axios";
 import {ElMessage} from "element-plus";
 import {compute} from "three/examples/jsm/nodes/gpgpu/ComputeNode";
 import {goto} from "@/assets/api";
+import store from "@/store";
 
 const value2=ref(0);
 const router=useRoute();
@@ -76,8 +77,13 @@ async function submit(item:any){
     examId : item.id,
     result : ans.value,
   }
-  await axios.post('http://150.158.110.63:8080/exam',datasub)
-  goto('/exam/page');
+
+  await axios.post('http://150.158.110.63:8080/examrecord',datasub,{
+    headers:{
+      'token' : store.state.token
+    }
+  })
+  goto('/exam');
 }
 
 const question = computed(()=>{
@@ -92,6 +98,9 @@ const question = computed(()=>{
   }
 })
 
+onMounted(()=>{
+  console.log(store.state.token);
+})
 </script>
 
 <template>
