@@ -22,6 +22,7 @@ import AffairNodeView from "@/views/LearnViews/AffairNodeView.vue";
 import EditView from "@/views/UserView/EditView.vue";
 import ExamStart from "@/views/ExamStart.vue";
 import ExamTest from "@/views/ExamTest.vue";
+import ExamRecordView from "@/views/ExamRecordView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -139,6 +140,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/examTest/:id',
         name: 'examTest',
         component: ExamTest
+      },
+      {
+        path: '/examRecord/:id',
+        name: 'examRecord',
+        component: ExamRecordView
       }
     ]
   }

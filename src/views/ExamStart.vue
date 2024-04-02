@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {useRoute} from "vue-router";
 import axios from "axios";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 
 const router=useRoute();
 const item = ref<any>({});
@@ -14,7 +14,10 @@ async function getData(){
   })
   item.value=res.data.data;
 }
-getData();
+
+onMounted(()=>{
+  getData();
+})
 </script>
 
 <template>
