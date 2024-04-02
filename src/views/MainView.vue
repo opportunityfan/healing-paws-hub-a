@@ -3,18 +3,18 @@
 </script>
 
 <template>
-
-    <div class="full" style="position: relative">
+  <div class="full" style="position: relative; --animate-duration: 0.3s">
+    <router-view v-slot="{ Component }">
       <transition
           name="animate__animated animate__fade"
           enter-active-class="animate__fadeIn"
           leave-active-class="animate__fadeOut"
           mode="out-in"
       >
-        <router-view/>
+        <component :is="Component"></component>
       </transition>
-    </div>
-
+    </router-view>
+  </div>
 </template>
 
 <style scoped lang="stylus">

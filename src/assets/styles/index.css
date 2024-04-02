@@ -100,6 +100,11 @@
     font-size: 12px;
     color: var(--white-color);
 }
+.text-bold {
+    font-size: 14px;
+    color: var(--black-color);
+    font-weight: 600;
+}
 input {
     border: none;
     font-family: "Readex Pro", serif;

@@ -1,6 +1,6 @@
 <template>
   <div class="full editor-main">
-    <mavon-editor v-model="data.markdown"></mavon-editor>
+    <v-md-editor v-model="data.markdown" height="100%"></v-md-editor>
   </div>
 </template>
 

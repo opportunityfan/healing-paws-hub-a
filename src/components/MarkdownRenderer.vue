@@ -1,11 +1,10 @@
 <template>
-  <div class="full">
-    <vue-markdown :source="props.markdown"></vue-markdown>
+  <div class="full" style="text-align: left">
+    <v-md-preview :text="props.markdown"></v-md-preview>
   </div>
 </template>
 
 <script setup lang="ts">
-import VueMarkdown from "vue-markdown-render";
 
 // eslint-disable-next-line no-undef
 const props = defineProps<{

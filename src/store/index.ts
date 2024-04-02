@@ -2,7 +2,7 @@ import { createStore } from 'vuex'
 
 export default createStore({
   state: {
-    frame_title: "Healing Paws Hub",
+    back_title: "",
     online: false,
     sidebar_fold: false,
     email_for_registry: " ",

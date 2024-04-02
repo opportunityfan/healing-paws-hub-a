@@ -55,8 +55,6 @@ export class affairNode{
     }
 }
 
-
-
 export const changeTheme = (theme : string) => {
     window.document.documentElement.setAttribute("data-theme", theme);
 }
@@ -67,8 +65,8 @@ export const goto = async (path : string) => {
 
 export const goBack = async () =>{
     await router.back()
-
 }
+
 export const testaxios = ()=>{
     axios.post('testPreAuthorize/hello', {},{
         headers:{
@@ -113,6 +111,26 @@ export const signOut = () => {
     store.state.online = false
     goto('/login').then()
 }
+
+export const getAffairNode = async (id : string) : Promise<affairNode | undefined> => {
+    let obj : affairNode | undefined = undefined
+    await axios.get('/affairnode', {
+        params: {
+            id: id
+        },
+        headers:{
+            'Content-Type' : 'application/json'
+        }
+    }).then((res) => {
+        if (res.data.code === 200) {
+            obj = res.data.data
+        }
+    })
+    return obj
+}
+
+
+//跳转到界面可以不单独写成函数
 export const goEdit = () => {
     goto('/edit').then()
 }

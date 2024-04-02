@@ -35,7 +35,6 @@ getAffairs(1,5)
     <HSearchBar style="width: 85%"></HSearchBar>
     <div>
       <HpageTable :items="affairs" itemsPerPage=2 @itemClick="goAffair"></HpageTable>
-
     </div>
   </div>
 </template>
