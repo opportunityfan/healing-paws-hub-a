@@ -28,7 +28,7 @@
                 <div class="foldable">Study</div>
               </div>
             </side-bar-item>
-            <side-bar-item name="archive" @click="goto('archive')">
+            <side-bar-item name="archive" @click="goto('/archive')">
               <div class="flex-row" style="justify-content: center; transition: gap 0.5s" :style="{gap: store.state.sidebar_fold?'0':'20px'}">
                 <div class="box-icon">
                   <i class='bx bx-archive'></i>
@@ -36,7 +36,7 @@
                 <div class="foldable">Archive</div>
               </div>
             </side-bar-item>
-            <side-bar-item name="guide" @click="goto('guide')">
+            <side-bar-item name="guide" @click="goto('/guide')">
               <div class="flex-row" style="justify-content: center; transition: gap 0.5s" :style="{gap: store.state.sidebar_fold?'0':'20px'}">
                 <div class="box-icon">
                   <i class='bx bxs-analyse'></i>
@@ -44,7 +44,7 @@
                 <div class="foldable">Guide</div>
               </div>
             </side-bar-item>
-            <side-bar-item name="exam" @click="goto('exam')">
+            <side-bar-item name="exam" @click="goto('/exam')">
               <div class="flex-row" style="justify-content: center; transition: gap 0.5s" :style="{gap: store.state.sidebar_fold?'0':'20px'}">
                 <div class="box-icon">
                   <i class='bx bx-spreadsheet' ></i>

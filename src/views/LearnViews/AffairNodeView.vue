@@ -2,7 +2,14 @@
   <HScroller scroll-direction="column">
     <div class="flex-column">
       <markdown-renderer :markdown="data.affairNode ? data.affairNode?.content : ''"></markdown-renderer>
-      <HButton @click="goto('/post-edit')">Test</HButton>
+      <div class="flex-row">
+        <HButton style="width: 200px">完成学习</HButton>
+        <HButton>
+          <div class="box-icon">
+            <i class='bx bx-star'></i>
+          </div>
+        </HButton>
+      </div>
     </div>
   </HScroller>
 </template>
