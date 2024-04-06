@@ -1,6 +1,6 @@
 <template>
   <div>
-    这是病例信息页面
+    这是病例详情界面
   </div>
 </template>
 

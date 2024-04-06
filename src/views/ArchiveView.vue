@@ -2,11 +2,33 @@
 
 import HScroller from "@/components/HScroller.vue";
 import HImage from "@/components/HImage.vue";
-import {ref} from "vue";
+import {ref, reactive, computed} from "vue";
 import HButton from "@/components/HButton.vue";
 import {goto} from "@/assets/api";
+import axios from "@/assets/axios";
+import store from "@/store";
 
-let diseaseNames = ref([{
+let testDiseaseNames = reactive([])
+
+function getDiseaseNamesByType(typeName:string){
+  axios.get('/disease/belong', {
+    params:{
+      pageNum: 1,
+      pageSize: 4,
+      type: "内科"
+    },
+    headers:{
+      'token':store.state.token
+    }
+  }).then((res)=>{
+    testDiseaseNames = res.data.data
+    console.log(testDiseaseNames)
+  })
+}
+
+getDiseaseNamesByType("内科")
+
+let diseaseNames = reactive([{
   id:0,
   class:0,
   name:'病名1',
@@ -14,7 +36,8 @@ let diseaseNames = ref([{
     src: require("@/assets/login-background.png"),
     width: 3035,
     height: 4299
-  }
+  },
+  ifChosen: false
 },
 {
   id:1,
@@ -24,7 +47,8 @@ let diseaseNames = ref([{
     src: require("@/assets/login-background.png"),
     width: 3035,
     height: 4299
-  }
+  },
+  ifChosen: false
 },
 {
   id:2,
@@ -34,7 +58,8 @@ let diseaseNames = ref([{
     src: require("@/assets/login-background.png"),
     width: 3035,
     height: 4299
-  }
+  },
+  ifChosen: false
 },
 {
   id:3,
@@ -44,9 +69,11 @@ let diseaseNames = ref([{
     src: require("@/assets/login-background.png"),
     width: 3035,
     height: 4299
-  }}])
+  },
+  ifChosen: false
+}])
 
-let diseaseClasses = ref([{
+let diseaseTypes = ref([{
   id: 0,
   name:'病种1'
 },{id:1, name:'病种2'},{id:2, name:'病种3'},{id:3, name:'病种4'}])
@@ -54,20 +81,39 @@ let diseaseClasses = ref([{
 let chosenDiseases: number[] = []
 
 function chooseDisease(index:number){
-  if (!chosenDiseases.includes(index)){
-    chosenDiseases.push(index)
-  }
-  else{
-    chosenDiseases.splice(chosenDiseases.indexOf(index),1)
-  }
   console.log("已选中"+index)
   console.log(chosenDiseases)
-  console.log(chosenDiseases.includes(index))
+  if (!chosenDiseases.includes(index)){
+    chosenDiseases.push(index)
+    diseaseNames[index].ifChosen = true
+  }
+  else {
+    chosenDiseases.splice(chosenDiseases.indexOf(index), 1)
+    diseaseNames[index].ifChosen = false
+  }
 }
 
-function searchDisease(){
+function searchArchives(){
   goto('/archiveSearchResults');
   console.log("多选提交")
+}
+
+let Archives = reactive([])
+
+function getArchivesByDiseaseNames(){
+  axios.get("/case/group", {
+    params:{
+      pageNum: 1,
+      pageSize: 4,
+      diseases: "口炎 肠炎"
+    },
+    headers:{
+      'token':store.state.token
+    }
+  }).then((res)=>{
+    Archives = res.data.data
+    console.log(Archives)
+  })
 }
 
 </script>
@@ -75,14 +121,16 @@ function searchDisease(){
 <template>
   <div class="full">
     <HScroller scroll-direction="column" class="full scroller-view">
+      <HButton @click="getDiseaseNamesByType">111</HButton>
+      <HButton @click="getArchivesByDiseaseNames">222</HButton>
       <div class="flex-column">
-        <div class="diseaseClass" v-for="diseaseClass in diseaseClasses" :key="diseaseClass.id">
-          {{diseaseClass.name}}
+        <div class="diseaseClass" v-for="diseaseType in diseaseTypes" :key="diseaseType.id">
+          {{diseaseType.name}}
           <br>
           <br>
           <div class="flex-row">
             <div v-for="diseaseName in diseaseNames" :key="diseaseName.id">
-              <div class="diseaseNameButton" @click="chooseDisease(diseaseName.id)" :class="{'chosen': chosenDiseases.includes(diseaseName.id)}">
+              <div class="diseaseNameButton" @click="chooseDisease(diseaseName.id)" :class="{'chosen': diseaseName.ifChosen}">
                 <HButton>{{diseaseName.name}}</HButton>
               </div>
             </div>
@@ -90,7 +138,7 @@ function searchDisease(){
         </div>
       </div>
       <div>
-        <HButton @click="searchDisease">确认选择</HButton>
+        <HButton @click="searchArchives">确认选择</HButton>
       </div>
     </HScroller>
   </div>
