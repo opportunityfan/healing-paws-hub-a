@@ -164,6 +164,15 @@ export const goAffairSearchView = () =>{
 export const gotoWithProp = async (name : string,prop : string) => {
     await router.push({name: name,params: {affairId : prop}});
 }
+
+export const gotoArchiveSearchResultsWithNames = async (name : string, diseaseNames : string) => {
+    await router.push({name: name, params: {diseaseNames : diseaseNames}})
+}
+
+export const gotoArchiveDetailPageWithId = async (name : string, archiveId : string) => {
+    await router.push({name: name, params: {archiveId : archiveId}})
+}
+
 export const goAffair = (affairId : string)=>{
     console.log(affairId)
     gotoWithProp('affairPage',affairId).then()
@@ -179,6 +188,7 @@ export const goInstrumentSearchView = () =>{
 export const goRoleSelect = () => {
     goto('/roleSelect').then()
 }
+
 
 export const autoComplete = async (searchUrl : string,word : string) :Promise<tag[]> => {
     const names = Array<tag>()

@@ -108,12 +108,12 @@ const routes: Array<RouteRecordRaw> = [
         component: ArchiveView,
       },
       {
-        path: '/archiveDetail',
+        path: '/archiveDetail/:archiveId',
         name: 'archiveDetailPage',
         component: ArchiveDetailView
       },
       {
-        path: '/archiveSearchResults',
+        path: '/archive/:diseaseNames',
         name: 'archiveSearchResults',
         component: ArchiveSearchResultsView
       },

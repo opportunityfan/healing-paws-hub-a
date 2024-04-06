@@ -2,118 +2,60 @@
 
 import HScroller from "@/components/HScroller.vue";
 import HImage from "@/components/HImage.vue";
-import {ref, reactive, computed} from "vue";
+import {ref, reactive} from "vue";
 import HButton from "@/components/HButton.vue";
-import {goto} from "@/assets/api";
+import {goto, gotoArchiveSearchResultsWithNames} from "@/assets/api";
 import axios from "@/assets/axios";
 import store from "@/store";
 
-let testDiseaseNames = reactive([])
+let diseaseTypes = reactive(["传染病","寄生虫病","内科","外产科疾病"])
+let diseaseNamesOrderedByType: Record<string, any> = reactive({})
 
-function getDiseaseNamesByType(typeName:string){
+function getDiseaseNamesByType(diseaseType: string){
   axios.get('/disease/belong', {
     params:{
       pageNum: 1,
-      pageSize: 4,
-      type: "内科"
+      pageSize: 50,
+      type: diseaseType
     },
     headers:{
       'token':store.state.token
     }
   }).then((res)=>{
-    testDiseaseNames = res.data.data
-    console.log(testDiseaseNames)
+    diseaseNamesOrderedByType[diseaseType] = res.data.data
   })
 }
 
-getDiseaseNamesByType("内科")
+diseaseTypes.forEach((diseaseType)=>{
+  getDiseaseNamesByType(diseaseType)
+})
 
-let diseaseNames = reactive([{
-  id:0,
-  class:0,
-  name:'病名1',
-  backgroundImage: {
-    src: require("@/assets/login-background.png"),
-    width: 3035,
-    height: 4299
-  },
-  ifChosen: false
-},
-{
-  id:1,
-  class:1,
-  name:'病名2',
-  backgroundImage: {
-    src: require("@/assets/login-background.png"),
-    width: 3035,
-    height: 4299
-  },
-  ifChosen: false
-},
-{
-  id:2,
-  class: 1,
-  name:'病名3',
-  backgroundImage: {
-    src: require("@/assets/login-background.png"),
-    width: 3035,
-    height: 4299
-  },
-  ifChosen: false
-},
-{
-  id:3,
-  class: 2,
-  name:'病名4',
-  backgroundImage: {
-    src: require("@/assets/login-background.png"),
-    width: 3035,
-    height: 4299
-  },
-  ifChosen: false
-}])
+console.log(diseaseNamesOrderedByType)
 
-let diseaseTypes = ref([{
-  id: 0,
-  name:'病种1'
-},{id:1, name:'病种2'},{id:2, name:'病种3'},{id:3, name:'病种4'}])
+let chosenDiseases: string[] = reactive([])
 
-let chosenDiseases: number[] = []
-
-function chooseDisease(index:number){
-  console.log("已选中"+index)
-  console.log(chosenDiseases)
-  if (!chosenDiseases.includes(index)){
-    chosenDiseases.push(index)
-    diseaseNames[index].ifChosen = true
+function chooseDisease(name:string){
+  if (!chosenDiseases.includes(name)){
+    chosenDiseases.push(name)
   }
   else {
-    chosenDiseases.splice(chosenDiseases.indexOf(index), 1)
-    diseaseNames[index].ifChosen = false
+    chosenDiseases.splice(chosenDiseases.indexOf(name), 1)
   }
+  console.log("已选中"+name)
+  console.log(chosenDiseases)
+  console.log(chosenDiseases.join(' '))
 }
+
 
 function searchArchives(){
-  goto('/archiveSearchResults');
+  if (chosenDiseases.length > 0){
+    let chosenDiseasesString = chosenDiseases.join(' ')
+    gotoArchiveSearchResultsWithNames('archiveSearchResults', chosenDiseasesString)
+  }
+  else {
+    console.log("提交失败")
+  }
   console.log("多选提交")
-}
-
-let Archives = reactive([])
-
-function getArchivesByDiseaseNames(){
-  axios.get("/case/group", {
-    params:{
-      pageNum: 1,
-      pageSize: 4,
-      diseases: "口炎 肠炎"
-    },
-    headers:{
-      'token':store.state.token
-    }
-  }).then((res)=>{
-    Archives = res.data.data
-    console.log(Archives)
-  })
 }
 
 </script>
@@ -121,17 +63,15 @@ function getArchivesByDiseaseNames(){
 <template>
   <div class="full">
     <HScroller scroll-direction="column" class="full scroller-view">
-      <HButton @click="getDiseaseNamesByType">111</HButton>
-      <HButton @click="getArchivesByDiseaseNames">222</HButton>
       <div class="flex-column">
-        <div class="diseaseClass" v-for="diseaseType in diseaseTypes" :key="diseaseType.id">
-          {{diseaseType.name}}
+        <div class="diseaseType" v-for="(diseaseType,index) in diseaseTypes" :key="index">
+          {{diseaseType}}
           <br>
           <br>
           <div class="flex-row">
-            <div v-for="diseaseName in diseaseNames" :key="diseaseName.id">
-              <div class="diseaseNameButton" @click="chooseDisease(diseaseName.id)" :class="{'chosen': diseaseName.ifChosen}">
-                <HButton>{{diseaseName.name}}</HButton>
+            <div v-for="diseaseName in diseaseNamesOrderedByType[diseaseType]" :key="diseaseName.id">
+              <div class="diseaseNameButton" @click="chooseDisease(diseaseName.name)">
+                <HButton :isChosen="chosenDiseases.includes(diseaseName.name)" height="50px">{{diseaseName.name}}</HButton>
               </div>
             </div>
           </div>
@@ -152,10 +92,10 @@ function getArchivesByDiseaseNames(){
 }
 
 .chosen {
-  border: 1px solid red
+  background-color: var(--theme-color-dark)
 }
 
-.diseaseClass {
+.diseaseType {
   font-size: 20px;
   color: var(--font-title-color);
   font-weight: 550;
