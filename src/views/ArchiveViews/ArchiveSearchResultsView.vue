@@ -48,7 +48,7 @@ function goArchiveDetails(archiveId: string){
   <div>
     这是病例查询结果页面
     <div class="flex-column">
-      <div class="flex-row">
+      <div class="flex-row flex-wrap">
         <div v-for="(archive, index) in Archives" :key="index">
           <HImage :image="image" @click="goArchiveDetails(archive.id.toString())"></HImage>
           <div>{{archive.name}}</div>

@@ -4,7 +4,7 @@ import HScroller from "@/components/HScroller.vue";
 import HImage from "@/components/HImage.vue";
 import {ref, reactive} from "vue";
 import HButton from "@/components/HButton.vue";
-import DiseaseNameButton from "@/DiseaseNameButton.vue";
+import DiseaseNameButton from "@/views/ArchiveViews/DiseaseNameButton.vue";
 import {goto, gotoArchiveSearchResultsWithNames} from "@/assets/api";
 import axios from "@/assets/axios";
 import store from "@/store";
@@ -69,7 +69,7 @@ function searchArchives(){
           {{diseaseType}}
           <br>
           <br>
-          <div class="flex-row" style="flex-wrap: wrap">
+          <div class="flex-row flex-wrap">
             <div v-for="diseaseName in diseaseNamesOrderedByType[diseaseType]" :key="diseaseName.id">
               <div class="diseaseNameButton" @click="chooseDisease(diseaseName.name)">
                 <DiseaseNameButton :isChosen="chosenDiseases.includes(diseaseName.name)" height="50px">{{diseaseName.name}}</DiseaseNameButton>
@@ -90,10 +90,6 @@ function searchArchives(){
 .diseaseNameButton {
   width: 100px;
   margin: 10px
-}
-
-.chosen {
-  background-color: var(--theme-color-dark)
 }
 
 .diseaseType {
