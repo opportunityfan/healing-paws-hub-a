@@ -73,6 +73,11 @@
     color: var(--font-inverse-color);
     font-weight: 600;
 }
+.subtitle{
+    font-size: 18px;
+    color: var(--black-color);
+    font-weight: 600;
+}
 .subtitle-inverse {
     font-size: 18px;
     color: var(--font-inverse-color);

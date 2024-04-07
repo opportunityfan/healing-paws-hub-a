@@ -45,7 +45,7 @@
 
 <script setup lang="ts">
 import { watch } from "vue";
-import {onMounted, onUnmounted, reactive, ref} from "vue";
+import {onMounted, onUnmounted, reactive, ref, defineExpose} from "vue";
 
 // eslint-disable-next-line no-undef
 const props = withDefaults(defineProps<{
@@ -197,6 +197,12 @@ const onTouchMove = (e : any) => {
   // 记录初始位置
   lastTouchY.value = e.touches[0].clientY
 }
+
+const toTop = () => {
+  info.topPercentage = 0
+}
+
+defineExpose({toTop})
 </script>
 
 <style scoped lang="stylus">

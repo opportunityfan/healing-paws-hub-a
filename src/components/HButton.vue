@@ -1,5 +1,10 @@
 <template>
-  <div class="h-button border-radius-thin" :style="{height: props.height === '' ? '40px' : props.height, backgroundColor: props.isChosen ? 'var(--theme-color-dark)' : 'var(--theme-color)'}">
+  <div
+      class="h-button border-radius-thin"
+      :style="{
+        height: props.height === '' ? '40px' : props.height
+      }"
+  >
     <div class="center">
       <slot name="default"></slot>
     </div>
@@ -12,10 +17,8 @@ const props = withDefaults(defineProps<{
   type?: string
   size?: string
   height?: string
-  isChosen?: boolean
 }>(),{
   type: "primary",
-  isChosen: false
 });
 </script>
 

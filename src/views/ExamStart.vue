@@ -21,34 +21,36 @@ onMounted(()=>{
 </script>
 
 <template>
-  <h1 class="head">
-    {{item.examName}}
-  </h1>
-  <h4 class="head">
-    考试分数：{{item.totalScore}}
-    考试时间：{{item.startTime}}-{{item.endTime}} 共计{{item.totalTime}}分钟
-  </h4>
   <div>
-    考试规则：
-    <br>
-    1.考试需要在规定时间内完成考试内容
-    <br>
-    2.不得作弊
-    <br>
-    3.，，，，，，，
-    <br>
-    4，，，，，，，，
-    <br>
-    5，，，，，，，
+    <h1 class="head">
+      {{item.examName}}
+    </h1>
+    <h4 class="head">
+      考试分数：{{item.totalScore}}
+      考试时间：{{item.startTime}}-{{item.endTime}} 共计{{item.totalTime}}分钟
+    </h4>
     <div>
+      考试规则：
+      <br>
+      1.考试需要在规定时间内完成考试内容
+      <br>
+      2.不得作弊
+      <br>
+      3.，，，，，，，
+      <br>
+      4，，，，，，，，
+      <br>
+      5，，，，，，，
+      <div>
 
+      </div>
     </div>
-  </div>
     <router-link :to="`/examTest/${item.id}`">
       <el-button>
         开始考试
       </el-button>
     </router-link>
+  </div>
 </template>
 
 <style scoped lang="stylus">
