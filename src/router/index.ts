@@ -6,13 +6,13 @@ import SignView from "@/views/SignView.vue"
 import LearnView from "@/views/LearnViews/LearnView.vue";
 import MainView from "@/views/MainView.vue";
 import GuideView from "@/views/GuideView.vue";
-import ArchiveView from "@/views/ArchiveView.vue";
+import ArchiveView from "@/views/ArchiveViews/ArchiveView.vue";
 import ExamView from "@/views/ExamView.vue";
 import AffairView from "@/views/LearnViews/AffairView.vue";
 import AffairSearchView from "@/views/LearnViews/AffairSearchView.vue";
 import PostEditView from "@/views/PostEditView.vue"
-import ArchiveDetailView from "@/views/ArchiveDetailView.vue";
-import ArchiveSearchResultsView from "@/views/ArchiveSearchResultsView.vue";
+import ArchiveDetailView from "@/views/ArchiveViews/ArchiveDetailView.vue";
+import ArchiveSearchResultsView from "@/views/ArchiveViews/ArchiveSearchResultsView.vue";
 import ExamLink from "@/views/ExamLink.vue";
 import store from "@/store";
 import InstrumentSearchView from "@/views/LearnViews/InstrumentSearchView.vue";
