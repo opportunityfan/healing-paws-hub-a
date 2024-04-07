@@ -16,11 +16,11 @@ export class Image {
 }
 
 export class Post {
-    id: number
+    id: string
     title: string
     backgroundImage: Image
     description: string
-    constructor(id: number, title: string, description: string , backgroundImage: Image) {
+    constructor(id: string, title: string, description: string , backgroundImage: Image) {
         this.id = id
         this.title = title
         this.description = description
