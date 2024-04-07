@@ -3,11 +3,11 @@
 import axios from "@/assets/axios";
 import store from "@/store";
 import {reactive, ref} from "vue";
-import HDivider from "@/components/HDivider.vue";
 import HInput from "@/components/HInput.vue";
 import HButton from "@/components/HButton.vue";
 import HAvatar from "@/components/HAvatar.vue";
 import {goRoleSelect} from "@/assets/api";
+import HFileUpload from "@/components/HFileUpload.vue";
 const data = reactive<{
   nickName : string,
   password : string,
@@ -19,7 +19,14 @@ const data = reactive<{
   confirmPassword : '',
   picked : ''
 })
-const editPanel = reactive({visible : false})
+
+const isMouseOverAvatar = ref(false)
+const onMouseEnterAvatar = () =>{
+  isMouseOverAvatar.value = true
+}
+const onMouseLeaveAvatar = () => {
+  isMouseOverAvatar.value = false
+}
 const chooseRole = () => {
   axios.post('/sysUser/setPermission',{},{
     params:{
@@ -34,38 +41,8 @@ const chooseRole = () => {
     console.log(res.data)
   })
 }
-const fileInput = ref()
-const selectedFile = ref()
-const handleImage = (event : any) =>{
-  const files = event.target.files || event.dataTransfer.files
-  if(!files.length) return;
-  selectedFile.value = files[0]
-
-  console.log('handleImage')
-  upLoadImage()
-}
-const upLoadImage = async () => {
-  if(!selectedFile.value){
-    alert('请先选图片')
-    return
-  }
-  const formData = new FormData()
-  formData.append('avatar',selectedFile.value)
-  await axios.post('/sysUser/setAvatar',formData,{
-    headers:{
-      'token' : store.state.token
-    }
-  }).then((res)=>{
-    console.log(res.data)
-    store.state.avatar_url = res.data.data
-  })
-}
 const changeNickName = () =>{
   console.log('昵称修改成功！')
-}
-const editAvatar = () =>{
-  console.log('change')
-  editPanel.visible = !editPanel.visible
 }
 
 </script>
@@ -107,11 +84,18 @@ const editAvatar = () =>{
         <div class="sub-title" style="padding: 0 10px">
           头像
         </div>
-        <HAvatar size="200" @click="editAvatar"></HAvatar>
-        <div v-if="editPanel.visible">
-          <input type="file" accept="image/*" @change="handleImage" ref="fileInput"/>
-
+        <div style="position: relative; width: fit-content" class="avatar-box"
+             @mouseenter="onMouseEnterAvatar"
+             @mouseleave="onMouseLeaveAvatar"
+             @click="editAvatar">
+          <HAvatar  size="200" class="avatar-icon"></HAvatar>
+          <div :style="{opacity : isMouseOverAvatar ? '1' : '0'}"
+               class="center add-icon" >
+            <HFileUpload></HFileUpload>
+          </div>
         </div>
+
+
       </div>
     </div>
   </div>
@@ -141,4 +125,19 @@ const editAvatar = () =>{
 
 .module
   margin 20px 0px
+
+.avatar-box
+  display flex
+  border-radius 999px
+  &:hover
+    cursor pointer
+    .avatar-icon
+      filter blur(4px)
+      transition 0.3s
+  
+.add-icon
+  position absolute
+  transition 0.3s
+
+
 </style>

@@ -1,0 +1,57 @@
+<script setup lang="ts">
+
+import {ref} from "vue";
+import axios from "@/assets/axios";
+import store from "@/store";
+
+const fileInput = ref<HTMLInputElement>()
+const clickFileInput = () => {
+  fileInput.value?.click()
+}
+
+const selectedFile = ref()
+const handleImage = (event : any) =>{
+  const files = event.target.files || event.dataTransfer.files
+  if(!files.length) return;
+  selectedFile.value = files[0]
+
+  console.log('handleImage')
+  upLoadImage()
+}
+const upLoadImage = async () => {
+  if(!selectedFile.value){
+    alert('请先选图片')
+    return
+  }
+  const formData = new FormData()
+  formData.append('avatar',selectedFile.value)
+  await axios.post('/sysUser/setAvatar',formData,{
+    headers:{
+      'token' : store.state.token
+    }
+  }).then((res)=>{
+    console.log(res.data)
+    store.state.avatar_url = res.data.data
+  })
+}
+</script>
+
+<template>
+  <div style="display: flex">
+    <input type="file" accept="image/*" @change="handleImage" ref="fileInput" style="display: none"/>
+    <div  class="file-input">
+      <i class='bx bx-plus file-select' @click="clickFileInput"></i>
+    </div>
+
+  </div>
+</template>
+
+<style scoped lang="stylus">
+.file-input
+  display flex
+  flex-direction row
+
+.file-select
+  font-size 100px
+  cursor pointer
+</style>
