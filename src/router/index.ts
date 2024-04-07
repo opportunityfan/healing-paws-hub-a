@@ -17,7 +17,6 @@ import ExamLink from "@/views/ExamLink.vue";
 import store from "@/store";
 import InstrumentSearchView from "@/views/LearnViews/InstrumentSearchView.vue";
 import InstrumentView from "@/views/LearnViews/InstrumentView.vue";
-import {affairNode} from "@/assets/api";
 import AffairNodeView from "@/views/LearnViews/AffairNodeView.vue";
 import EditView from "@/views/UserView/EditView.vue";
 import ExamStart from "@/views/ExamStart.vue";
