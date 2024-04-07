@@ -100,7 +100,11 @@ export const signIn = (data:any) => {
                  store.state.email = res.data.data.account
              })
              store.state.online = true
+
              goto('/main').then()
+             if(res.data.msg.substring(0,3) === 'NEW'){
+                 goto('/RoleSelectView').then()
+             }
          }
      }).catch(err=>{
          console.log("network Error！")
