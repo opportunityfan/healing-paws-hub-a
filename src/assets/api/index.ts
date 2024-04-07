@@ -16,11 +16,11 @@ export class Image {
 }
 
 export class Post {
-    id: number
+    id: string
     title: string
     backgroundImage: Image
     description: string
-    constructor(id: number, title: string, description: string , backgroundImage: Image) {
+    constructor(id: string, title: string, description: string , backgroundImage: Image) {
         this.id = id
         this.title = title
         this.description = description
@@ -100,7 +100,11 @@ export const signIn = (data:any) => {
                  store.state.email = res.data.data.account
              })
              store.state.online = true
+
              goto('/main').then()
+             if(res.data.msg.substring(0,3) === 'NEW'){
+                 goto('/RoleSelectView').then()
+             }
          }
      }).catch(err=>{
          console.log("network Error！")

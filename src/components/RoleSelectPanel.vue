@@ -2,9 +2,11 @@
 
 import {reactive, ref} from "vue";
 import HImage from "@/components/HImage.vue";
-import {goRoleSelect, Image} from "@/assets/api";
+import {goBack, goRoleSelect, goto, Image} from "@/assets/api";
 import HDivider from "@/components/HDivider.vue";
 import HButton from "@/components/HButton.vue";
+import axios from "@/assets/axios";
+import store from "@/store";
 
 const roles =reactive<{
   role : string
@@ -16,7 +18,7 @@ const roles =reactive<{
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   {role:'医助',image: (new Image(require("@/assets/assistant.png"),0.618,1))},
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  {role:'医生',image: (new Image(require("@/assets/doctor.png"),0.618,1))}
+  {role:'医师',image: (new Image(require("@/assets/doctor.png"),0.618,1))}
 ])
 
 const hintMessages = ['您选择了前台人员哦','您选择了医助哦','您选择了医生哦',' ']
@@ -35,6 +37,29 @@ const ConfirmSelected = () => {
 
   console.log('确认选择')
 }
+const chooseRole = () => {
+  axios.post('/sysUser/setPermission',{},{
+    params:{
+      permission:roles[roleSelected.value].role
+    },
+    headers:{
+      'Content-Type' : 'application/json',
+      'token': store.state.token
+    }
+  }).then((res)=>{
+
+    console.log(res.data)
+    goBack()
+  })
+}
+const submit = () =>{
+  if(roleSelected.value !== 3){
+    console.log()
+    chooseRole()
+  }
+
+}
+const isSubmitDisabled = ref(true)
 </script>
 
 <template>
@@ -51,7 +76,7 @@ const ConfirmSelected = () => {
       {{hintMessages[roleSelected]}}
     </div>
     <div class="item-center">
-      <HButton height="35px" style="width: 120px" @click="ConfirmSelected">确认选择</HButton>
+      <HButton height="35px" style="width: 120px" @click="submit" >确认选择</HButton>
     </div>
     <div style="margin-top: -20px;" >
       <span class="hint">角色修改后可以随时修改哦</span>

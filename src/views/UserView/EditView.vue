@@ -2,24 +2,26 @@
 
 import axios from "@/assets/axios";
 import store from "@/store";
-import {reactive, ref} from "vue";
+import {reactive, ref, watch} from "vue";
 import HInput from "@/components/HInput.vue";
 import HButton from "@/components/HButton.vue";
 import HAvatar from "@/components/HAvatar.vue";
 import {goRoleSelect} from "@/assets/api";
 import HFileUpload from "@/components/HFileUpload.vue";
 const data = reactive<{
-  nickName : string,
+  account : string
+  userName : string,
   password : string,
   confirmPassword : string
   picked : string
 }>({
-  nickName : store.state.nick_name,
+  account : '',
+  userName : store.state.nick_name,
   password : '',
   confirmPassword : '',
   picked : ''
 })
-
+const ispasswordSame = ref(true)
 const isMouseOverAvatar = ref(false)
 const onMouseEnterAvatar = () =>{
   isMouseOverAvatar.value = true
@@ -27,23 +29,35 @@ const onMouseEnterAvatar = () =>{
 const onMouseLeaveAvatar = () => {
   isMouseOverAvatar.value = false
 }
-const chooseRole = () => {
-  axios.post('/sysUser/setPermission',{},{
-    params:{
-      permission:'前台'
-    },
+
+const updateUserData = () =>{
+  const bodyData = {
+    account:data.account,
+    password:'',
+    userName:data.userName
+  }
+  if(ispasswordSame.value){
+    bodyData.password = data.confirmPassword
+  }
+  axios.post('/sysUser/update',bodyData,{
     headers:{
-      'Content-Type' : 'application/json',
-      'token': store.state.token
+      'token':store.state.token
     }
   }).then((res)=>{
-
     console.log(res.data)
   })
 }
-const changeNickName = () =>{
-  console.log('昵称修改成功！')
-}
+
+watch(
+    () => data.confirmPassword,
+    (val,preval) => {
+      if(val !== data.password){
+        ispasswordSame.value = false
+      }else{
+        ispasswordSame.value = true
+      }
+    }
+)
 
 </script>
 
@@ -54,8 +68,15 @@ const changeNickName = () =>{
         <div class="sub-title">
           昵称
         </div>
-        <HInput name="NickName" v-model="data.nickName" height="25px" @keydown.enter="changeNickName"></HInput>
+        <HInput name="userName" v-model="data.userName" height="25px" @keydown.enter="updateUserData"></HInput>
         <div class="hint">这里可以修改你的昵称哦</div>
+      </div>
+      <div class="module">
+        <div class="sub-title">
+          账号
+        </div>
+        <HInput name="account" v-model="data.account" height="25px" @keydown.enter="updateUserData"></HInput>
+        <div class="hint">这里可以修改你的账号哦</div>
       </div>
       <div class="module">
         <div class="sub-title">
@@ -68,7 +89,7 @@ const changeNickName = () =>{
 
       <div class="module">
         <div>
-          <HButton height="35px" style="width: 200px">
+          <HButton height="35px" style="width: 200px" @click="updateUserData">
             更新信息
           </HButton>
           <div style="text-align: left; margin-top: -20px;" >
@@ -86,8 +107,7 @@ const changeNickName = () =>{
         </div>
         <div style="position: relative; width: fit-content" class="avatar-box"
              @mouseenter="onMouseEnterAvatar"
-             @mouseleave="onMouseLeaveAvatar"
-             @click="editAvatar">
+             @mouseleave="onMouseLeaveAvatar">
           <HAvatar  size="200" class="avatar-icon"></HAvatar>
           <div :style="{opacity : isMouseOverAvatar ? '1' : '0'}"
                class="center add-icon" >
