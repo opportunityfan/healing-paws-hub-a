@@ -8,10 +8,7 @@ import {goto} from "@/assets/api";
 import {onMounted, ref} from "vue";
 import axios from "@/assets/axios";
 import {dayjs} from "element-plus";
-
-function ChangeRecord(){
-  goto('/examLink');
-}
+import HTableManage from "@/components/HTableManage.vue";
 
 const text=ref('');
 const choose=ref(null);
@@ -45,8 +42,10 @@ async function getData(){
       pageSize:pagesize.value,
     }
   }).then((result)=>{
+      console.log(result.data)
         console.log(result.data.data);
         tabledata.value=result.data.data;
+        console.log(tabledata.value);
       }
   );
 }
@@ -69,7 +68,7 @@ function operation(order:string){
 function clearup(){
   sort.value='';
   text.value='';
-  choose.value=null;
+  choose.value='';
   value2.value='';
   getData();
 }
@@ -78,7 +77,9 @@ function clearup(){
 <template>
   <div>
     <div class="shang">
-      <HButton @click="ChangeRecord">前往考试记录</HButton>
+      <router-link to="/examAdd">
+        <HButton>前往添加考试</HButton>
+      </router-link>
       <!--      <HSearch></HSearch>-->
       <!--      <HTimePicker></HTimePicker>-->
       <div class="hang">
@@ -114,8 +115,9 @@ function clearup(){
         <el-button @click="clearup()">清空</el-button>
       </div>
     </div>
+<!--    {{tabledata}}-->
     <div class="xia">
-      <HTable :tabledata="tabledata"></HTable>
+      <HTableManage :tabledata="tabledata"></HTableManage>
     </div>
     <el-pagination
         small

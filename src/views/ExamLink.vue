@@ -63,7 +63,7 @@ onMounted(()=>{
     </thead>
     <tbody>
     <tr v-for="(item,index) in testdata" :key="index">
-      <td>{{item.examId}}</td>
+      <td>{{item.examName}}</td>
       <td>{{item.time}}</td>
       <td>{{item.score}}</td>
       <td>

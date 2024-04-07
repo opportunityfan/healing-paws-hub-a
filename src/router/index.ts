@@ -23,6 +23,12 @@ import ExamStart from "@/views/ExamStart.vue";
 import ExamTest from "@/views/ExamTest.vue";
 import ExamRecordView from "@/views/ExamRecordView.vue";
 import RoleSelectView from "@/views/UserView/RoleSelectView.vue";
+import ExamManageView from "@/views/ExamManageView.vue";
+import ExamAddView from "@/views/ExamAddView.vue";
+import ExamUpdateView from "@/views/ExamUpdateView.vue";
+import SubjectView from "@/views/SubjectView.vue";
+import SubjectAddView from "@/views/SubjectAddView.vue";
+import SubjectUpdateView from "@/views/SubjectUpdateView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -150,6 +156,36 @@ const routes: Array<RouteRecordRaw> = [
         path: '/examRecord/:id',
         name: 'examRecord',
         component: ExamRecordView
+      },
+      {
+        path: '/examManage',
+        name: 'examManage',
+        component: ExamManageView
+      },
+      {
+        path: '/examAdd',
+        name: 'examAdd',
+        component: ExamAddView
+      },
+      {
+        path: '/examUpdate/:id',
+        name: 'examUpdate',
+        component: ExamUpdateView
+      },
+      {
+        path: '/subject',
+        name: 'subject',
+        component: SubjectView
+      },
+      {
+        path: '/subjectAdd',
+        name: 'subjectAdd',
+        component: SubjectAddView
+      },
+      {
+        path: '/subjectUpdate/:id',
+        name: 'subjectUpdate',
+        component: SubjectUpdateView
       }
     ]
   }
