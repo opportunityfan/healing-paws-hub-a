@@ -1,5 +1,5 @@
 <template>
-  <div class="post-main full border-radius-regular">
+  <div class="post-main full border-radius-regular" @click="onPostClick">
     <div class="post-background full" v-lazyLoad="props.post.backgroundImage.src"></div>
     <div class="post-info flex-column full">
       <div class="flex-row" style="justify-content: space-between; width: 90%" :style="{justifyContent: props.showDescription? 'space-between' : 'center'}">
@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import {Post} from "@/assets/api";
-
+import {defineEmits} from 'vue'
 // eslint-disable-next-line no-undef
 const props = withDefaults(defineProps<{
   post : Post
@@ -24,6 +24,10 @@ const props = withDefaults(defineProps<{
 }>(), {
   showDescription: true
 })
+const emit = defineEmits(['onPostClick'])
+const onPostClick = () =>{
+  emit('onPostClick',props.post.id)
+}
 </script>
 
 <style scoped lang="stylus">
@@ -41,6 +45,7 @@ const props = withDefaults(defineProps<{
     transition all 0.2s
     z-index -1
   &:hover
+    cursor pointer
     .post-background
       content ''
       width 100%

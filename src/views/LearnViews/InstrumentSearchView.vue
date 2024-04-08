@@ -1,10 +1,13 @@
 <script setup lang="ts">
 
+import HSearchBar from "@/components/HSearchBar.vue";
+import {goItem} from "@/assets/api";
 </script>
 
 <template>
-  <div>
-    器械搜索界面
+  <div class="full">
+    <HSearchBar search-url="/item/search" @onEnter="goItem"></HSearchBar>
+
   </div>
 </template>
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, defineEmits, withDefaults, defineProps } from 'vue'
-import {tag, autoComplete, goto, goAffair} from '@/assets/api';
+import {tag, autoComplete, goto, goAffair, autoCompleteItem} from '@/assets/api';
 import { onBeforeRouteUpdate, useRoute } from "vue-router";
 
 const isFocus = ref(false)
@@ -48,10 +48,17 @@ const onInput = (e: any) => {
   // 补全最后一词
   const value = e.target.value
 
-  autoComplete(props.searchUrl,value).then((res) => {
-    autoCompletes.value = res
-    selectedIndex.value = -1
-  })
+  if(props.searchUrl === "/item/search"){
+    autoCompleteItem(value).then(res => {
+      autoCompletes.value = res
+      selectedIndex.value = -1
+    })
+  }else {
+    autoComplete(props.searchUrl, value).then((res) => {
+      autoCompletes.value = res
+      selectedIndex.value = -1
+    })
+  }
 }
 
 const onKeyDown = (e: any) => {
@@ -187,6 +194,7 @@ const onMouseEnter = (index: number) => {
   height: auto;
   display: flex;
   flex-direction: column;
+  z-index 1
 }
 
 .search-panel-item {

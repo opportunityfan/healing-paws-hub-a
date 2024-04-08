@@ -102,9 +102,8 @@ let instruments = [
 let affairId = 0
 
 const requestNewAffair = async (count : number) => {
-
   const newPostList = new Array<Post>()
-  const jsondata = {count:'4'}
+  const jsondata = {count:'5'}
   await axios.post('/affair/recommend',jsondata,{
     headers:{
       'token':store.state.token
@@ -121,10 +120,10 @@ const requestNewAffair = async (count : number) => {
         const image = new Image(item.pic,item.picSize[0],item.picSize[1])
         tempImage = image
       }
-
       newPostList.push(new Post(item.id,item.name,item.description,tempImage))
     }
-
+  }).catch(e=>{
+    console.log(e)
   })
   return newPostList
 }

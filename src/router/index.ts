@@ -98,9 +98,10 @@ const routes: Array<RouteRecordRaw> = [
         component: InstrumentSearchView
       },
       {
-        path: '/instrument',
+        path: '/instrument/:itemId',
         name: 'instrumentPage',
-        component: InstrumentView
+        component: InstrumentView,
+        props:true
       },
       {
         path: '/guide',

@@ -158,6 +158,9 @@ export const getAffairNode = async (id : string) : Promise<affairNode | undefine
 export const goEdit = () => {
     goto('/edit').then()
 }
+export const goPost = (id : string) => {
+    console.log(id)
+}
 export const getRecommendedAffairs = () =>{
     console.log("s")
 }
@@ -186,6 +189,10 @@ export const goAffairNode = async (nodeId: string) =>{
     await router.push({name: 'affairNodePage',params: {nodeId : nodeId}});
 
 }
+export const goItem = async (itemId: string) => {
+    console.log(itemId)
+    await router.push({name:'instrumentPage',params:{itemId : itemId}})
+}
 export const goInstrumentSearchView = () =>{
     goto('/instrumentSearch').then()
 }
@@ -211,6 +218,31 @@ export const autoComplete = async (searchUrl : string,word : string) :Promise<ta
             const tempTag = new tag(e.id,e.name)
             names.push(tempTag)
         })
+    })
+    console.log(names)
+    return names
+}
+export const autoCompleteItem = async (word : string) :Promise<tag[]> =>{
+    const names = Array<tag>()
+    await axios.get('/item/search',{
+        params:{
+            pageNum : 1,
+            pageSize : 10,
+            name : word
+        },
+        headers:{
+            'token' : store.state.token
+        }
+    }).then((res)=>{
+        const affairs = res.data
+        console.log(res.data)
+
+        if(affairs)
+            affairs.forEach((e:any) => {
+                const tempTag = new tag(e.id,e.name)
+                names.push(tempTag)
+            })
+        console.log(affairs)
     })
     console.log(names)
     return names
