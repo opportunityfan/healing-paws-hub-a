@@ -6,7 +6,7 @@ import {reactive, ref, watch} from "vue";
 import HInput from "@/components/HInput.vue";
 import HButton from "@/components/HButton.vue";
 import HAvatar from "@/components/HAvatar.vue";
-import {goRoleSelect} from "@/assets/api";
+import {getUserInfo, goRoleSelect} from "@/assets/api";
 import HFileUpload from "@/components/HFileUpload.vue";
 const data = reactive<{
   account : string
@@ -30,7 +30,7 @@ const onMouseLeaveAvatar = () => {
   isMouseOverAvatar.value = false
 }
 
-const updateUserData = () =>{
+const updateUserData = async () =>{
   const bodyData = {
     account:data.account,
     password:'',
@@ -39,13 +39,15 @@ const updateUserData = () =>{
   if(ispasswordSame.value){
     bodyData.password = data.confirmPassword
   }
-  axios.post('/sysUser/update',bodyData,{
+  await axios.post('/sysUser/update',bodyData,{
     headers:{
       'token':store.state.token
     }
   }).then((res)=>{
     console.log(res.data)
   })
+  let res = getUserInfo()
+  console.log(res)
 }
 
 watch(

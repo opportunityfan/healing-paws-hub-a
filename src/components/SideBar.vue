@@ -52,6 +52,14 @@
                 <div class="foldable">Exam</div>
               </div>
             </side-bar-item>
+            <side-bar-item name="manage" @click="goto('/manageMain')">
+              <div class="flex-row" style="justify-content: center; transition: gap 0.5s" :style="{gap: store.state.sidebar_fold?'0':'20px'}">
+                <div class="box-icon">
+                  <i class='bx bx-command' ></i>
+                </div>
+                <div class="foldable">Manage</div>
+              </div>
+            </side-bar-item>
           </side-bar-item-group>
         </div>
         <div class="sidebar-bottom-block border-radius-regular">

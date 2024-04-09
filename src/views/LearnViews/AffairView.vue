@@ -2,16 +2,15 @@
 
 <script setup lang="ts">
 
-import {onMounted, reactive, ref} from "vue";
+import {reactive} from "vue";
 import {useRoute} from 'vue-router'
 import FlowDia from "@/components/FlowDia.vue";
 import axios from "@/assets/axios";
 import store from "@/store";
-import {affairNode, goAffairNode} from "@/assets/api";
+import {affairNode, getAffairNodes, goAffairNode} from "@/assets/api";
 
 const route = useRoute()
 const affairId = route.params.affairId//事务id
-
 
 let nodes = reactive([{
   id: '1321',
@@ -42,25 +41,6 @@ let nodes = reactive([{
     contentImg: 'null',
   }
 ])
-
-let testNodes = reactive([])
-const getAffair = (affairId : string)=>{
-  axios.get('/affair/subs',{
-    params:{
-      affairId: affairId
-    },
-    headers:{
-      'token':store.state.token
-    }
-  }).then((res) =>{
-    testNodes = res.data.data
-    console.log(testNodes)
-    console.log(nodes)
-  })
-}
-
-
-getAffair('6606c8b71d488834ff7a83af')
 
 </script>
 

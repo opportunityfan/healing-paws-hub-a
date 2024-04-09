@@ -79,8 +79,6 @@ export const testaxios = ()=>{
     })
 }
 export const signIn = (data:any) => {
-
-
     axios.post('/sysUser/login',data,{
          headers:{
              'Content-Type' : 'application/json'
@@ -89,18 +87,9 @@ export const signIn = (data:any) => {
          if(res.data.code==200){
 
              store.state.token = res.data.data.token
-             axios.get('/sysUser',{
-                 headers:{
-                     'token' : store.state.token
-                 }
-             }).then((res)=>{
-                 console.log(res.data.data)
-                 store.state.nick_name = res.data.data.username
-                 store.state.avatar_url = res.data.data.avatar
-                 store.state.email = res.data.data.account
+             getUserInfo().then(res => {
+                 store.state.online = true
              })
-             store.state.online = true
-
              goto('/main').then()
              if(res.data.msg.substring(0,3) === 'NEW'){
                  goto('/RoleSelectView').then()
@@ -109,7 +98,6 @@ export const signIn = (data:any) => {
      }).catch(err=>{
          console.log("network Error！")
     })
-
 }
 export const signUp = (data : any)=>{
     store.state.email_for_registry = data.email
@@ -123,6 +111,20 @@ export const signUp = (data : any)=>{
 
     goto('/check-email').then();
 }
+export const getUserInfo = async () => {
+    let userInfo: any
+    await axios.get('/sysUser',{
+        headers:{
+            'token' : store.state.token
+        }
+    }).then((res)=>{
+        userInfo = res.data.data
+        store.state.nick_name = userInfo.username
+        store.state.avatar_url = userInfo.avatar
+        store.state.email = userInfo.account
+    })
+    return userInfo
+}
 export const signOut = () => {
     store.state.online = false
     goto('/login').then()
@@ -133,7 +135,6 @@ export const signOut = () => {
     }).then((res)=>{
         console.log(res.data)
     })
-
 }
 
 export const getAffairNode = async (id : string) : Promise<affairNode | undefined> => {
@@ -143,7 +144,7 @@ export const getAffairNode = async (id : string) : Promise<affairNode | undefine
             id: id
         },
         headers:{
-            'Content-Type' : 'application/json'
+            'token' : store.state.token
         }
     }).then((res) => {
         if (res.data.code === 200) {
@@ -157,9 +158,6 @@ export const getAffairNode = async (id : string) : Promise<affairNode | undefine
 //跳转到界面可以不单独写成函数
 export const goEdit = () => {
     goto('/edit').then()
-}
-export const goPost = (id : string) => {
-    console.log(id)
 }
 export const getRecommendedAffairs = () =>{
     console.log("s")
@@ -184,6 +182,7 @@ export const goAffair = (affairId : string)=>{
     console.log(affairId)
     gotoWithProp('affairPage',affairId).then()
 }
+
 export const goAffairNode = async (nodeId: string) =>{
     console.log(nodeId,'nodeid')
     await router.push({name: 'affairNodePage',params: {nodeId : nodeId}});
@@ -254,4 +253,21 @@ export class tag{
         this.id = id
         this.name = name
     }
+}
+export const getAffairNodes = async (affairId : string)=>{
+    const affairNodes = Array<affairNode>()
+    await axios.get('/affair/subs',{
+        params:{
+            affairId: affairId
+        },
+        headers:{
+            'token':store.state.token
+        }
+    }).then((res) =>{
+        console.log(res.data)
+        res.data.data.forEach((node: any) => {
+            affairNodes.push(new affairNode(node.id,node.name,node.content,node.contentImg,node.contentVideo))
+        })
+    })
+    return affairNodes
 }
