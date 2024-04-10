@@ -5,12 +5,11 @@
 import {reactive} from "vue";
 import {useRoute} from 'vue-router'
 import FlowDia from "@/components/FlowDia.vue";
-import axios from "@/assets/axios";
-import store from "@/store";
+
 import {affairNode, getAffairNodes, goAffairNode} from "@/assets/api";
 
 const route = useRoute()
-const affairId = route.params.affairId//事务id
+const affairId = route.params.affairId as string//事务id
 
 let nodes = reactive([{
   id: '1321',
@@ -48,7 +47,7 @@ let nodes = reactive([{
   <div class="full">
     <div >事务{{affairId}}详情</div>
     <div class="full">
-      <FlowDia :nodes="nodes" @nodeClicked="goAffairNode"></FlowDia>
+      <FlowDia :affairId="affairId" @nodeClicked="goAffairNode"></FlowDia>
     </div>
   </div>
 </template>

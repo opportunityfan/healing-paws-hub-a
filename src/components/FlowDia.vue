@@ -1,14 +1,21 @@
 <script setup lang="ts">
-import type {Edge, Node, Elements} from '@vue-flow/core'
+import type {Edge, Node} from '@vue-flow/core'
 import {VueFlow, useVueFlow} from "@vue-flow/core";
-import {ref,defineProps, withDefaults, defineEmits} from "vue";
+import {ref, defineProps, withDefaults, defineEmits, reactive} from "vue";
 import HButton from "@/components/HButton.vue";
-import {affairNode} from "@/assets/api";
+import {affairNode, getAffairNodes} from "@/assets/api";
 
 const props = withDefaults(defineProps<{
-  nodes : Array<affairNode>
+  affairId: string
+
 }>(),{
-  nodes : ()=>[]
+  affairId: '',
+
+})
+const data = reactive<{
+  nodes : Array<affairNode>
+}>({
+  nodes : []
 })
 
 const emit = defineEmits(['nodeClicked'])
@@ -16,51 +23,57 @@ const nodes = ref<Node[]>([])
 const {addNodes, onPaneReady, addEdges, onNodeClick, onNodeDoubleClick} = useVueFlow()
 const edges = ref<Edge[]>([])
 
-const initGraph = ()=>{
-  console.log('sjofsf')
-  console.log(props.nodes)
-  for(let [index, node] of props.nodes.entries()){
+const initGraph = async ()=>{
+  getAffairNodes(props.affairId as string).then(res=>{
+    res.forEach(node=>{
+      data.nodes.push(new affairNode(node.id,node.name,node.content,node.contentImg,node.contentVideo))
+    })
 
-
-    if(index!=0) {
-      if(index!=props.nodes.length-1) {
-        nodes.value.push({
-          id: (index+1).toString(),
-          label: node.name,
-          position: {x: ((index+1) * 50) + 100, y: ((index+1) * 100) + 100},
-          class: 'mid-node',
-          data:{
-            nodeId: node.id
-          }
+    for(let [index,node] of res.entries()){
+      if(index!=0) {
+        if(index!=data.nodes.length-1) {
+          nodes.value.push({
+            id: (index+1).toString(),
+            label: node.name,
+            position: {x: ((index+1) * 50) + 100, y: ((index+1) * 100) + 100},
+            class: 'mid-node',
+            data:{
+              nodeId: node.id
+            }
+          })
+        }else{
+          nodes.value.push({
+            id: (index+1).toString(),
+            label: node.name,
+            position: {x: ((index+1) * 50) + 100, y: ((index+1) * 100) + 100},
+            class: 'end-node',
+            data:{
+              nodeId: node.id
+            }
+          })
+        }
+        edges.value.push({
+          id:'e'+index.toString() + '-' + (index+1).toString(),
+          source: index.toString(),
+          target: (index+1).toString()
         })
       }else{
         nodes.value.push({
           id: (index+1).toString(),
           label: node.name,
           position: {x: ((index+1) * 50) + 100, y: ((index+1) * 100) + 100},
-          class: 'end-node',
+          class: 'start-node',
           data:{
             nodeId: node.id
           }
         })
       }
-      edges.value.push({
-        id:'e'+index.toString() + '-' + (index+1).toString(),
-        source: index.toString(),
-        target: (index+1).toString()
-      })
-    }else{
-      nodes.value.push({
-        id: (index+1).toString(),
-        label: node.name,
-        position: {x: ((index+1) * 50) + 100, y: ((index+1) * 100) + 100},
-        class: 'start-node',
-        data:{
-          nodeId: node.id
-        }
-      })
     }
-  }
+  })
+
+  // for(let [index, node] of data.nodes.entries()){
+  //
+  // }
 }//使用传入节点数据初始化flow图
 initGraph()
 onPaneReady((instance) => instance.fitView())//适应所有节点位置，保证pane的缩放能展示所有节点

@@ -2,19 +2,12 @@
 import {useRoute} from "vue-router";
 import FlowDia from "@/components/FlowDia.vue";
 import {affairNode, getAffairNodes} from "@/assets/api";
-import {reactive} from "vue";
 
 const route = useRoute()
-const affairId = route.params.affairId
+const affairId = route.params.affairId as string
 
 const nodes = Array<affairNode>()
-getAffairNodes(affairId as string).then(res=>{
-  console.log(res)
-  res.forEach(node=>{
-    nodes.push(new affairNode(node.id,node.name,node.content,node.contentImg,node.contentVideo))
-  })
 
-})
 const goAffairNodeManage = () => {
   console.log('goaffairnodemanage')
 }
@@ -23,8 +16,9 @@ const goAffairNodeManage = () => {
 <template>
 
   <div class="full">
-    <div>
-      <FlowDia :nodes="nodes" @nodeClicked="goAffairNodeManage"></FlowDia>
+    <div >事务{{affairId}}详情</div>
+    <div class="full">
+      <FlowDia :affair-id="affairId" @nodeClicked="goAffairNodeManage"></FlowDia>
     </div>
   </div>
 </template>
