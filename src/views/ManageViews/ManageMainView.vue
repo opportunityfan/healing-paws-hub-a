@@ -1,20 +1,19 @@
-<script setup lang="ts">
+<template>
+  <div class="full">
+    <router-view></router-view>
+    <bottom-bar></bottom-bar>
+  </div>
+</template>
 
-import HButton from "@/components/HButton.vue";
+<script setup lang="ts">
 import {goto} from "@/assets/api";
+import BottomBar from "@/components/BottomBar.vue";
 
 const goAffairManage = () =>{
   goto('/affairManageSearch')
 }
 </script>
 
-<template>
-  <div class="full">
-    <div >
-      <HButton @click="goAffairManage" style="width: 200px;">事务管理</HButton>
-    </div>
-  </div>
-</template>
 
 <style scoped lang="stylus">
 

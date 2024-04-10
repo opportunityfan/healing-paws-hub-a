@@ -202,12 +202,15 @@ const routes: Array<RouteRecordRaw> = [
       {
         path:'/manageMain',
         name:'manageMainPage',
-        component: ManageMainView
-      },
-      {
-        path:'/affairManageSearch',
-        name:'affairManageSearchPage',
-        component: AffairManageSearchView
+        component: ManageMainView,
+        redirect: '/affairManageSearch',
+        children: [
+          {
+            path:'/affairManageSearch',
+            name:'affairManageSearchPage',
+            component: AffairManageSearchView
+          }
+        ]
       },
       {
         path:'/affairManage/:affairId',

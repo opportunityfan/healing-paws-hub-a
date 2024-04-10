@@ -118,6 +118,11 @@
     color: var(--black-color);
     font-weight: 600;
 }
+.text-bold-inverse {
+    font-size: 14px;
+    color: var(--white-color);
+    font-weight: 600;
+}
 input {
     border: none;
     font-family: "Readex Pro", serif;
@@ -185,5 +190,14 @@ input:focus-visible {
     }
     to {
         transform: scale(1);
+    }
+}
+
+@keyframes rotate90 {
+    from {
+        transform: rotate(0);
+    }
+    to {
+        transform: rotate(.25turn);
     }
 }
