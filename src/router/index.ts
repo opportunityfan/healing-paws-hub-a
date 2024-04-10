@@ -6,7 +6,7 @@ import SignView from "@/views/SignView.vue"
 import LearnView from "@/views/LearnViews/LearnView.vue";
 import MainView from "@/views/MainView.vue";
 import GuideView from "@/views/GuideView.vue";
-import ArchiveView from "@/views/ArchiveView.vue";
+import ArchiveView from "@/views/ArchiveViews/ArchiveView.vue";
 import ExamView from "@/views/ExamView.vue";
 import AffairView from "@/views/LearnViews/AffairView.vue";
 import AffairSearchView from "@/views/LearnViews/AffairSearchView.vue";
@@ -23,6 +23,7 @@ import ExamStart from "@/views/ExamStart.vue";
 import ExamTest from "@/views/ExamTest.vue";
 import ExamRecordView from "@/views/ExamRecordView.vue";
 import RoleSelectView from "@/views/UserView/RoleSelectView.vue";
+import ArchiveManagementView from "@/views/ArchiveViews/ArchiveManagementView.vue"
 import ExamManageView from "@/views/ExamManageView.vue";
 import ExamAddView from "@/views/ExamAddView.vue";
 import ExamUpdateView from "@/views/ExamUpdateView.vue";
@@ -132,6 +133,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/archive/:diseaseNames',
         name: 'archiveSearchResults',
         component: ArchiveSearchResultsView
+      },
+      {
+        path: '/archive/management',
+        name: 'archiveManagementPage',
+        component: ArchiveManagementView
       },
       {
         path: '/exam',

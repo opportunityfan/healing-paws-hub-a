@@ -12,6 +12,9 @@
 .flex-column > div {
     margin: 0 auto;
 }
+.flex-wrap {
+    flex-wrap: wrap;
+}
 .item-center{
     display: flex;
     justify-content: center;

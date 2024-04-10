@@ -47,7 +47,7 @@ let nodes = reactive([{
   <div class="full">
     <div >事务{{affairId}}详情</div>
     <div class="full">
-      <FlowDia :affairId="affairId" @nodeClicked="goAffairNode"></FlowDia>
+      <FlowDia :affairId="affairId" @nodeClicked="goAffairNode" :isEditable="false"></FlowDia>
     </div>
   </div>
 </template>

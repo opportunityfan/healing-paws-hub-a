@@ -10,7 +10,7 @@
         </div>
       </div>
 
-      <PostFlow :request-new-post="requestNewAffair" style="flex-grow: 1"></PostFlow>
+      <PostFlow :request-new-post="requestNewAffair" urlPrefix="/affair/" style="flex-grow: 1"></PostFlow>
     </div>
     <div class="instrument-bar flex-column" style="height: 40%">
       <div class="flex-row">
@@ -21,7 +21,7 @@
           <i class='bx bx-dots-horizontal-rounded'></i>
         </div>
       </div>
-      <PostFlow :request-new-post="requestNewInstrument" style="flex-grow: 1" :width="120" :show-description="false" :update-post-count="7"></PostFlow>
+      <PostFlow :request-new-post="requestNewInstrument" urlPrefix="/instrument/" style="flex-grow: 1" :width="120" :show-description="false" :update-post-count="7"></PostFlow>
     </div>
   </div>
 </template>
