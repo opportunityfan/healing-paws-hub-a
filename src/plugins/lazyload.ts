@@ -18,7 +18,9 @@ const lazyLoad = (app : App) => {
                         console.log('error')
                     }
                     if (el.localName === 'img') el.setAttribute('src', binding.value)
-                    else if (el.localName == 'div') el.style.backgroundImage = 'url(' + binding.value + ')'
+                    else if (el.localName == 'div') {
+                        el.style.backgroundImage = 'url(' + binding.value + ')'
+                    }
                 }
             }, {
                 threshold: 0.01 // 当图片img元素占比视图0.01时 el.src = binding.value

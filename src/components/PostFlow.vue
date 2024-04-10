@@ -69,6 +69,8 @@ onMounted(() => {
 .post-flow-bar
   width fit-content
   justify-content space-between
+  padding 5px 5px
+  box-sizing border-box
   overflow hidden
   gap 20px
 .post-bar
