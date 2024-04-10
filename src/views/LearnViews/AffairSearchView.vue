@@ -66,7 +66,7 @@ const requestNewAffair = async (count : number) => {
     <div class="main-panel full">
       <HSearchBar style="width: 85%" searchUrl="/affair/fuzzy" @onEnter="goAffair"></HSearchBar>
       <div class="affair-bar" style="height: 100%">
-        <PostFlowVertical :request-new-post="requestNewAffair" style="flex-grow: 1" width="300"></PostFlowVertical>
+        <PostFlowVertical :request-new-post="requestNewAffair" urlPrefix="/affair/" style="flex-grow: 1" width="300"></PostFlowVertical>
       </div>
     </div>
 </template>

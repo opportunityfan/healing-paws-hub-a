@@ -1,26 +1,32 @@
 <script setup lang="ts">
 import type {Edge, Node} from '@vue-flow/core'
 import {VueFlow, useVueFlow} from "@vue-flow/core";
-import {ref, defineProps, withDefaults, defineEmits, reactive} from "vue";
+import {ref, defineProps, withDefaults, defineEmits, reactive, onMounted} from "vue";
 import HButton from "@/components/HButton.vue";
 import {affairNode, getAffairNodes} from "@/assets/api";
-
+import HInput from "@/components/HInput.vue";
 const props = withDefaults(defineProps<{
   affairId: string
-
+  isEditable: boolean
 }>(),{
   affairId: '',
-
+  isEditable: true
 })
 const data = reactive<{
-  nodes : Array<affairNode>
+  nodes : Array<affairNode>,
+  nodeEditPanel : boolean
+  nodeIndex : number
 }>({
-  nodes : []
+  nodes : [],
+  nodeEditPanel : false,
+  nodeIndex : 0
 })
+
+const tempNode = reactive({name:'name'})
 
 const emit = defineEmits(['nodeClicked'])
 const nodes = ref<Node[]>([])
-const {addNodes, onPaneReady, addEdges, onNodeClick, onNodeDoubleClick} = useVueFlow()
+const {addNodes, onPaneReady, addEdges, onNodeClick, onNodeDoubleClick, onNodeContextMenu} = useVueFlow()
 const edges = ref<Edge[]>([])
 
 const initGraph = async ()=>{
@@ -30,6 +36,7 @@ const initGraph = async ()=>{
     })
 
     for(let [index,node] of res.entries()){
+      data.nodeIndex = index+1
       if(index!=0) {
         if(index!=data.nodes.length-1) {
           nodes.value.push({
@@ -82,12 +89,38 @@ onNodeClick((event)=>{
   console.log(event.node.id)
   emit('nodeClicked',event.node.data.nodeId)
 })
+
+const showPanel = () => {
+  data.nodeEditPanel = true
+}
+
+const onNodeAdd = () => {
+  data.nodeIndex++
+  const nodeIndex = data.nodeIndex
+  addNodes({
+    id : nodeIndex.toString(),
+    position : {x: ((nodeIndex) * 50) + 100, y: ((nodeIndex+1) * 100) + 100},
+    label : tempNode.name
+  })
+}
+
 </script>
 
 <template>
+<div class="full">
+  <div class="flow-panel">
+    <VueFlow :nodes="nodes" :edges="edges"/>
+  </div>
+  <div class="edit-panel" v-if="isEditable">
+    <HButton height="35px" class="button-block" @click="showPanel">添加节点</HButton>
+    <HButton height="35px" class="button-block">保存</HButton>
+  </div>
+  <div class="edit-panel"  v-if="data.nodeEditPanel">
+    <HInput name="nodeName" v-model="tempNode.name" height="35px" class="button-block"></HInput>
+    <HButton height="35px" class="button-block" @click="onNodeAdd">确认添加</HButton>
+  </div>
 
-  <VueFlow :nodes="nodes" :edges="edges"/>
-
+</div>
 </template>
 
 <style lang="stylus">
@@ -124,4 +157,14 @@ onNodeClick((event)=>{
 .end-node:hover
   background var(--accent-color-dark)
   transition background-color 0.2s
+
+.flow-panel
+  height 70%
+
+.edit-panel
+  display flex
+  flex-direction row
+  .button-block
+    width 200px
+    margin 10px 20px
 </style>
