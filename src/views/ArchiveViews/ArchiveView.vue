@@ -1,7 +1,6 @@
 <script setup lang="ts">
 
 import HScroller from "@/components/HScroller.vue";
-import HImage from "@/components/HImage.vue";
 import {ref, reactive} from "vue";
 import HButton from "@/components/HButton.vue";
 import DiseaseNameButton from "@/views/ArchiveViews/DiseaseNameButton.vue";
@@ -59,11 +58,17 @@ function searchArchives(){
   console.log("多选提交")
 }
 
+function consoleLogToken(){
+  console.log(store.state.token)
+}
+
 </script>
 
 <template>
   <div class="full">
     <HScroller scroll-direction="column" class="full scroller-view">
+      <HButton @click="goto('/archive/management')">前往管理员页面</HButton>
+      <HButton @click="consoleLogToken"></HButton>
       <div class="flex-column">
         <div class="diseaseType" v-for="(diseaseType,index) in diseaseTypes" :key="index">
           {{diseaseType}}
@@ -81,6 +86,9 @@ function searchArchives(){
       <div>
         <HButton @click="searchArchives">确认选择</HButton>
       </div>
+      <br>
+      <br>
+      <br>
     </HScroller>
   </div>
 </template>

@@ -1,18 +1,19 @@
 <script setup lang="ts">
 
-import HImage from "@/components/HImage.vue";
 import HButton from "@/components/HButton.vue";
-import {Image} from "@/assets/api";
+import HScroller from "@/components/HScroller.vue";
+import {Post} from "@/assets/api";
 import {reactive, ref} from "vue";
-import {goto, gotoArchiveDetailPageWithId} from "@/assets/api";
+import {gotoArchiveDetailPageWithId} from "@/assets/api";
 import {useRoute} from "vue-router";
 import axios from "@/assets/axios";
 import store from "@/store";
+import ArchiveBlock from "@/views/ArchiveViews/ArchiveBlock.vue";
 
 const route = useRoute()
 console.log(route.params.diseaseNames)
 
-let Archives = reactive([])
+let archiveInfos: Post[] = reactive([])
 
 function getArchivesByDiseaseNames(){
   axios.get("/case/group", {
@@ -25,16 +26,24 @@ function getArchivesByDiseaseNames(){
       'token':store.state.token
     }
   }).then((res)=>{
-    Object.assign(Archives, res.data.data)
-    console.log(Archives)
+    console.log(res.data.data)
+    res.data.data.forEach((archive)=>{
+      archiveInfos.push({
+        id: archive.id,
+        title: archive.name,
+        backgroundImage: {
+          src: archive.descriptionImg === null ? require("@/assets/login-background.png") : archive.descriptionImg,
+          width: 100,
+          height: 100
+        },
+        description: archive.type.join("/")
+      })
+    })
+    console.log(archiveInfos)
   })
 }
 
 getArchivesByDiseaseNames()
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-let image = new Image(require("@/assets/login-background.png"), 1, 1)
-
 
 function goArchiveDetails(archiveId: string){
   gotoArchiveDetailPageWithId('archiveDetailPage', archiveId)
@@ -45,19 +54,25 @@ function goArchiveDetails(archiveId: string){
 </script>
 
 <template>
-  <div>
+  <div class="full">
     这是病例查询结果页面
-    <div class="flex-column">
-      <div class="flex-row flex-wrap">
-        <div v-for="(archive, index) in Archives" :key="index">
-          <HImage :image="image" @click="goArchiveDetails(archive.id.toString())"></HImage>
-          <div>{{archive.name}}</div>
+    <HScroller scroll-direction="column" class="full scroller-view">
+      <div class="flex-column">
+        <div class="flex-row flex-wrap">
+          <div class="archiveBlocks" v-for="(archiveInfo, index) in archiveInfos" :key="index">
+            <ArchiveBlock :archiveInfo = "archiveInfo" @click="goArchiveDetails(archiveInfo.id.toString())"></ArchiveBlock>
+          </div>
         </div>
       </div>
-    </div>
+    </HScroller>
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="stylus">
+
+.archiveBlocks
+  width 200px
+  height 200px
+  margin 20px
 
 </style>

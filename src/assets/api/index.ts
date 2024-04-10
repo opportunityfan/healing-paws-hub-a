@@ -28,6 +28,38 @@ export class Post {
     }
 }
 
+export class Case {
+    id: string
+    name: string
+    description: string
+    descriptionImg: Image
+    checkItem: string
+    checkItemImg: Image
+    diagnosis: string
+    diagnosisImg: Image
+    remedy: string
+    remedyImg: Image
+    type: string[]
+    constructor(id: string, name: string,
+    description: string, descriptionImg: Image,
+    checkItem: string, checkItemImg: Image,
+    diagnosis: string, diagnosisImg: Image,
+    remedy: string, remedyImg: Image,
+    type: string[]) {
+        this.id = id
+        this.name = name
+        this.description = description
+        this.descriptionImg = descriptionImg
+        this.checkItem = checkItem
+        this.checkItemImg = checkItemImg
+        this.diagnosis = diagnosis
+        this.diagnosisImg = diagnosisImg
+        this.remedy = remedy
+        this.remedyImg = remedyImg
+        this.type = type
+    }
+}
+
 export class affair{
     id: string
     description: string
