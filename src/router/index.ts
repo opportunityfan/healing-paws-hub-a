@@ -11,8 +11,8 @@ import ExamView from "@/views/ExamView.vue";
 import AffairView from "@/views/LearnViews/AffairView.vue";
 import AffairSearchView from "@/views/LearnViews/AffairSearchView.vue";
 import AffairNodeEditView from "@/views/LearnViews/AffairNodeEditView.vue"
-import ArchiveDetailView from "@/views/ArchiveDetailView.vue";
-import ArchiveSearchResultsView from "@/views/ArchiveSearchResultsView.vue";
+import ArchiveDetailView from "@/views/ArchiveViews/ArchiveDetailView.vue";
+import ArchiveSearchResultsView from "@/views/ArchiveViews/ArchiveSearchResultsView.vue";
 import ExamLink from "@/views/ExamLink.vue";
 import store from "@/store";
 import InstrumentSearchView from "@/views/LearnViews/InstrumentSearchView.vue";
