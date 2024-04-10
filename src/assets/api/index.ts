@@ -1,8 +1,6 @@
 import router from "@/router";
 import store from "@/store"
 import axios from "@/assets/axios";
-import {ref} from "vue";
-import {string} from "three/examples/jsm/nodes/shadernode/ShaderNode";
 
 export class Image {
     src: string
@@ -54,6 +52,25 @@ export class affairNode{
         this.content = content
         this.contentImg = contentImg
         this.contentVideo = contentVideo
+    }
+}
+
+export class instrument {
+    id: string
+    name: string
+    introduction: string
+    usage: string
+    price: number
+    departmentId: string
+    type: string
+    constructor(id : string, name : string, introduction: string, usage: string, price : number, departmentId: string, type: string) {
+        this.id = id
+        this.name = name
+        this.introduction = introduction
+        this.usage = usage
+        this.price = price
+        this.departmentId = departmentId
+        this.type = type
     }
 }
 
@@ -152,6 +169,27 @@ export const getAffairNode = async (id : string) : Promise<affairNode | undefine
         }
     })
     return obj
+}
+
+export const getInstrument = async (id : string) : Promise<instrument | undefined> => {
+    return undefined
+}
+
+export const setAffairNode = async (node : affairNode) => {
+    const formData = new FormData()
+    formData.append('id', node.id)
+    formData.append('name', node.name)
+    formData.append('content', node.content)
+    await axios.put('/affairnode', formData, {
+        headers: {
+            token: store.state.token
+        }
+    }).then((res) => {
+        console.log(res)
+        if (res.data.code === 200) {
+            console.log('update affair node success')
+        }
+    })
 }
 
 

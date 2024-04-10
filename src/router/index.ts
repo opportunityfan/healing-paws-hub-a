@@ -10,7 +10,7 @@ import ArchiveView from "@/views/ArchiveView.vue";
 import ExamView from "@/views/ExamView.vue";
 import AffairView from "@/views/LearnViews/AffairView.vue";
 import AffairSearchView from "@/views/LearnViews/AffairSearchView.vue";
-import PostEditView from "@/views/PostEditView.vue"
+import AffairNodeEditView from "@/views/LearnViews/AffairNodeEditView.vue"
 import ArchiveDetailView from "@/views/ArchiveDetailView.vue";
 import ArchiveSearchResultsView from "@/views/ArchiveSearchResultsView.vue";
 import ExamLink from "@/views/ExamLink.vue";
@@ -97,15 +97,21 @@ const routes: Array<RouteRecordRaw> = [
         props: true
       },
       {
+        path: '/affair-node-edit/:nodeId',
+        name: 'affair-node-edit',
+        component: AffairNodeEditView,
+        props: true
+      },
+      {
         path: '/instrumentSearch',
         name: 'instrumentSearchPage',
         component: InstrumentSearchView
       },
       {
-        path: '/instrument/:itemId',
+        path: '/instrument/:instrumentId',
         name: 'instrumentPage',
         component: InstrumentView,
-        props:true
+        props: true
       },
       {
         path: '/guide',
@@ -131,11 +137,6 @@ const routes: Array<RouteRecordRaw> = [
         path: '/exam',
         name: 'examPage',
         component: ExamView
-      },
-      {
-        path: '/post-edit',
-        name: 'postEdit',
-        component: PostEditView
       },
       {
         path: '/examLink',
