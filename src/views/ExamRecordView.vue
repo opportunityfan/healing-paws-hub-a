@@ -94,6 +94,7 @@ const question = computed(()=>{
 
 <template>
   <div>
+  <div>
     <el-button>
       考试题目跳转
       <el-select v-model="value2" @change="select">
@@ -133,6 +134,7 @@ const question = computed(()=>{
       </div>
       <br>
     </div>
+  </div>
   </div>
 </template>
 

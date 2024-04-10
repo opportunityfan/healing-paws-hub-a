@@ -17,13 +17,22 @@ import ExamLink from "@/views/ExamLink.vue";
 import store from "@/store";
 import InstrumentSearchView from "@/views/LearnViews/InstrumentSearchView.vue";
 import InstrumentView from "@/views/LearnViews/InstrumentView.vue";
-import {affairNode} from "@/assets/api";
 import AffairNodeView from "@/views/LearnViews/AffairNodeView.vue";
 import EditView from "@/views/UserView/EditView.vue";
 import ExamStart from "@/views/ExamStart.vue";
 import ExamTest from "@/views/ExamTest.vue";
 import ExamRecordView from "@/views/ExamRecordView.vue";
 import RoleSelectView from "@/views/UserView/RoleSelectView.vue";
+import ExamManageView from "@/views/ExamManageView.vue";
+import ExamAddView from "@/views/ExamAddView.vue";
+import ExamUpdateView from "@/views/ExamUpdateView.vue";
+import SubjectView from "@/views/SubjectView.vue";
+import SubjectAddView from "@/views/SubjectAddView.vue";
+import SubjectUpdateView from "@/views/SubjectUpdateView.vue";
+import ManageMainView from "@/views/ManageViews/ManageMainView.vue";
+import AffairManageSearchView from "@/views/ManageViews/AffairManageViews/AffairManageSearchView.vue";
+import AffairManageView from "@/views/ManageViews/AffairManageViews/AffairManageView.vue";
+import AffairNodeMangeView from "@/views/ManageViews/AffairManageViews/AffairNodeMangeView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -93,9 +102,10 @@ const routes: Array<RouteRecordRaw> = [
         component: InstrumentSearchView
       },
       {
-        path: '/instrument',
+        path: '/instrument/:itemId',
         name: 'instrumentPage',
-        component: InstrumentView
+        component: InstrumentView,
+        props:true
       },
       {
         path: '/guide',
@@ -151,6 +161,58 @@ const routes: Array<RouteRecordRaw> = [
         path: '/examRecord/:id',
         name: 'examRecord',
         component: ExamRecordView
+      },
+      {
+        path: '/examManage',
+        name: 'examManage',
+        component: ExamManageView
+      },
+      {
+        path: '/examAdd',
+        name: 'examAdd',
+        component: ExamAddView
+      },
+      {
+        path: '/examUpdate/:id',
+        name: 'examUpdate',
+        component: ExamUpdateView
+      },
+      {
+        path: '/subject',
+        name: 'subject',
+        component: SubjectView
+      },
+      {
+        path: '/subjectAdd',
+        name: 'subjectAdd',
+        component: SubjectAddView
+      },
+      {
+        path: '/subjectUpdate/:id',
+        name: 'subjectUpdate',
+        component: SubjectUpdateView
+      },
+      {
+        path:'/manageMain',
+        name:'manageMainPage',
+        component: ManageMainView
+      },
+      {
+        path:'/affairManageSearch',
+        name:'affairManageSearchPage',
+        component: AffairManageSearchView
+      },
+      {
+        path:'/affairManage/:affairId',
+        name:'affairManagePage',
+        component: AffairManageView,
+        props: true
+      },
+      {
+        path:'/affairNodeManage/:affairNodeId',
+        name:'affairNodeManagePage',
+        component: AffairNodeMangeView,
+        props: true
       }
     ]
   }
@@ -165,12 +227,12 @@ router.beforeEach((to,from,next)=>{
   if(store.state.online&&to.name==='login'){
     next(false)
   }else{
-    if(to.name==='learnPage'||to.name==='guidePage'||to.name==='archivePage'||to.name==='examPage'||to.name==='editPage'){
+    if(to.name==='learnPage'||to.name==='guidePage'||to.name==='archivePage'||to.name==='examPage'||to.name==='editPage'||to.name==='manageMainPage'){
       store.state.ifBackKey = false
     }else {
       store.state.ifBackKey = true
     }
-    console.log(from.name)
+
     console.log(from.path)
     next()
   }

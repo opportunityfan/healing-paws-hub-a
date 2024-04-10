@@ -17,6 +17,8 @@ const {addNodes, onPaneReady, addEdges, onNodeClick, onNodeDoubleClick} = useVue
 const edges = ref<Edge[]>([])
 
 const initGraph = ()=>{
+  console.log('sjofsf')
+  console.log(props.nodes)
   for(let [index, node] of props.nodes.entries()){
 
 

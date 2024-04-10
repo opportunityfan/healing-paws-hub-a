@@ -16,11 +16,11 @@ export class Image {
 }
 
 export class Post {
-    id: number
+    id: string
     title: string
     backgroundImage: Image
     description: string
-    constructor(id: number, title: string, description: string , backgroundImage: Image) {
+    constructor(id: string, title: string, description: string , backgroundImage: Image) {
         this.id = id
         this.title = title
         this.description = description
@@ -79,8 +79,6 @@ export const testaxios = ()=>{
     })
 }
 export const signIn = (data:any) => {
-
-
     axios.post('/sysUser/login',data,{
          headers:{
              'Content-Type' : 'application/json'
@@ -89,23 +87,17 @@ export const signIn = (data:any) => {
          if(res.data.code==200){
 
              store.state.token = res.data.data.token
-             axios.get('/sysUser',{
-                 headers:{
-                     'token' : store.state.token
-                 }
-             }).then((res)=>{
-                 console.log(res.data.data)
-                 store.state.nick_name = res.data.data.username
-                 store.state.avatar_url = res.data.data.avatar
-                 store.state.email = res.data.data.account
+             getUserInfo().then(res => {
+                 store.state.online = true
              })
-             store.state.online = true
              goto('/main').then()
+             if(res.data.msg.substring(0,3) === 'NEW'){
+                 goto('/RoleSelectView').then()
+             }
          }
      }).catch(err=>{
          console.log("network Error！")
     })
-
 }
 export const signUp = (data : any)=>{
     store.state.email_for_registry = data.email
@@ -119,6 +111,20 @@ export const signUp = (data : any)=>{
 
     goto('/check-email').then();
 }
+export const getUserInfo = async () => {
+    let userInfo: any
+    await axios.get('/sysUser',{
+        headers:{
+            'token' : store.state.token
+        }
+    }).then((res)=>{
+        userInfo = res.data.data
+        store.state.nick_name = userInfo.username
+        store.state.avatar_url = userInfo.avatar
+        store.state.email = userInfo.account
+    })
+    return userInfo
+}
 export const signOut = () => {
     store.state.online = false
     goto('/login').then()
@@ -129,7 +135,6 @@ export const signOut = () => {
     }).then((res)=>{
         console.log(res.data)
     })
-
 }
 
 export const getAffairNode = async (id : string) : Promise<affairNode | undefined> => {
@@ -139,7 +144,7 @@ export const getAffairNode = async (id : string) : Promise<affairNode | undefine
             id: id
         },
         headers:{
-            'Content-Type' : 'application/json'
+            'token' : store.state.token
         }
     }).then((res) => {
         if (res.data.code === 200) {
@@ -177,10 +182,15 @@ export const goAffair = (affairId : string)=>{
     console.log(affairId)
     gotoWithProp('affairPage',affairId).then()
 }
+
 export const goAffairNode = async (nodeId: string) =>{
     console.log(nodeId,'nodeid')
     await router.push({name: 'affairNodePage',params: {nodeId : nodeId}});
 
+}
+export const goItem = async (itemId: string) => {
+    console.log(itemId)
+    await router.push({name:'instrumentPage',params:{itemId : itemId}})
 }
 export const goInstrumentSearchView = () =>{
     goto('/instrumentSearch').then()
@@ -211,6 +221,31 @@ export const autoComplete = async (searchUrl : string,word : string) :Promise<ta
     console.log(names)
     return names
 }
+export const autoCompleteItem = async (word : string) :Promise<tag[]> =>{
+    const names = Array<tag>()
+    await axios.get('/item/search',{
+        params:{
+            pageNum : 1,
+            pageSize : 10,
+            name : word
+        },
+        headers:{
+            'token' : store.state.token
+        }
+    }).then((res)=>{
+        const affairs = res.data
+        console.log(res.data)
+
+        if(affairs)
+            affairs.forEach((e:any) => {
+                const tempTag = new tag(e.id,e.name)
+                names.push(tempTag)
+            })
+        console.log(affairs)
+    })
+    console.log(names)
+    return names
+}
 export class tag{
     id: string;
     name: string;
@@ -218,4 +253,21 @@ export class tag{
         this.id = id
         this.name = name
     }
+}
+export const getAffairNodes = async (affairId : string)=>{
+    const affairNodes = Array<affairNode>()
+    await axios.get('/affair/subs',{
+        params:{
+            affairId: affairId
+        },
+        headers:{
+            'token':store.state.token
+        }
+    }).then((res) =>{
+        console.log(res.data)
+        res.data.data.forEach((node: any) => {
+            affairNodes.push(new affairNode(node.id,node.name,node.content,node.contentImg,node.contentVideo))
+        })
+    })
+    return affairNodes
 }

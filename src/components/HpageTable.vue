@@ -1,43 +1,78 @@
 <script setup lang="ts">
 
-import {reactive, withDefaults, defineProps, defineEmits, ref, computed} from "vue";
+import {reactive, withDefaults, defineProps, defineEmits, ref, computed, watch, onMounted} from "vue";
 import HDivider from "@/components/HDivider.vue";
 import HInput from "@/components/HInput.vue";
+import {tag} from "@/assets/api";
 
 const props = withDefaults(defineProps<{
   itemsPerPage?: number,
-  items: Array<{id:string,name:string}>
+  totalPages? :number
+  requestItems : (pageNum : number, pageSize : number) => Promise<tag[]>
 }>(),{
-  itemsPerPage: 10
+  itemsPerPage: 10,
+  totalPages: 10
+})
+
+const data = reactive<{
+  tagList: tag[]
+  requesting: boolean
+}>({
+  tagList: [],
+  requesting: false
 })
 const emit = defineEmits(['itemClick'])
 const itemClick = (id: string)=>{
   emit('itemClick',id)
 }
-const totalPages = computed(()=>{
-  return Math.ceil(props.items.length/props.itemsPerPage)
-})
+
 const currentPage = ref(1)
 
-const currentPageItems = computed(()=>{
-  const start = (currentPage.value - 1)*props.itemsPerPage
-  const end = currentPage.value*props.itemsPerPage
-  return props.items.slice(start,end)
-})
-
 const prePage = ()=>{
-  currentPage.value--
-
+  if(currentPage.value > 1) {
+    currentPage.value--
+  }
 }
 const nextPage = ()=>{
-  currentPage.value++
+  if (currentPage.value < props.totalPages) {
+    currentPage.value++
+  }
 }
+
+onMounted(() => {
+  data.tagList.length=0
+  data.requesting = true
+  props.requestItems(currentPage.value,props.itemsPerPage).then(res=>{
+
+    res.forEach((tag) =>{
+      data.tagList.push(tag)
+    })
+  }).finally(()=>{
+    data.requesting = false
+  })
+})
+
+watch(
+    () => currentPage.value,
+    (val,preval) => {
+      data.tagList.length=0
+      data.requesting = true
+      props.requestItems(currentPage.value,props.itemsPerPage).then(res=>{
+
+        res.forEach((tag) =>{
+            data.tagList.push(tag)
+        })
+      }).finally(()=>{
+        data.requesting = false
+      })
+    }
+)
 </script>
 
 <template>
   <div class="page-Table">
 
-      <div v-for="item in currentPageItems" :key="item.id" class="item-part" @click="itemClick(item.id)">
+      <div v-for="(item, index) in data.tagList" :key="index" class="item-part" @click="itemClick(item.id)">
         {{item.name}}
 
       </div>

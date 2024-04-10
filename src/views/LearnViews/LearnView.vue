@@ -9,6 +9,7 @@
           <i class='bx bx-dots-horizontal-rounded'></i>
         </div>
       </div>
+
       <PostFlow :request-new-post="requestNewAffair" style="flex-grow: 1"></PostFlow>
     </div>
     <div class="instrument-bar flex-column" style="height: 40%">
@@ -26,13 +27,18 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from "vue";
-import PostBlock from "@/components/PostBlock.vue";
+
 import PostFlow from "@/components/PostFlow.vue";
-import {goAffairSearchView, goInstrumentSearchView, Post} from "@/assets/api";
+import {goAffairSearchView, goInstrumentSearchView, Post, Image} from "@/assets/api";
+
+
+import axios from "@/assets/axios";
+import store from "@/store";
+import {temp} from "three/examples/jsm/nodes/core/VarNode";
+import HLoading from "@/components/HLoading.vue";
 let affairs = [
   {
-    id: 0,
+    id: '0',
     title:'手术1',
     description: 'this is description',
     backgroundImage: {
@@ -42,7 +48,7 @@ let affairs = [
     }
   },
   {
-    id: 1,
+    id: '1',
     title:'手术2',
     description: 'this is description',
     backgroundImage: {
@@ -52,7 +58,7 @@ let affairs = [
     }
   },
   {
-    id: 2,
+    id: '2',
     title:'手术3',
     description: 'this is description',
     backgroundImage: {
@@ -63,7 +69,7 @@ let affairs = [
   }]
 let instruments = [
   {
-    id: 3,
+    id: '3',
     title:'手术刀1',
     description: 'this is description',
     backgroundImage: {
@@ -73,7 +79,7 @@ let instruments = [
     }
   },
   {
-    id: 4,
+    id: '4',
     title:'手术刀2',
     description: 'this is description',
     backgroundImage: {
@@ -83,7 +89,7 @@ let instruments = [
     }
   },
   {
-    id: 5,
+    id: '5',
     title:'手术刀3',
     description: 'this is description',
     backgroundImage: {
@@ -92,19 +98,39 @@ let instruments = [
       height: 4299
     }
   }]
+
 let affairId = 0
+
 const requestNewAffair = async (count : number) => {
   const newPostList = new Array<Post>()
-  for (let i = 0 ; i < count ; ++i) {
-    newPostList.push(affairs[affairId])
-    affairId ++;
-    if (affairId >= 3) affairId = 0;
-  }
+  const jsondata = {count:'5'}
+  await axios.post('/affair/recommend',jsondata,{
+    headers:{
+      'token':store.state.token
+    }
+  }).then(res=>{
+    console.log(res.data.data)
+    for(let item of res.data.data){
+      let tempImage
+      if(item.pic === null){
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const image = new Image(require("@/assets/login-background.png"),3035,4299)
+        tempImage = image
+      }else{
+        const image = new Image(item.pic,item.picSize[0],item.picSize[1])
+        tempImage = image
+      }
+      newPostList.push(new Post(item.id,item.name,item.description,tempImage))
+    }
+  }).catch(e=>{
+    console.log(e)
+  })
   return newPostList
 }
 let instrumentId = 0
 const requestNewInstrument = async (count : number) => {
   const newPostList = new Array<Post>()
+
   for (let i = 0 ; i < count ; ++i) {
     newPostList.push(instruments[instrumentId])
     instrumentId ++;

@@ -2,71 +2,64 @@
 
 import axios from "@/assets/axios";
 import store from "@/store";
-import {reactive, ref} from "vue";
-import HDivider from "@/components/HDivider.vue";
+import {reactive, ref, watch} from "vue";
 import HInput from "@/components/HInput.vue";
 import HButton from "@/components/HButton.vue";
 import HAvatar from "@/components/HAvatar.vue";
-import {goRoleSelect} from "@/assets/api";
+import {getUserInfo, goRoleSelect} from "@/assets/api";
+import HFileUpload from "@/components/HFileUpload.vue";
 const data = reactive<{
-  nickName : string,
+  account : string
+  userName : string,
   password : string,
   confirmPassword : string
   picked : string
 }>({
-  nickName : store.state.nick_name,
+  account : '',
+  userName : store.state.nick_name,
   password : '',
   confirmPassword : '',
   picked : ''
 })
-const editPanel = reactive({visible : false})
-const chooseRole = () => {
-  axios.post('/sysUser/setPermission',{},{
-    params:{
-      permission:'前台'
-    },
-    headers:{
-      'Content-Type' : 'application/json',
-      'token': store.state.token
-    }
-  }).then((res)=>{
-
-    console.log(res.data)
-  })
+const ispasswordSame = ref(true)
+const isMouseOverAvatar = ref(false)
+const onMouseEnterAvatar = () =>{
+  isMouseOverAvatar.value = true
 }
-const fileInput = ref()
-const selectedFile = ref()
-const handleImage = (event : any) =>{
-  const files = event.target.files || event.dataTransfer.files
-  if(!files.length) return;
-  selectedFile.value = files[0]
-
-  console.log('handleImage')
-  upLoadImage()
+const onMouseLeaveAvatar = () => {
+  isMouseOverAvatar.value = false
 }
-const upLoadImage = async () => {
-  if(!selectedFile.value){
-    alert('请先选图片')
-    return
+
+const updateUserData = async () =>{
+  const bodyData = {
+    account:data.account,
+    password:'',
+    userName:data.userName
   }
-  const formData = new FormData()
-  formData.append('avatar',selectedFile.value)
-  await axios.post('/sysUser/setAvatar',formData,{
+  if(ispasswordSame.value){
+    bodyData.password = data.confirmPassword
+  }
+  await axios.post('/sysUser/update',bodyData,{
     headers:{
-      'token' : store.state.token
+      'token':store.state.token
     }
   }).then((res)=>{
     console.log(res.data)
-    store.state.avatar_url = res.data.data
   })
+  let res = getUserInfo()
+  console.log(res)
 }
-const changeNickName = () =>{
-  console.log('昵称修改成功！')
-}
-const editAvatar = () =>{
-  console.log('change')
-  editPanel.visible = !editPanel.visible
-}
+
+watch(
+    () => data.confirmPassword,
+    (val,preval) => {
+      if(val !== data.password){
+        ispasswordSame.value = false
+      }else{
+        ispasswordSame.value = true
+      }
+    }
+)
 
 </script>
 
@@ -77,8 +70,15 @@ const editAvatar = () =>{
         <div class="sub-title">
           昵称
         </div>
-        <HInput name="NickName" v-model="data.nickName" height="25px" @keydown.enter="changeNickName"></HInput>
+        <HInput name="userName" v-model="data.userName" height="25px" @keydown.enter="updateUserData"></HInput>
         <div class="hint">这里可以修改你的昵称哦</div>
+      </div>
+      <div class="module">
+        <div class="sub-title">
+          账号
+        </div>
+        <HInput name="account" v-model="data.account" height="25px" @keydown.enter="updateUserData"></HInput>
+        <div class="hint">这里可以修改你的账号哦</div>
       </div>
       <div class="module">
         <div class="sub-title">
@@ -91,7 +91,7 @@ const editAvatar = () =>{
 
       <div class="module">
         <div>
-          <HButton height="35px" style="width: 200px">
+          <HButton height="35px" style="width: 200px" @click="updateUserData">
             更新信息
           </HButton>
           <div style="text-align: left; margin-top: -20px;" >
@@ -107,11 +107,17 @@ const editAvatar = () =>{
         <div class="sub-title" style="padding: 0 10px">
           头像
         </div>
-        <HAvatar size="200" @click="editAvatar"></HAvatar>
-        <div v-if="editPanel.visible">
-          <input type="file" accept="image/*" @change="handleImage" ref="fileInput"/>
-
+        <div style="position: relative; width: fit-content" class="avatar-box"
+             @mouseenter="onMouseEnterAvatar"
+             @mouseleave="onMouseLeaveAvatar">
+          <HAvatar  size="200" class="avatar-icon"></HAvatar>
+          <div :style="{opacity : isMouseOverAvatar ? '1' : '0'}"
+               class="center add-icon" >
+            <HFileUpload></HFileUpload>
+          </div>
         </div>
+
+
       </div>
     </div>
   </div>
@@ -141,4 +147,19 @@ const editAvatar = () =>{
 
 .module
   margin 20px 0px
+
+.avatar-box
+  display flex
+  border-radius 999px
+  &:hover
+    cursor pointer
+    .avatar-icon
+      filter blur(4px)
+      transition 0.3s
+  
+.add-icon
+  position absolute
+  transition 0.3s
+
+
 </style>
