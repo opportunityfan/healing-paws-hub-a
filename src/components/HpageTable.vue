@@ -96,8 +96,8 @@ watch(
 .page-Table
   border 2px solid var(--theme-color-bright)
   border-radius 16px
-  width 85%
-  margin 20px 0
+  width 100%
+  margin 0px 0
 .page-Table:hover
   border-color var(--theme-color)
   transition 0.3s
