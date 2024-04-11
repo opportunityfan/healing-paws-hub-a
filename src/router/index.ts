@@ -39,6 +39,8 @@ import DepartmentManageView from "@/views/ManageViews/DepartmentAndItemManage/De
 import DepartmentEditView from "@/views/ManageViews/DepartmentAndItemManage/DepartmentEditView.vue";
 import ItemManageView from "@/views/ManageViews/DepartmentAndItemManage/ItemManageView.vue";
 import ItemEditView from "@/views/ManageViews/DepartmentAndItemManage/ItemEditView.vue";
+import ArchiveDetailManageView from "@/views/ManageViews/ArchiveManageViews/ArchiveDetailManageView.vue";
+import ArchiveSearchResultsManageView from "@/views/ManageViews/ArchiveManageViews/ArchiveSearchResultsManageView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -146,11 +148,6 @@ const routes: Array<RouteRecordRaw> = [
         component: ArchiveSearchResultsView
       },
       {
-        path: '/archiveManage',
-        name: 'archiveManage',
-        component: ArchiveManageView
-      },
-      {
         path: '/exam',
         name: 'examPage',
         component: ExamView
@@ -243,6 +240,26 @@ const routes: Array<RouteRecordRaw> = [
             name: 'subjectUpdate',
             component: SubjectUpdateView
           },
+          {
+            path: '/archiveManage',
+            name: 'archiveManage',
+            component: ArchiveManageView
+          },
+          {
+            path: '/archiveDetailManage/:archiveId',
+            name: 'archiveDetailManage',
+            component: ArchiveDetailManageView
+          },
+          {
+            path: '/archiveDetailManage',
+            name: 'newArchiveDetail',
+            component: ArchiveDetailManageView
+          },
+          {
+            path: '/archiveSearchResultsManage/:diseaseNames',
+            name: 'archiveSearchResultsManage',
+            component: ArchiveSearchResultsManageView
+          }
         ]
       },
       {
