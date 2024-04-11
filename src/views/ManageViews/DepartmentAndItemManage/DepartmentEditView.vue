@@ -73,6 +73,7 @@ const itemData = reactive<{
   type : 'normal'
 })
 const staffTable = ref()
+const itemTable = ref()
 const picFile = ref()
 
 const isMouseOverAvatar = ref(false)
@@ -142,17 +143,12 @@ const requestStaffs = async (pageNum : number, pageSize : number) => {
 }
 const requestItems = async (pageNum : number, pageSize : number) =>{
   const currentItems = new Array<tag>()
-  await axios.get('/item/search',{
-    params: {
-      pageNum: pageNum,
-      pageSize: pageSize,
-      name: department.name
-    },
+  await axios.get('/department/getItem/'+department.id,{
     headers:{
       'token':store.state.token
     }
   }).then(res=>{
-    console.log('科室的物品',res)
+    console.log('科室的物品',res.data.data)
     if(res.data.data) {
       for (let item of res.data.data) {
         currentItems.push(new tag(item.id, item.name))
@@ -259,6 +255,7 @@ const addItem = () => {
     }
   }).then(res=>{
     console.log(res.data)
+    itemTable.value.update()
   })
 }
 const goItemEdit = (id : string) => {
@@ -337,7 +334,7 @@ const goItemEdit = (id : string) => {
         </div>
         <div  class="right-panel">
           <div class="text-bold">科室物品</div>
-          <HpageTable :request-items="requestItems" totalPages="1" @itemClick="goItemEdit" ></HpageTable>
+          <HpageTable :request-items="requestItems" totalPages="1" @itemClick="goItemEdit" ref="itemTable"></HpageTable>
           <HButton height="30px" style="margin-top: 5px" @click="itemPanel">添加物品</HButton>
 
           <div class="item-add-panel" v-if="itemData.isEditPanel">

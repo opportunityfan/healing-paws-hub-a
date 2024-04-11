@@ -196,7 +196,7 @@ const onMouseEnter = (index: number) => {
   height: auto;
   display: flex;
   flex-direction: column;
-  z-index 1
+  z-index 10
 }
 
 .search-panel-item {
@@ -225,7 +225,7 @@ input {
   font-size: 14px;
   font-weight: 400;
   letter-spacing: 0.25px;
-  z-index: 100;
+  z-index: 10;
   top: -0.5px;
 }
 input:focus-visible {

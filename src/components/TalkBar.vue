@@ -57,6 +57,7 @@ import HScroller from "@/components/HScroller.vue";
 import {onMounted, VueElement, ref, reactive} from "vue";
 import HAvatar from "@/components/HAvatar.vue";
 import {string} from "three/examples/jsm/nodes/shadernode/ShaderNode";
+import {sendToGpt, startGptTalk} from "@/assets/api/gpt";
 
 onMounted(() => {
   store.state.talkHistories = [
@@ -69,20 +70,34 @@ onMounted(() => {
       selfSend: true
     }
   ]
+  startTalk()
 })
 
+const startTalk = async () => {
+  data.conversation_id = await startGptTalk()
+}
 const data = reactive<{
+  conversation_id : string
   text: string
 }>({
-  text: ''
+  text: '',
+  conversation_id : ''
 })
 
-const onSubmit = () => {
+const onSubmit =  () => {
   store.state.talkHistories.push({
     content: data.text,
     selfSend: true
   })
+
+  sendToGpt(data.conversation_id,data.text).then(res=>{
+    store.state.talkHistories.push({
+      content: res,
+      selfSend: false
+    })
+  })
   data.text = ''
+
 }
 </script>
 
