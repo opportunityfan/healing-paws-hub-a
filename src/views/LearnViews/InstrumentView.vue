@@ -3,12 +3,20 @@
     <HLoading :load="onLoad">
       <div class="full">
         <HScroller scroll-direction="column" ref="scrollRef">
-          <div class="flex-column" style="user-select: text">
-            <!--      <div class="subtitle">{{ data.affairNode ? data.affairNode?.name : '' }}</div>-->
-            <markdown-renderer :markdown="data.affairNode ? data.affairNode?.content : ''"></markdown-renderer>
+          <div class="flex-column">
+            <div>
+              <div class="subtitle" style="padding: 15px 0;position: relative">
+                <span>{{ data.instrument ? '器械:' + data.instrument?.name : '' }}</span>
+                <div class="box-icon button-hover" style="position: absolute; top: 15px;height: 26px;right: -40px;display: inline-block" @click="goto('/instrument-edit/' + data.instrument?.id)">
+                  <i class='bx bxs-edit center'></i>
+                </div>
+              </div>
+            </div>
+            <HStatistic></HStatistic>
+            <markdown-renderer :markdown="data.instrument?.usage ? data.instrument?.usage : ''"  style="user-select: text"></markdown-renderer>
           </div>
         </HScroller>
-        <div class="tool-bar flex-column" style="gap: 20px">
+        <div class="tool-bar flex-column" style="gap: 10px">
           <HIconButton
               name="返回顶部"
               color="var(--grey-color)"
@@ -46,6 +54,7 @@ import store from "@/store";
 import HScroller from "@/components/HScroller.vue";
 import HIconButton from "@/components/HIconButton.vue";
 import HLoading from "@/components/HLoading.vue";
+import HStatistic from "@/components/HStatistic.vue"
 // eslint-disable-next-line no-undef
 const props = defineProps<{instrumentId: string}>()
 
@@ -71,8 +80,8 @@ const onComplete = () => {
 
 const onLoad = async () => {
   await getInstrument(props.instrumentId).then((res) => {
-    data.instrument = new instrument('1', '检查仪器', '### 这是标题\n\n这是检查仪器的介绍\n\n123123 $\\sum_{i}^i$\n\n123123\n\n123123\n\n123123\n\n123123\n\n123123\n\n123123\n\n123123\n\n123123\n\n123123\n\n123123\n\n123123\n\n123123\n\n123123\n\n123123\n\n123123\n\n123123\n\n123123\n\n123123\n\n123123\n\n123123\n\n123123\n\n123123', '', '')
-    store.state.back_title = '返回学习'
+    data.instrument = res
+    // store.state.back_title = '返回学习'
   })
   return
 }

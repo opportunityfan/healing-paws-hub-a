@@ -17,6 +17,7 @@ import ExamLink from "@/views/ExamLink.vue";
 import store from "@/store";
 import InstrumentSearchView from "@/views/LearnViews/InstrumentSearchView.vue";
 import InstrumentView from "@/views/LearnViews/InstrumentView.vue";
+import InstrumentEditView from "@/views/LearnViews/InstrumentEditView.vue"
 import AffairNodeView from "@/views/LearnViews/AffairNodeView.vue";
 import EditView from "@/views/UserView/EditView.vue";
 import ExamStart from "@/views/ExamStart.vue";
@@ -112,6 +113,12 @@ const routes: Array<RouteRecordRaw> = [
         path: '/instrument/:instrumentId',
         name: 'instrumentPage',
         component: InstrumentView,
+        props: true
+      },
+      {
+        path: '/instrument-edit/:instrumentId',
+        name: 'instrumentEditPage',
+        component: InstrumentEditView,
         props: true
       },
       {

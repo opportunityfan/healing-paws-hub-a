@@ -17,7 +17,7 @@
     </div>
     <div class="post-info flex-column full">
       <div class="flex-row" style="justify-content: space-between; width: 90%" :style="{justifyContent: props.showDescription? 'space-between' : 'center'}">
-        <div class="subtitle-inverse">{{ props.post.title }}</div>
+        <div class="post-title subtitle-inverse">{{ props.post.title }}</div>
         <div class="post-state incomplete hint-inverse" v-if="props.showDescription">未学习</div>
       </div>
       <div class="post-state incomplete hint-inverse" v-if="!props.showDescription">未学习</div>
@@ -84,10 +84,17 @@ const onLoad = () => {
   padding 10px
   box-sizing border-box
   overflow hidden
+  background-color rgba(0 ,0 ,0, 0.1)
 
 .post-state
   border-radius 999px
   padding 2px 10px
+
+.post-title
+  border-radius 999px
+  padding 5px 15px
+  backdrop-filter blur(10px)
+  background-color rgba(0 ,0 ,0, 0.1)
 
 .complete
   background-color var(--theme-color)

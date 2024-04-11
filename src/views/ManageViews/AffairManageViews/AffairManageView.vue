@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {useRoute} from "vue-router";
 import FlowDia from "@/components/FlowDia.vue";
-import {goAffairNodeManage, goBack, Image} from "@/assets/api";
+import {goAffairNodeManage, goBack, Image as Img} from "@/assets/api";
 import {onBeforeUnmount, onMounted, reactive, ref} from "vue";
 
 import HFormInput from "@/components/HFormInput.vue";
@@ -48,7 +48,7 @@ const affair = reactive<{
   pic : string
   picSize : Array<number>
   role : string
-  image : Image
+  image : Img
 }>({
   id : route.params.affairId as string,
   name : '事务',
@@ -57,7 +57,7 @@ const affair = reactive<{
   pic:'',
   picSize:[],
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  image: new Image(require('@/assets/avatar.jpg'),1,1)
+  image: new Img(require('@/assets/avatar.jpg'),1,1)
 })
 const picFile = ref()
 const showToolTip = (e) =>{
@@ -94,7 +94,7 @@ const getAffairById = async () => {
     affair.pic = res.data.data.pic
     affair.picSize = res.data.data.picSize
     affair.role = res.data.data.role
-    affair.image = new Image(affair.pic,1,1)
+    affair.image = new Img(affair.pic,1,1)
   })
 }
 
@@ -109,9 +109,12 @@ const onLoad = async () =>{
 }
 const handleImage = (image : File) =>{
   console.log('图片文件信息',image)
+  let imageFile = new Image()
+  imageFile.src = window.URL.createObjectURL(image)
+  imageFile.onload = () => {
+    affair.image = new Img(imageFile.src, imageFile.width, imageFile.height)
+  }
   affair.pic= image.path
-  console.log('新图片路径',affair.pic)
-  affair.image = new Image(affair.pic,1,1)
   picFile.value = image
 }
 const onUpdate = async (formdata : FormData) => {
@@ -184,7 +187,7 @@ const deleteAffair = () => {
             <div style="position: relative; width: fit-content" class="avatar-box"
                  @mouseenter="onMouseEnterAvatar"
                  @mouseleave="onMouseLeaveAvatar">
-              <HImage :image="affair.image" :size="100" ></HImage>
+              <HImage :image="affair.image" :size="100" :lazy-load="false"></HImage>
               <div :style="{opacity : isMouseOverAvatar ? '1' : '0'}"
                    class="center add-icon" >
                 <HFileUpload @handleFile="handleImage"></HFileUpload>

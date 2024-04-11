@@ -83,7 +83,7 @@ const onLoad = async () => {
   await getAffairNode(props.nodeId).then((res) => {
     //data.affairNode = new affairNode('1', '检查仪器', '在检查仪器之前，需要对仪器进行检查。\n\n如果没有对仪器进行检查就没法检查仪器。\n\n具体步骤如下:\n\n1. 检查仪器\n\n2. 检查仪器\n\n3. 检查仪器\n\n4. 检查仪器\n\n', '', '')
     data.affairNode = res
-    store.state.back_title = '返回事务'
+    // store.state.back_title = '返回事务'
   })
   return
 }

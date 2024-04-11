@@ -83,6 +83,7 @@ function onClick (value: any) {
   color: rgba(0, 0, 0, .88);
   font-size: 14px;
   line-height: 1;
+  margin: 10px 0
   .m-radio-wrap {
     display: inline-block;
     .m-box {
