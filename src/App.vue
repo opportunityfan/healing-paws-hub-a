@@ -1,5 +1,6 @@
 <template>
   <div class="main-div flex-row border-radius-regular padding-surround">
+    <talk-bar></talk-bar>
     <SideBar></SideBar>
     <div class="flex-column" style="height: 100%;flex-grow: 1;min-width: 0;min-height: 0;">
       <FrameBar></FrameBar>
@@ -7,7 +8,6 @@
         <router-view/>
       </div>
     </div>
-    <talk-bar></talk-bar>
   </div>
 </template>
 

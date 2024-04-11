@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'
+import {TalkHistory} from "@/assets/api";
 
 export default createStore({
   state: {
@@ -13,7 +14,8 @@ export default createStore({
     token: '',
     role:'',
     permission:'',
-    talkBarAppend: false
+    talkBarAppend: false,
+    talkHistories: new Array<TalkHistory>()
   },
   getters: {
   },

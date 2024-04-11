@@ -359,3 +359,13 @@ export const openTalkBar = () => {
 export const closeTalkBar = () => {
     store.state.talkBarAppend = false
 }
+
+export class TalkHistory {
+    content: string;
+    selfSend: boolean;
+    constructor(content : string, selfSend : boolean) {
+        this.content = content
+        this.selfSend = selfSend
+
+    }
+}
