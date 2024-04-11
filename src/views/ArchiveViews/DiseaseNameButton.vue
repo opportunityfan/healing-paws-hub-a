@@ -30,6 +30,7 @@ const props = withDefaults(defineProps<{
   font-size 12px
   transition background-color 0.1s
   cursor pointer
+  text-align center
 
 .diseaseNameButton:hover
   background-color var(--theme-color-dark)
