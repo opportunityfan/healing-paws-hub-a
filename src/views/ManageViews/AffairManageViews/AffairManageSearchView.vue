@@ -6,6 +6,7 @@ import {tag} from "@/assets/api";
 import router from "@/router";
 import axios from "@/assets/axios";
 import store from "@/store";
+import HButton from "@/components/HButton.vue";
 
 const requestAffairs = async (pageNum : number, pageSize : number) => {
   const currentItems = new Array<tag>()
@@ -33,11 +34,12 @@ const goAffairManage = async (affairId : string) => {
 }
 </script>
 <template>
-
   <div class="main-panel full">
     <HSearchBar style="width: 85%" searchUrl="/affair/fuzzy" @onEnter="goAffairManage"></HSearchBar>
-    <div>
+    <div style="width: 85%">
+      <div class="subtitle" style="text-align: left;margin-top:10px; margin-left:3px">事务列表</div>
       <HpageTable :request-items="requestAffairs" totalPages="2" @itemClick="goAffairManage"></HpageTable>
+      <HButton height="30px" style="margin-top: 5px" @click="goAffairManage('0')">添加事务</HButton>
     </div>
   </div>
 </template>

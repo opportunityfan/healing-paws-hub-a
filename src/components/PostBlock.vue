@@ -1,6 +1,20 @@
 <template>
   <div class="post-main full border-radius-regular" @click="onPostClick">
-    <div class="post-background full" v-lazyLoad="props.post.backgroundImage.src"></div>
+    <transition
+        name="animate__animated animate__fade"
+        enter-active-class="animate__fadeIn"
+        leave-active-class="animate__fadeOut"
+        mode="out-in"
+    >
+      <div class="loading-block" v-if="!loaded">
+        <div class="center">
+          <div class="spinner1"></div>
+        </div>
+      </div>
+    </transition>
+    <div class="post-background full">
+      <img class="center" v-lazyLoad="props.post.backgroundImage.src" @load="onLoad" style="height: 100%; width: 100%; object-fit: cover" alt src>
+    </div>
     <div class="post-info flex-column full">
       <div class="flex-row" style="justify-content: space-between; width: 90%" :style="{justifyContent: props.showDescription? 'space-between' : 'center'}">
         <div class="subtitle-inverse">{{ props.post.title }}</div>
@@ -16,7 +30,7 @@
 
 <script setup lang="ts">
 import {Post} from "@/assets/api";
-import {defineEmits} from 'vue'
+import {defineEmits,ref} from 'vue'
 // eslint-disable-next-line no-undef
 const props = withDefaults(defineProps<{
   post : Post
@@ -24,16 +38,22 @@ const props = withDefaults(defineProps<{
 }>(), {
   showDescription: true
 })
+const loaded = ref<boolean>(false)
 const emit = defineEmits(['onPostClick'])
 const onPostClick = () =>{
   emit('onPostClick',props.post.id)
+}
+const onLoad = () => {
+  console.log('ok')
+  loaded.value = true
 }
 </script>
 
 <style scoped lang="stylus">
 .post-main
   overflow hidden
-  position: relative
+  position relative
+  box-shadow 0 0 2px 2px #AAA
   z-index 0
   .post-background
     top 0
@@ -44,6 +64,7 @@ const onPostClick = () =>{
     background-repeat no-repeat
     transition all 0.2s
     z-index -1
+    overflow hidden
   &:hover
     cursor pointer
     .post-background
@@ -73,4 +94,11 @@ const onPostClick = () =>{
 
 .incomplete
   background-color var(--error-color)
+
+.loading-block
+  background-color var(--theme-color-dark)
+  position absolute
+  width 100%
+  height 100%
+  z-index 10
 </style>

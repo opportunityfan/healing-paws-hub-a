@@ -3,7 +3,7 @@
     <HScroller scroll-direction="column">
       <div class="post-flow-bar-v flex-column" :style="{width: props.width === 0 ? '100%' : props.width + 'px'}">
         <div v-for="(post, index) in data.postList" :key="index" :style="{height: props.height + 'px'}" class="post-bar-v">
-          <PostBlock :post = "post" :show-description="props.showDescription"></PostBlock>
+          <PostBlock :post = "post" :show-description="props.showDescription" @click="goto(props.urlPrefix+post.id)"></PostBlock>
         </div>
         <div class="more" ref="moreRef"></div>
       </div>
@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import {onMounted, reactive, ref, VueElement} from "vue";
-import { Post } from "@/assets/api"
+import {goto, Post} from "@/assets/api"
 import PostBlock from "@/components/PostBlock.vue";
 import HScroller from "@/components/HScroller.vue";
 // eslint-disable-next-line no-undef
@@ -23,6 +23,7 @@ const props = withDefaults(defineProps<{
   requestNewPost : (count: number) => Promise<Post[]>
   updatePostCount?: number
   showDescription?: boolean
+  urlPrefix: string
 }>(), {
   width: 0,
   height: 250,

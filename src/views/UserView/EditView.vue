@@ -49,7 +49,22 @@ const updateUserData = async () =>{
   let res = getUserInfo()
   console.log(res)
 }
-
+const upLoadImage = async (image : File) => {
+  if(!image){
+    alert('请先选图片')
+    return
+  }
+  const formData = new FormData()
+  formData.append('avatar',image)
+  await axios.post('/sysUser/setAvatar',formData,{
+    headers:{
+      'token' : store.state.token
+    }
+  }).then((res)=>{
+    console.log(res.data)
+    store.state.avatar_url = res.data.data
+  })
+}
 watch(
     () => data.confirmPassword,
     (val,preval) => {
@@ -113,7 +128,7 @@ watch(
           <HAvatar  size="200" class="avatar-icon"></HAvatar>
           <div :style="{opacity : isMouseOverAvatar ? '1' : '0'}"
                class="center add-icon" >
-            <HFileUpload></HFileUpload>
+            <HFileUpload @handleFile="upLoadImage"></HFileUpload>
           </div>
         </div>
 

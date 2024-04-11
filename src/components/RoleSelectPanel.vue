@@ -47,9 +47,11 @@ const chooseRole = () => {
       'token': store.state.token
     }
   }).then((res)=>{
-
-    console.log(res.data)
-    goBack()
+    if(res.data.code===200){
+      store.state.role = roles[roleSelected.value].role
+      console.log(res.data)
+      goBack()
+    }
   })
 }
 const submit = () =>{

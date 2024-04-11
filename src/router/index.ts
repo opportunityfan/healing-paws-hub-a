@@ -6,13 +6,13 @@ import SignView from "@/views/SignView.vue"
 import LearnView from "@/views/LearnViews/LearnView.vue";
 import MainView from "@/views/MainView.vue";
 import GuideView from "@/views/GuideView.vue";
-import ArchiveView from "@/views/ArchiveView.vue";
+import ArchiveView from "@/views/ArchiveViews/ArchiveView.vue";
 import ExamView from "@/views/ExamView.vue";
 import AffairView from "@/views/LearnViews/AffairView.vue";
 import AffairSearchView from "@/views/LearnViews/AffairSearchView.vue";
-import PostEditView from "@/views/PostEditView.vue"
-import ArchiveDetailView from "@/views/ArchiveDetailView.vue";
-import ArchiveSearchResultsView from "@/views/ArchiveSearchResultsView.vue";
+import AffairNodeEditView from "@/views/LearnViews/AffairNodeEditView.vue"
+import ArchiveDetailView from "@/views/ArchiveViews/ArchiveDetailView.vue";
+import ArchiveSearchResultsView from "@/views/ArchiveViews/ArchiveSearchResultsView.vue";
 import ExamLink from "@/views/ExamLink.vue";
 import store from "@/store";
 import InstrumentSearchView from "@/views/LearnViews/InstrumentSearchView.vue";
@@ -23,6 +23,7 @@ import ExamStart from "@/views/ExamStart.vue";
 import ExamTest from "@/views/ExamTest.vue";
 import ExamRecordView from "@/views/ExamRecordView.vue";
 import RoleSelectView from "@/views/UserView/RoleSelectView.vue";
+import ArchiveManagementView from "@/views/ArchiveViews/ArchiveManagementView.vue"
 import ExamManageView from "@/views/ExamManageView.vue";
 import ExamAddView from "@/views/ExamAddView.vue";
 import ExamUpdateView from "@/views/ExamUpdateView.vue";
@@ -33,6 +34,10 @@ import ManageMainView from "@/views/ManageViews/ManageMainView.vue";
 import AffairManageSearchView from "@/views/ManageViews/AffairManageViews/AffairManageSearchView.vue";
 import AffairManageView from "@/views/ManageViews/AffairManageViews/AffairManageView.vue";
 import AffairNodeMangeView from "@/views/ManageViews/AffairManageViews/AffairNodeMangeView.vue";
+import DepartmentManageView from "@/views/ManageViews/DepartmentAndItemManage/DepartmentManageView.vue";
+import DepartmentEditView from "@/views/ManageViews/DepartmentAndItemManage/DepartmentEditView.vue";
+import ItemManageView from "@/views/ManageViews/DepartmentAndItemManage/ItemManageView.vue";
+import ItemEditView from "@/views/ManageViews/DepartmentAndItemManage/ItemEditView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -97,15 +102,21 @@ const routes: Array<RouteRecordRaw> = [
         props: true
       },
       {
+        path: '/affair-node-edit/:nodeId',
+        name: 'affair-node-edit',
+        component: AffairNodeEditView,
+        props: true
+      },
+      {
         path: '/instrumentSearch',
         name: 'instrumentSearchPage',
         component: InstrumentSearchView
       },
       {
-        path: '/instrument/:itemId',
+        path: '/instrument/:instrumentId',
         name: 'instrumentPage',
         component: InstrumentView,
-        props:true
+        props: true
       },
       {
         path: '/guide',
@@ -128,14 +139,14 @@ const routes: Array<RouteRecordRaw> = [
         component: ArchiveSearchResultsView
       },
       {
+        path: '/archive/management',
+        name: 'archiveManagementPage',
+        component: ArchiveManagementView
+      },
+      {
         path: '/exam',
         name: 'examPage',
         component: ExamView
-      },
-      {
-        path: '/post-edit',
-        name: 'postEdit',
-        component: PostEditView
       },
       {
         path: '/examLink',
@@ -195,23 +206,41 @@ const routes: Array<RouteRecordRaw> = [
       {
         path:'/manageMain',
         name:'manageMainPage',
-        component: ManageMainView
-      },
-      {
-        path:'/affairManageSearch',
-        name:'affairManageSearchPage',
-        component: AffairManageSearchView
+        component: ManageMainView,
+        redirect: '/affairManageSearch',
+        children: [
+          {
+            path:'/affairManageSearch',
+            name:'affairManageSearchPage',
+            component: AffairManageSearchView
+          },
+          {
+            path:'/departmentManage',
+            name:'departmentManageView',
+            component:DepartmentManageView
+          },
+          {
+            path:'/departmentEdit/:id',
+            name:'departmentManageEditPage',
+            component:DepartmentEditView,
+            props:true
+          },
+          {
+            path:'/itemManage',
+            name:'itemManagePage',
+            component:ItemManageView
+          },
+          {
+            path:'/itemEdit',
+            name:'itemEditPage',
+            component:ItemEditView
+          }
+        ]
       },
       {
         path:'/affairManage/:affairId',
         name:'affairManagePage',
         component: AffairManageView,
-        props: true
-      },
-      {
-        path:'/affairNodeManage/:affairNodeId',
-        name:'affairNodeManagePage',
-        component: AffairNodeMangeView,
         props: true
       }
     ]

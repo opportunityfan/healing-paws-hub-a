@@ -29,6 +29,8 @@ import createKatexPlugin from '@kangc/v-md-editor/lib/plugins/katex/cdn';
 import hljs from 'highlight.js';
 
 import { definedCodeMirror } from '@/codeMirror'
+import rightClick from "@/plugins/rightClick";
+import clickOutside from "@/plugins/clickOutside";
 
 
 VMdEditor.Codemirror = definedCodeMirror
@@ -49,6 +51,8 @@ createApp(App)
     .use(store)
     .use(router)
     .use(lazyload)
+    .use(rightClick)
+    .use(clickOutside)
     .use(ElementPlus)
     .use(VMdEditor)
     .use(VMdPreview)

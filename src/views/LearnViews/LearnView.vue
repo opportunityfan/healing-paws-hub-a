@@ -10,7 +10,7 @@
         </div>
       </div>
 
-      <PostFlow :request-new-post="requestNewAffair" style="flex-grow: 1"></PostFlow>
+      <PostFlow :request-new-post="requestNewAffair" urlPrefix="/affair/" style="flex-grow: 1"></PostFlow>
     </div>
     <div class="instrument-bar flex-column" style="height: 40%">
       <div class="flex-row">
@@ -21,7 +21,7 @@
           <i class='bx bx-dots-horizontal-rounded'></i>
         </div>
       </div>
-      <PostFlow :request-new-post="requestNewInstrument" style="flex-grow: 1" :width="120" :show-description="false" :update-post-count="7"></PostFlow>
+      <PostFlow :request-new-post="requestNewInstrument" urlPrefix="/instrument/" style="flex-grow: 1" :width="120" :show-description="false" :update-post-count="7"></PostFlow>
     </div>
   </div>
 </template>
@@ -103,7 +103,7 @@ let affairId = 0
 
 const requestNewAffair = async (count : number) => {
   const newPostList = new Array<Post>()
-  const jsondata = {count:'5'}
+  const jsondata = {count:'10'}
   await axios.post('/affair/recommend',jsondata,{
     headers:{
       'token':store.state.token
@@ -127,15 +127,35 @@ const requestNewAffair = async (count : number) => {
   })
   return newPostList
 }
-let instrumentId = 0
+let instrumentNum = 1
 const requestNewInstrument = async (count : number) => {
   const newPostList = new Array<Post>()
 
-  for (let i = 0 ; i < count ; ++i) {
-    newPostList.push(instruments[instrumentId])
-    instrumentId ++;
-    if (instrumentId >= 3) instrumentId = 0;
-  }
+  await axios.get('/item/search',{
+    headers:{
+      token : store.state.token
+    },
+    params:{
+      pageNum : instrumentNum,
+      pageSize : 7,
+      name: ''
+    }
+  }).then(res=>{
+    console.log(res.data)
+    for(let item of res.data){
+      let tempImage
+      // if(item.pic === null){
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const image = new Image(require("@/assets/login-background.png"),3035,4299)
+        tempImage = image
+      // }else{
+      //   const image = new Image(item.pic,item.picSize[0],item.picSize[1])
+      //   tempImage = image
+      // }
+      newPostList.push(new Post(item.id,item.name,item.introduction,tempImage))
+    }
+    instrumentNum++
+  })
   return newPostList
 }
 </script>
