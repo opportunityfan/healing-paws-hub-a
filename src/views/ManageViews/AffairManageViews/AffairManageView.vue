@@ -60,22 +60,7 @@ const affair = reactive<{
   image: new Image(require('@/assets/avatar.jpg'),1,1)
 })
 const picFile = ref()
-const showToolTip = (e) =>{
-  data.tooltipX = e.clientX
-  data.tooltipY = e.clientY
-  data.show = true
-  console.log(e.clientX)
-  console.log(e.clientY)
-}
-const hideToolTip = () =>{
-  data.show = false
-}
-onMounted(()=>{
-  window.addEventListener('click',hideToolTip)
-})
-onBeforeUnmount(()=>{
-  window.removeEventListener('click',hideToolTip)
-})
+
 const onMouseEnterAvatar = () =>{
   isMouseOverAvatar.value = true
 }

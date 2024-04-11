@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, defineEmits, withDefaults, defineProps } from 'vue'
-import {tag, autoComplete, goto, goAffair, autoCompleteItem} from '@/assets/api';
+import {tag, autoComplete, goto, goAffair, autoCompleteItem, autoCompleteWXJ} from '@/assets/api';
 import { onBeforeRouteUpdate, useRoute } from "vue-router";
 
 const isFocus = ref(false)
@@ -48,13 +48,15 @@ const onInput = (e: any) => {
   // 补全最后一词
   const value = e.target.value
 
-  if(props.searchUrl === "/item/search"){
-    autoCompleteItem(value).then(res => {
+
+
+  if(props.searchUrl === '/affair/fuzzy'){
+    autoComplete(props.searchUrl, value).then((res) => {
       autoCompletes.value = res
       selectedIndex.value = -1
     })
-  }else {
-    autoComplete(props.searchUrl, value).then((res) => {
+  }else{
+    autoCompleteWXJ(props.searchUrl,value).then(res => {
       autoCompletes.value = res
       selectedIndex.value = -1
     })

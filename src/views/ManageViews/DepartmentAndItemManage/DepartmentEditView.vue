@@ -1,13 +1,236 @@
 <script setup lang="ts">
 
+import HFormInput from "@/components/HFormInput.vue";
+import HButton from "@/components/HButton.vue";
+import HFileUpload from "@/components/HFileUpload.vue";
+import HImage from "@/components/HImage.vue";
+import HRadio from "@/components/HRadio.vue";
+import {reactive, ref} from "vue";
+import {useRoute} from "vue-router";
+import {goBack, Image, tag} from "@/assets/api";
+import HLoading from "@/components/HLoading.vue";
+import axios from "@/assets/axios";
+import store from "@/store";
+import HpageTable from "@/components/HpageTable.vue";
+const route = useRoute()
+const department = reactive<{
+  id : string,
+  name : string,
+  introduction : string,
+  connect : Array<string>,
+  staff : Array<{id:string,name:string,position:string,phone:string}>,
+  pic : string
+  image : Image
+}>({
+  id : route.params.id as string,
+  name : '科室',
+  introduction : '这是一个科室',
+  connect : [],
+  staff : [],
+  pic : '',
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  image : new Image(require('@/assets/avatar.jpg'),1,1)
+})
+const data = reactive<{
+  isNew : boolean
+
+}>({
+  isNew : false,
+
+})
+const staffData = reactive<{
+  isStaffPanel : boolean
+  id? : string,
+  name? : string,
+  position? : string,
+  phone? : string
+}>({
+  isStaffPanel : false
+})
+const picFile = ref()
+
+const deleteDepartment = async () => {
+  axios.delete('/department/'+department.id,{
+    headers:{
+      token : store.state.token
+    }
+  }).then(res=>{
+    console.log(res.data)
+    if(res.data.code===200){
+      console.log('删除成功！')
+      goBack()
+    }
+  })
+}
+const getDepartmentById = async () => {
+
+  if(department.id !== '0') {
+    axios.get('/department/' + department.id, {
+      headers: {
+        token: store.state.token
+      }
+    }).then(res => {
+      console.log('拿department返回', res.data)
+      const temp = res.data.data
+      department.name = temp.departmentName
+      department.introduction = temp.introduction
+      department.connect = temp.connectID
+      department.staff = temp.staffList
+    })
+  }else{
+    data.isNew = true
+  }
+}
+const onLoad = async () =>{
+
+  await getDepartmentById()
+  return
+}
+const requestStaffs = async (pageNum : number, pageSize : number) => {
+  const currentItems = new Array<tag>()
+  if(department.staff){
+    department.staff.forEach(s=>{
+      currentItems.push(new tag(s.id,s.name))
+    })
+  }
+  return currentItems
+}
+const requestItems = async (pageNum : number, pageSize : number) =>{
+  const currentItems = new Array<tag>()
+  await axios.get('/item/search',{
+    params: {
+      pageNum: pageNum,
+      pageSize: pageSize,
+      name: department.name
+    },
+    headers:{
+      'token':store.state.token
+    }
+  }).then(res=>{
+    console.log('科室的物品',res)
+    if(res.data.data) {
+      for (let item of res.data.data) {
+        currentItems.push(new tag(item.id, item.name))
+      }
+    }
+  })
+  return currentItems
+}
+const createDepartment = () => {
+  const jsondata = {
+    id : department.id,
+    departmentName : department.name,
+    introduction : department.introduction,
+    connectID : department.connect,
+    staffList : department.staff,
+
+  }
+
+  const formdata = new FormData()
+  formdata.append('department',new Blob([JSON.stringify(jsondata)],{type:"application/json"}))
+  axios.post('/department',formdata,{
+    headers:{
+      token : store.state.token,
+
+    }
+
+
+  }).then(res=>{
+    console.log(res.data)
+  })
+}
+const addStaff = () => {
+  staffData.isStaffPanel = !staffData.isStaffPanel
+
+}
 </script>
 
 <template>
-  <div  class="full">
+  <h-loading :load="onLoad">
+    <div  class="full">
+      <div class="subtitle" >{{ data.isNew? '创建科室':'编辑科室' }}</div>
+        <div class="main-panel">
 
-  </div>
+          <div class="left-panel">
+            <div class="flex-row" style="width: 100%; gap: 20px; margin: 6px 0">
+              <div class="text-bold" style="flex-shrink: 0">科室名称</div>
+              <HFormInput v-model="department.name" name="科室名称" style="width: 200px"></HFormInput>
+            </div>
+            <div class="flex-row" style="width: 100%; gap: 20px; margin: 6px 0">
+              <div class="text-bold" style="flex-shrink: 0">科室说明</div>
+              <HFormInput v-model="department.introduction" name="科室说明" style="width: 200px"></HFormInput>
+            </div>
+
+          </div>
+          <div class="right-panel">
+            <div class="flex-row" style="width: 100%; gap: 20px; margin: 6px 0">
+  <!--            <div class="text-bold" style="flex-shrink: 0">图片编辑</div>-->
+  <!--            <div style="position: relative; width: fit-content" class="avatar-box"-->
+  <!--                 @mouseenter="onMouseEnterAvatar"-->
+  <!--                 @mouseleave="onMouseLeaveAvatar">-->
+  <!--              <HImage :image="affair.image" :size="100" ></HImage>-->
+  <!--              <div :style="{opacity : isMouseOverAvatar ? '1' : '0'}"-->
+  <!--                   class="center add-icon" >-->
+  <!--                <HFileUpload @handleFile="handleImage"></HFileUpload>-->
+  <!--              </div>-->
+  <!--            </div>-->
+              <HButton @click="createDepartment"  v-if="data.isNew">创建科室</HButton>
+              <HButton @click="updateDepartment"  v-if="!data.isNew">更新科室</HButton>
+              <HButton @click="deleteDepartment" type="danger">删除科室</HButton>
+            </div>
+        </div>
+      </div>
+
+      <div class="main-panel">
+        <div class="left-panel">
+          <div class="text-bold">科室人员</div>
+          <HpageTable :request-items="requestStaffs" totalPages="2" @itemClick="editStaff"></HpageTable>
+          <HButton height="30px" style="margin-top: 5px" @click="addStaff">添加人员</HButton>
+          <div class="staff-add-panel" v-if="data.isStaffPanel">
+            <div class="flex-row" style="width: 100%; gap: 20px; margin: 6px 0">
+              <div class="text-bold" style="flex-shrink: 0; margin-left: 6px">人员id</div>
+              <HFormInput v-model="staffData.id" name="人员id" style="width: 160px"></HFormInput>
+            </div>
+
+            <div class="flex-row" style="width: 100%; gap: 20px; margin: 6px 0">
+              <div class="text-bold" style="flex-shrink: 0; margin-left: 6px">名称</div>
+              <HFormInput v-model="staffData.name" name="名称" style="width: 160px"></HFormInput>
+            </div>
+            <div class="flex-row" style="width: 100%; gap: 20px; margin: 6px 0">
+              <div class="text-bold" style="flex-shrink: 0; margin-left: 6px">职位</div>
+              <HFormInput v-model="staffData.position" name="职位" style="width: 160px"></HFormInput>
+            </div>
+            <div class="flex-row" style="width: 100%; gap: 20px; margin: 6px 0">
+              <div class="text-bold" style="flex-shrink: 0; margin-left: 6px">手机号</div>
+              <HFormInput v-model="staffData.phone" name="手机号" style="width: 160px"></HFormInput>
+            </div>
+          </div>
+        </div>
+        <div  class="right-panel">
+          <div class="text-bold">科室物品</div>
+          <HpageTable :request-items="requestItems" totalPages="2" @itemClick="goItemEdit"></HpageTable>
+          <HButton height="30px" style="margin-top: 5px" >添加物品</HButton>
+        </div>
+      </div>
+
+    </div>
+  </h-loading>
 </template>
 
 <style scoped lang="stylus">
 
+.main-panel
+  display flex
+  align-items stretch
+
+.left-panel
+  flex 1
+  padding 0
+  margin-left 20px
+.right-panel
+  flex 1
+  margin 0 50px
+.staff-add-panel
+  border 1px solid var(--theme-color)
+  border-radius 16px
 </style>

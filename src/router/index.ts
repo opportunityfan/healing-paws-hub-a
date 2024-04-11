@@ -221,7 +221,7 @@ const routes: Array<RouteRecordRaw> = [
           },
           {
             path:'/departmentEdit/:id',
-            name:'departmentManageEditPage',
+            name:'departmentEditPage',
             component:DepartmentEditView,
             props:true
           },

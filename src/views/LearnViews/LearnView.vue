@@ -142,7 +142,7 @@ const requestNewInstrument = async (count : number) => {
     }
   }).then(res=>{
     console.log(res.data)
-    for(let item of res.data){
+    for(let item of res.data.data){
       let tempImage
       // if(item.pic === null){
         // eslint-disable-next-line @typescript-eslint/no-var-requires

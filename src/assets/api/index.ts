@@ -292,9 +292,9 @@ export const autoComplete = async (searchUrl : string,word : string) :Promise<ta
     console.log(names)
     return names
 }
-export const autoCompleteItem = async (word : string) :Promise<tag[]> =>{
+export const autoCompleteWXJ = async (searchUrl : string,word : string) :Promise<tag[]> =>{
     const names = Array<tag>()
-    await axios.get('/item/search',{
+    await axios.get(searchUrl,{
         params:{
             pageNum : 1,
             pageSize : 10,
@@ -304,15 +304,22 @@ export const autoCompleteItem = async (word : string) :Promise<tag[]> =>{
             'token' : store.state.token
         }
     }).then((res)=>{
-        const affairs = res.data
+        const items = res.data
         console.log(res.data)
-
-        if(affairs)
-            affairs.forEach((e:any) => {
-                const tempTag = new tag(e.id,e.name)
-                names.push(tempTag)
-            })
-        console.log(affairs)
+        if(searchUrl === '/item/search') {
+            if (items)
+                items.forEach((e: any) => {
+                    const tempTag = new tag(e.id, e.name)
+                    names.push(tempTag)
+                })
+        }else if(searchUrl === '/department/search'){
+            if (items)
+                items.forEach((e: any) => {
+                    const tempTag = new tag(e.id, e.departmentName)
+                    names.push(tempTag)
+                })
+        }
+        console.log(items)
     })
     console.log(names)
     return names
