@@ -7,6 +7,7 @@ import HInput from "@/components/HInput.vue";
 import HButton from "@/components/HButton.vue";
 import HAvatar from "@/components/HAvatar.vue";
 import {getUserInfo, goRoleSelect} from "@/assets/api";
+import {sendToGpt, startGptTalk} from "@/assets/api/gpt"
 import HFileUpload from "@/components/HFileUpload.vue";
 const data = reactive<{
   account : string
@@ -76,6 +77,11 @@ watch(
     }
 )
 
+const testGpt = async () => {
+  let conversation_id = await startGptTalk()
+  let result = await sendToGpt(conversation_id, '你好，你是谁')
+  console.log('GPT返回的结果',result)
+}
 </script>
 
 <template>
@@ -113,7 +119,7 @@ watch(
             <span class="hint">想要更改您的角色?</span>
             <span class="clickable-text" @click="goRoleSelect">点击此处!</span>
           </div>
-
+          <HButton @click="testGpt">发送对话</HButton>
         </div>
       </div>
     </div>
