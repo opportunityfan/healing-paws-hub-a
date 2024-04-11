@@ -1,10 +1,11 @@
 <script setup lang="ts">
 
-import {ref} from "vue";
+import {ref,defineEmits} from "vue";
 import axios from "@/assets/axios";
 import store from "@/store";
 
 const fileInput = ref<HTMLInputElement>()
+const emit = defineEmits(['handleFile'])
 const clickFileInput = () => {
   fileInput.value?.click()
 }
@@ -14,9 +15,9 @@ const handleImage = (event : any) =>{
   const files = event.target.files || event.dataTransfer.files
   if(!files.length) return;
   selectedFile.value = files[0]
-
+  emit('handleFile',selectedFile.value)
   console.log('handleImage')
-  upLoadImage()
+
 }
 const upLoadImage = async () => {
   if(!selectedFile.value){

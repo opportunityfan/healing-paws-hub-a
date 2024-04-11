@@ -8,7 +8,7 @@ const questiondata=ref({});
 const text=ref(null);
 const isdelete=ref(false);
 const statement=ref('');
-const pageSize=ref(5);
+const pageSize=ref(10);
 const pageNum=ref(1)
 async function getdata(){
   const res = await axios.get('http://150.158.110.63:8080/question/group',{
@@ -78,10 +78,7 @@ onMounted(()=>{
         <td>{{item.statement}}</td>
         <td>{{item.score}}</td>
         <td>
-<!--          <HDealWith v-for="Type in item.type" :key="Type" :to="Type">-->
-
-<!--          </HDealWith>-->
-          {{item.type}}
+          {{item.type.join(',')}}
         </td>
         <td>
           <router-link :to="`/subjectUpdate/${item.id}`">
@@ -105,7 +102,7 @@ onMounted(()=>{
         background
         layout="prev, pager, next"
         :page-size="pageSize"
-        :total="20"
+        :total="30"
         class="mt-4"
         @current-change="pagechange"
     />

@@ -3,7 +3,9 @@
 </script>
 
 <template>
-  <div>对一个affairNode操作的地方</div>
+  <div  class="full">
+
+  </div>
 </template>
 
 <style scoped lang="stylus">

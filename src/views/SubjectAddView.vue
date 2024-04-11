@@ -147,7 +147,7 @@ onMounted(()=>{
           <td>{{item.name}}</td>
           <td>{{item.type}}</td>
           <td>
-            <el-checkbox @change="(value)=>{Add(value,item.id)}"></el-checkbox>
+            <el-checkbox @change="(value)=>{Add(value,item.name)}"></el-checkbox>
           </td>
         </tr>
         </tbody>
@@ -157,7 +157,7 @@ onMounted(()=>{
           background
           layout="prev, pager, next"
           :page-size="pageSize"
-          :total="50"
+          :total="61"
           class="mt-4"
           @current-change="pagechange"
       />

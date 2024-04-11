@@ -10,7 +10,9 @@ export default createStore({
     nick_name: "NickName",
     email: "3336970253@qq.com",
     ifBackKey: false,
-    token: ''
+    token: '',
+    role:'',
+    permission:''
   },
   getters: {
   },

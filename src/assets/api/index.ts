@@ -104,6 +104,7 @@ export const signIn = (data:any) => {
          if(res.data.code==200){
 
              store.state.token = res.data.data.token
+             store.state.role = res.data.data.role
              getUserInfo().then(res => {
                  store.state.online = true
              })
@@ -217,14 +218,14 @@ export const gotoArchiveDetailPageWithId = async (name : string, archiveId : str
 }
 
 export const goAffair = (affairId : string)=>{
-    console.log(affairId)
     gotoWithProp('affairPage',affairId).then()
 }
 
 export const goAffairNode = async (nodeId: string) =>{
-    console.log(nodeId,'nodeid')
     await router.push({name: 'affairNodePage',params: {nodeId : nodeId}});
-
+}
+export const goAffairNodeManage = async (nodeId : string) => {
+    await goto('/affair-node-edit/' + nodeId)
 }
 export const goItem = async (itemId: string) => {
     console.log(itemId)

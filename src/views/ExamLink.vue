@@ -89,5 +89,7 @@ onMounted(()=>{
 </template>
 
 <style scoped lang="stylus">
-
+.xtable{
+  width: 100%;
+}
 </style>

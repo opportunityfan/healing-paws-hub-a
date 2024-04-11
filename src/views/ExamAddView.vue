@@ -61,7 +61,7 @@ async function getdata(){
   const res = await axios.get('http://150.158.110.63:8080/question/page',{
     params:{
       pageNum: 1,
-      pageSize: 5,
+      pageSize: 10,
     }
   })
   questiondata.value=res.data.data;

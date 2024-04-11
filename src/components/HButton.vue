@@ -1,8 +1,9 @@
 <template>
   <div
       class="h-button border-radius-thin"
+      :class="props.type==='danger'?'h-button-danger':'h-button'"
       :style="{
-        height: props.height === '' ? '40px' : props.height
+        height: props.height === '' ? '40px' : props.height,
       }"
   >
     <div class="center">
@@ -36,4 +37,9 @@ const props = withDefaults(defineProps<{
 
 .h-button:hover
   background-color var(--theme-color-dark)
+
+.h-button-danger
+  background-color var(--accent-color)
+.h-button-danger:hover
+  background-color var(--accent-color-dark)
 </style>
