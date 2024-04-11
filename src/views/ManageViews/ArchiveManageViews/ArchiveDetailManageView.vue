@@ -7,6 +7,7 @@ import store from "@/store";
 import HScroller from "@/components/HScroller.vue";
 import HInput from "@/components/HInput.vue";
 import HButton from "@/components/HButton.vue";
+import HFileUpload from "@/components/HFileUpload.vue";
 import {Image, goBack} from "@/assets/api";
 
 let archiveDetailInfo = reactive({
@@ -94,6 +95,13 @@ function postArchiveDetailInfo(){
   }
 }
 
+// let images = reactive({})
+//
+// function upLoadImages(image: File) {
+//   Object.assign(images, {
+//   })
+// }
+
 </script>
 
 <template>
@@ -123,6 +131,12 @@ function postArchiveDetailInfo(){
               name="接诊（基本情况、临床症状）"
               v-model="archiveDetailInfo.description"
           ></HInput>
+<!--          <div style="position: relative; width: fit-content" class="avatar-box">-->
+<!--            <HImage :image="affair.image" :size="100" :lazy-load="false"></HImage>-->
+<!--            <div class="center add-icon" >-->
+<!--              <HFileUpload @handleFile="upLoadImages"></HFileUpload>-->
+<!--            </div>-->
+<!--          </div>-->
           <HInput
               name="检查"
               v-model="archiveDetailInfo.checkItem"

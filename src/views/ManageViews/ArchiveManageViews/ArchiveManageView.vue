@@ -3,70 +3,124 @@
 import HScroller from "@/components/HScroller.vue";
 import {ref, reactive} from "vue";
 import HButton from "@/components/HButton.vue";
+import HInput from "@/components/HInput.vue";
 import DiseaseNameButton from "@/views/ArchiveViews/DiseaseNameButton.vue";
 import {goto, gotoArchiveSearchResultsWithNames} from "@/assets/api";
 import axios from "@/assets/axios";
 import store from "@/store";
 
-let diseaseTypes = reactive(["传染病","寄生虫病","内科","外产科疾病","常用手术","免疫"])
+let diseaseTypes = reactive(["传染病", "寄生虫病", "内科", "外产科疾病", "常用手术", "免疫"])
 let diseaseNamesOrderedByType: Record<string, any> = reactive({})
 
-function getDiseaseNamesByType(diseaseType: string){
+function getDiseaseNamesByType(diseaseType: string) {
   axios.get('/disease/belong', {
-    params:{
+    params: {
       pageNum: 1,
       pageSize: 50,
       type: diseaseType
     },
-    headers:{
-      'token':store.state.token
+    headers: {
+      'token': store.state.token
     }
-  }).then((res)=>{
+  }).then((res) => {
     diseaseNamesOrderedByType[diseaseType] = res.data.data
   })
 }
 
-diseaseTypes.forEach((diseaseType)=>{
+diseaseTypes.forEach((diseaseType) => {
   getDiseaseNamesByType(diseaseType)
 })
 
 console.log(diseaseNamesOrderedByType)
 
-let chosenDiseases: string[] = reactive([])
+let chosenDiseases = reactive([])
+let chosenDiseasesId = reactive([])
 
-function chooseDisease(name:string){
-  if (!chosenDiseases.includes(name)){
-    chosenDiseases.push(name)
+function chooseDisease(diseaseName) {
+  if (!chosenDiseases.includes(diseaseName.name)) {
+    chosenDiseases.push(diseaseName.name)
+    chosenDiseasesId.push(diseaseName.id)
+  } else {
+    chosenDiseases.splice(chosenDiseases.indexOf(diseaseName.name), 1)
+    chosenDiseasesId.splice(chosenDiseasesId.indexOf(diseaseName.id), 1)
   }
-  else {
-    chosenDiseases.splice(chosenDiseases.indexOf(name), 1)
-  }
-  console.log("已选中"+name)
-  console.log(chosenDiseases)
+  console.log("已选中" + diseaseName.name + diseaseName.id)
+  console.log(chosenDiseasesId)
   console.log(chosenDiseases.join(' '))
 }
 
 
-function searchArchives(){
-  if (chosenDiseases.length > 0){
+function searchArchives() {
+  if (chosenDiseases.length > 0) {
     let chosenDiseasesString = chosenDiseases.join(' ')
     gotoArchiveSearchResultsWithNames('archiveSearchResultsManage', chosenDiseasesString)
-  }
-  else {
+  } else {
     console.log("提交失败")
   }
   console.log("多选提交")
 }
 
-function consoleLogToken(){
-  console.log(store.state.token)
+let isClicked = ref("")
+let diseaseNameToAdd = ref("")
+
+function addDisease(diseaseType: string) {
+  if (diseaseNameToAdd.value !== '') {
+    let jsondata = {
+      name: diseaseNameToAdd.value,
+      type: diseaseType
+    }
+    axios.post('/disease', jsondata, {
+      headers: {
+        'token': store.state.token
+      }
+    }).then((res)=>{
+      if(res.data.code === 200) {
+        console.log("添加成功")
+        diseaseNameToAdd.value = ''
+        isClicked.value = ''
+        getDiseaseNamesByType(diseaseType)
+      }
+      else {
+        console.log("添加失败")
+        console.log(res.data.msg)
+      }
+    })
+  }
+  else {
+    console.log("请输入病种名称")
+  }
+}
+
+function deleteDiseases() {
+  for (let diseaseId of chosenDiseasesId) {
+    axios.delete('/disease', {
+      params: {
+        'id': diseaseId
+      },
+      headers: {
+        'token': store.state.token
+      }
+    }).then((res)=>{
+      if(res.data.code === 200) {
+        console.log("删除成功")
+        diseaseTypes.forEach((diseaseType) => {
+          getDiseaseNamesByType(diseaseType)
+        })
+      }
+      else {
+        console.log("删除失败")
+        console.log(res.data.msg)
+      }
+    })
+  }
+  chosenDiseasesId.length = 0
 }
 
 </script>
 
 <template>
   <div class="full">
-    <HScroller scroll-direction="column" class="scroller-view" style="width:100%;height:60%">
+    <HScroller scroll-direction="column" class="scroller-view" style="width:100%;height:70%">
       <div class="flex-column" style="border:1px solid var(--theme-color)">
         <div class="diseaseType" v-for="(diseaseType,index) in diseaseTypes" :key="index">
           {{diseaseType}}
@@ -74,9 +128,30 @@ function consoleLogToken(){
           <br>
           <div class="flex-row flex-wrap">
             <div v-for="diseaseName in diseaseNamesOrderedByType[diseaseType]" :key="diseaseName.id">
-              <div class="diseaseNameButton" @click="chooseDisease(diseaseName.name)">
+              <div class="diseaseNameButton" @click="chooseDisease(diseaseName)">
                 <DiseaseNameButton :isChosen="chosenDiseases.includes(diseaseName.name)" height="50px">{{diseaseName.name}}</DiseaseNameButton>
               </div>
+            </div>
+            <DiseaseNameButton @click="()=>{isClicked=diseaseType}" height="50px">
+              <div v-show="isClicked!==diseaseType" style="font-size: 30px">+</div>
+              <HInput
+                  name=""
+                  v-show="isClicked===diseaseType"
+                  style="display: inline-block"
+                  v-model="diseaseNameToAdd"
+              ></HInput>
+            </DiseaseNameButton>
+            <div v-show="isClicked===diseaseType">
+              <DiseaseNameButton
+                  height="20px"
+                  style="width: 20px"
+                  @click="addDisease(diseaseType)"
+              >√</DiseaseNameButton>
+              <DiseaseNameButton
+                  height="20px"
+                  style="width: 20px"
+                  @click="()=>{isClicked=''}"
+              >x</DiseaseNameButton>
             </div>
           </div>
         </div>
@@ -85,8 +160,11 @@ function consoleLogToken(){
       <br>
       <br>
     </HScroller>
-    <HButton @click="searchArchives">确认选择</HButton>
-    <HButton @click="goto('/archiveDetailManage')">新建病例</HButton>
+    <div class="flex-row">
+      <HButton @click="searchArchives" style="margin-right: 10px">搜索符合的病例</HButton>
+      <HButton @click="deleteDiseases" style="margin-right: 10px">删除选中的病种</HButton>
+      <HButton @click="goto('/archiveDetailManage')">新建病例</HButton>
+    </div>
   </div>
 </template>
 

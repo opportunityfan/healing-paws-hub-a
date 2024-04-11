@@ -86,8 +86,6 @@ function consoleLogToken(){
       <br>
     </HScroller>
     <HButton @click="searchArchives">确认选择</HButton>
-    <HButton @click="goto('archiveManage')">前往病例管理页面</HButton>
-    <HButton @click="consoleLogToken">token</HButton>
   </div>
 </template>
 
