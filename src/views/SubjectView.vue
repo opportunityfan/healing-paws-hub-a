@@ -102,7 +102,7 @@ onMounted(()=>{
         background
         layout="prev, pager, next"
         :page-size="pageSize"
-        :total="30"
+        :total="100"
         class="mt-4"
         @current-change="pagechange"
     />

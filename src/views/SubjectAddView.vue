@@ -5,6 +5,7 @@ import {dayjs, FormEmits, FormInstance} from "element-plus";
 import axios from "axios";
 import {goto} from "@/assets/api";
 import store from "@/store";
+import MarkdownEditor from "@/components/MarkdownEditor.vue";
 
 const subjectform=reactive({
   statement: '',
@@ -103,8 +104,9 @@ onMounted(()=>{
 <!--    {{diseasedata}}-->
     <el-form :model="subjectform" :rules="rules" @submit="submit()" ref="formref">
       <el-form-item prop="statement" label="题目描述">
-        <el-input v-model="subjectform.statement">
-        </el-input>
+<!--        <el-input v-model="subjectform.statement">-->
+<!--        </el-input>-->
+        <MarkdownEditor v-model="subjectform.statement" height="200px"></MarkdownEditor>
       </el-form-item>
       <el-form-item prop="answer" label="题目答案">
         <el-input v-model="subjectform.answer">
@@ -114,8 +116,9 @@ onMounted(()=>{
         <el-button @click="isAdd=true">选择病种</el-button>
       </el-form-item>
       <el-form-item prop="detail" label="题目答案解析">
-        <el-input v-model="subjectform.detail">
-        </el-input>
+<!--        <el-input v-model="subjectform.detail">-->
+<!--        </el-input>-->
+        <MarkdownEditor v-model="subjectform.detail" height="200px"></MarkdownEditor>
       </el-form-item>
       <el-form-item prop="score" label="题目分数">
         <el-input-number v-model="subjectform.score" :min="1" :max="100" :controls="false"/>

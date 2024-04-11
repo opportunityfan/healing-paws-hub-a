@@ -6,6 +6,7 @@ import {ElMessage} from "element-plus";
 import {compute} from "three/examples/jsm/nodes/gpgpu/ComputeNode";
 import {goto} from "@/assets/api";
 import store from "@/store";
+import MarkdownRenderer from "@/components/MarkdownRenderer.vue";
 
 const value2=ref(0);
 const router=useRoute();
@@ -127,45 +128,30 @@ onMounted(()=>{
         交卷
       </el-button>
     </div>
-    <div>
-      <el-button>
-        考试题目跳转
-        <el-select v-model="value2" @change="select">
-          <el-option v-for="( s , index) in item.questionList" :label="index+1" :key="index" :value="index">
-          </el-option>
-        </el-select>
-      </el-button>
-    </div>
-    <div>
-      <div>
+    <br>
+    <el-row>
+      <el-col :span="8">
         <el-button @click="Last">上一题</el-button>
-      </div>
-      <div>
+      </el-col>
+      <el-col :span="8">
+        <el-button>
+          考试题目跳转
+          <el-select v-model="value2" @change="select">
+            <el-option v-for="( s , index) in item.questionList" :label="index+1" :key="index" :value="index">
+            </el-option>
+          </el-select>
+        </el-button>
+      </el-col>
+      <el-col :span="8">
         <el-button @click="Next">下一题</el-button>
-      </div>
-    </div>
+      </el-col>
+    </el-row>
     <div>
       <br>
       <div v-if="item.questionList && item.questionList.length>0">
-        <h5>
-          题目分数：{{question.score}}
-        </h5>
-        <br>
-        <h3>
-          题目描述
-        </h3>
-        <br>
-        <div>
-          {{ question.statement }}
-        </div>
-        <div>
-
-        </div>
-        <br>
-        <div>
-          请输入答案
-        </div>
-        <br>
+        <markdown-renderer :markdown="'#### 题目描述：'+'\n'+question.statement"></markdown-renderer>
+        <markdown-renderer :markdown="'#### 题目分数：'+question.score"></markdown-renderer>
+        <markdown-renderer :markdown="'#### 请输入答案：'"></markdown-renderer>
         <el-input v-model="answer" @blur="record()">
         </el-input>
       </div>
