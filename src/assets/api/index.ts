@@ -136,6 +136,7 @@ export const signIn = (data:any) => {
          if(res.data.code==200){
 
              store.state.token = res.data.data.token
+             store.state.role = res.data.data.role
              getUserInfo().then(res => {
                  store.state.online = true
              })

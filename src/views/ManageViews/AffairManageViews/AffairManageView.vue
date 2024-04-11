@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {useRoute} from "vue-router";
 import FlowDia from "@/components/FlowDia.vue";
-import { goAffairNodeManage, Image} from "@/assets/api";
+import {goAffairNodeManage, goBack, Image} from "@/assets/api";
 import {onBeforeUnmount, onMounted, reactive, ref} from "vue";
 
 import HFormInput from "@/components/HFormInput.vue";
@@ -12,6 +12,7 @@ import store from "@/store";
 import HLoading from "@/components/HLoading.vue";
 import HRadio from "@/components/HRadio.vue";
 import HImage from "@/components/HImage.vue";
+import HButton from "@/components/HButton.vue";
 const route = useRoute()
 
 const roles = ref([{
@@ -140,6 +141,22 @@ const onUpdate = async (formdata : FormData) => {
     })
   }
 }
+const deleteAffair = () => {
+  axios.delete('/affair',{
+    headers:{
+      token : store.state.token
+    },
+    params:{
+      id : affair.id
+    }
+  }).then(res=>{
+    console.log(res.data)
+    if(res.data.code===200){
+      console.log('删除成功！')
+      goBack()
+    }
+  })
+}
 </script>
 
 <template>
@@ -173,7 +190,9 @@ const onUpdate = async (formdata : FormData) => {
                 <HFileUpload @handleFile="handleImage"></HFileUpload>
               </div>
             </div>
+            <HButton @click="deleteAffair" type="danger">删除事务</HButton>
           </div>
+
         </div>
       </div>
       <div class="flow-dia">

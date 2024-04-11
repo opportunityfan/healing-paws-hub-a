@@ -34,7 +34,6 @@ const goAffairManage = async (affairId : string) => {
 }
 </script>
 <template>
-
   <div class="main-panel full">
     <HSearchBar style="width: 85%" searchUrl="/affair/fuzzy" @onEnter="goAffairManage"></HSearchBar>
     <div style="width: 85%">

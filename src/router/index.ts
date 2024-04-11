@@ -217,12 +217,6 @@ const routes: Array<RouteRecordRaw> = [
         name:'affairManagePage',
         component: AffairManageView,
         props: true
-      },
-      {
-        path:'/affairNodeManage/:affairNodeId',
-        name:'affairNodeManagePage',
-        component: AffairNodeMangeView,
-        props: true
       }
     ]
   }
