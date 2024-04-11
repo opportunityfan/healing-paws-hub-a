@@ -144,14 +144,14 @@ const requestNewInstrument = async (count : number) => {
     console.log(res.data)
     for(let item of res.data.data){
       let tempImage
-      // if(item.pic === null){
+      if(item.pic === null){
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const image = new Image(require("@/assets/login-background.png"),3035,4299)
         tempImage = image
-      // }else{
-      //   const image = new Image(item.pic,item.picSize[0],item.picSize[1])
-      //   tempImage = image
-      // }
+      }else{
+        const image = new Image(item.pic,1,1)
+        tempImage = image
+      }
       newPostList.push(new Post(item.id,item.name,item.introduction,tempImage))
     }
     instrumentNum++

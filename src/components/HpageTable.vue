@@ -1,9 +1,10 @@
 <script setup lang="ts">
 
-import {reactive, withDefaults, defineProps, defineEmits, ref, computed, watch, onMounted} from "vue";
+import {reactive, withDefaults, defineProps, defineEmits, ref, computed, watch, onMounted, defineExpose} from "vue";
 import HDivider from "@/components/HDivider.vue";
 import HInput from "@/components/HInput.vue";
 import {tag} from "@/assets/api";
+import HLoading from "@/components/HLoading.vue";
 
 const props = withDefaults(defineProps<{
   itemsPerPage?: number,
@@ -21,9 +22,10 @@ const data = reactive<{
   tagList: [],
   requesting: false
 })
-const emit = defineEmits(['itemClick'])
-const itemClick = (id: string)=>{
+const emit = defineEmits(['itemClick','itemClick-Index'])
+const itemClick = (id: string,index : number)=>{
   emit('itemClick',id)
+  emit('itemClick-Index',index)
 }
 
 const currentPage = ref(1)
@@ -39,7 +41,20 @@ const nextPage = ()=>{
   }
 }
 
-onMounted(() => {
+// onMounted(() => {
+//   data.tagList.length=0
+//   data.requesting = true
+//   props.requestItems(currentPage.value,props.itemsPerPage).then(res=>{
+//
+//     res.forEach((tag) =>{
+//       data.tagList.push(tag)
+//     })
+//   }).finally(()=>{
+//     data.requesting = false
+//   })
+// })
+
+const onLoad = async () => {
   data.tagList.length=0
   data.requesting = true
   props.requestItems(currentPage.value,props.itemsPerPage).then(res=>{
@@ -50,45 +65,49 @@ onMounted(() => {
   }).finally(()=>{
     data.requesting = false
   })
-})
+}
 
 watch(
     () => currentPage.value,
     (val,preval) => {
-      data.tagList.length=0
-      data.requesting = true
-      props.requestItems(currentPage.value,props.itemsPerPage).then(res=>{
-
-        res.forEach((tag) =>{
-            data.tagList.push(tag)
-        })
-      }).finally(()=>{
-        data.requesting = false
-      })
+      update()
     }
 )
+const update = () =>{
+  data.tagList.length=0
+  data.requesting = true
+  props.requestItems(currentPage.value,props.itemsPerPage).then(res=>{
+
+    res.forEach((tag) =>{
+      data.tagList.push(tag)
+    })
+  }).finally(()=>{
+    data.requesting = false
+  })
+}
+defineExpose({update})
 </script>
 
 <template>
-  <div class="page-Table">
-
-      <div v-for="(item, index) in data.tagList" :key="index" class="item-part" @click="itemClick(item.id)">
-        {{item.name}}
-
+  <div>
+  <h-loading :load="onLoad">
+    <div class="page-Table">
+        <div v-for="(item, index) in data.tagList" :key="index" class="item-part" @click="itemClick(item.id,index)" >
+          {{item.name}}
+        </div>
+      <div class="pagination">
+        <span class="box-icon button-hover" style="font-size: 16px" @click="prePage">
+          <i class='bx bx-chevron-left'></i>
+        </span>
+        <span>
+          {{currentPage}}/{{totalPages}}
+        </span>
+        <span class="box-icon button-hover" style="font-size: 16px" @click="nextPage">
+          <i class='bx bx-chevron-right' ></i>
+        </span>
       </div>
-
-
-    <div class="pagination">
-      <span class="box-icon button-hover" style="font-size: 16px" @click="prePage">
-        <i class='bx bx-chevron-left'></i>
-      </span>
-      <span>
-        {{currentPage}}/{{totalPages}}
-      </span>
-      <span class="box-icon button-hover" style="font-size: 16px" @click="nextPage">
-        <i class='bx bx-chevron-right' ></i>
-      </span>
     </div>
+  </h-loading>
   </div>
 </template>
 
