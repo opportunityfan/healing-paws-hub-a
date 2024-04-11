@@ -21,7 +21,7 @@
     </transition>
 
     <div class="image-block">
-      <img @load="onLoad" v-lazyLoad="props.image.src" alt="" src="">
+      <img @load="onLoad" v-lazyLoad="props.lazyLoad? props.image.src : ''" alt="" :src="props.lazyLoad? '' : props.image.src">
     </div>
   </div>
 
@@ -29,16 +29,18 @@
 </template>
 
 <script setup lang="ts">
-import {defineProps, defineEmits, reactive} from 'vue'
+import {defineProps, defineEmits, reactive, onMounted} from 'vue'
 import {Image} from "@/assets/api";
 // eslint-disable-next-line no-undef
 const props = withDefaults(defineProps<{
   image: Image
   fix?: 'width'|'height'
   size?: number
+  lazyLoad?: boolean
 }>(),{
   fix: 'width',
-  size: 100
+  size: 100,
+  lazyLoad: true
 })
 
 const data = reactive<{
@@ -52,6 +54,10 @@ const emits = defineEmits(['load','error'])
 const onLoad = () => {
   data.loaded = true
 }
+
+onMounted(() => {
+  data.loaded = !props.lazyLoad
+})
 
 </script>
 

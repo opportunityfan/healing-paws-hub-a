@@ -11,6 +11,7 @@ const lazyLoad = (app : App) => {
     // 图片懒加载指令
     app.directive('lazyLoad', {
         mounted (el: HTMLElement, binding : DirectiveBinding) { // vue2.0 inserted vue3.0 mounted
+            if (binding.value === '') return
             const observer = new IntersectionObserver(([{ isIntersecting }]) => {
                 if (isIntersecting) { // isIntersecting判断是否进入视图
                     observer.unobserve(el) // 进入视图后，停止监听

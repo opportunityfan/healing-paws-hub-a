@@ -14,7 +14,6 @@ const goAffairManage = () =>{
 }
 </script>
 
-
 <style scoped lang="stylus">
 
 </style>

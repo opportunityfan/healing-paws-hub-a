@@ -26,38 +26,6 @@ export class Post {
     }
 }
 
-export class Case {
-    id: string
-    name: string
-    description: string
-    descriptionImg: Image
-    checkItem: string
-    checkItemImg: Image
-    diagnosis: string
-    diagnosisImg: Image
-    remedy: string
-    remedyImg: Image
-    type: string[]
-    constructor(id: string, name: string,
-    description: string, descriptionImg: Image,
-    checkItem: string, checkItemImg: Image,
-    diagnosis: string, diagnosisImg: Image,
-    remedy: string, remedyImg: Image,
-    type: string[]) {
-        this.id = id
-        this.name = name
-        this.description = description
-        this.descriptionImg = descriptionImg
-        this.checkItem = checkItem
-        this.checkItemImg = checkItemImg
-        this.diagnosis = diagnosis
-        this.diagnosisImg = diagnosisImg
-        this.remedy = remedy
-        this.remedyImg = remedyImg
-        this.type = type
-    }
-}
-
 export class affair{
     id: string
     description: string
@@ -95,6 +63,7 @@ export class instrument {
     price: number
     departmentId: string
     type: string
+    image: Image
     constructor(id : string, name : string, introduction: string, usage: string, price : number, departmentId: string, type: string) {
         this.id = id
         this.name = name
@@ -103,6 +72,7 @@ export class instrument {
         this.price = price
         this.departmentId = departmentId
         this.type = type
+        this.image = new Image('', 1, 1)
     }
 }
 
@@ -205,7 +175,24 @@ export const getAffairNode = async (id : string) : Promise<affairNode | undefine
 }
 
 export const getInstrument = async (id : string) : Promise<instrument | undefined> => {
-    return undefined
+    let obj : instrument | undefined = undefined
+    await axios.get('/item/' + id, {
+        headers:{
+            'token' : store.state.token
+        }
+    }).then((res) => {
+        console.log(res)
+        if (res.data.code === 200) {
+            obj = res.data.data
+            if (obj)  {
+                if (!res.data.data.picSize) {
+                    res.data.data.picSize = [1, 1]
+                }
+                obj.image = new Image(res.data.data.pic, res.data.data.picSize[0], res.data.data.picSize[1])
+            }
+        }
+    })
+    return obj
 }
 
 export const setAffairNode = async (node : affairNode) => {
@@ -218,13 +205,28 @@ export const setAffairNode = async (node : affairNode) => {
             token: store.state.token
         }
     }).then((res) => {
-        console.log(res)
         if (res.data.code === 200) {
             console.log('update affair node success')
         }
     })
 }
 
+export const setInstrument = async (instrument : instrument, image? : File) => {
+    console.log(instrument)
+    const formData = new FormData()
+    formData.append('item', new Blob([JSON.stringify(instrument)],{type: "application/json"}))
+    if(image) formData.append('pic', image)
+    await axios.put('/item', formData, {
+        headers: {
+            token: store.state.token
+        }
+    }).then((res) => {
+        console.log(res)
+        if (res.data.code === 200) {
+            console.log('update instrument node success')
+        }
+    })
+}
 
 //跳转到界面可以不单独写成函数
 export const goEdit = () => {

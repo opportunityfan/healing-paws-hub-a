@@ -17,13 +17,14 @@ import ExamLink from "@/views/ExamLink.vue";
 import store from "@/store";
 import InstrumentSearchView from "@/views/LearnViews/InstrumentSearchView.vue";
 import InstrumentView from "@/views/LearnViews/InstrumentView.vue";
+import InstrumentEditView from "@/views/LearnViews/InstrumentEditView.vue"
 import AffairNodeView from "@/views/LearnViews/AffairNodeView.vue";
 import EditView from "@/views/UserView/EditView.vue";
 import ExamStart from "@/views/ExamStart.vue";
 import ExamTest from "@/views/ExamTest.vue";
 import ExamRecordView from "@/views/ExamRecordView.vue";
 import RoleSelectView from "@/views/UserView/RoleSelectView.vue";
-import ArchiveManagementView from "@/views/ArchiveViews/ArchiveManagementView.vue"
+import ArchiveManageView from "@/views/ManageViews/ArchiveManageViews/ArchiveManageView.vue"
 import ExamManageView from "@/views/ExamManageView.vue";
 import ExamAddView from "@/views/ExamAddView.vue";
 import ExamUpdateView from "@/views/ExamUpdateView.vue";
@@ -119,6 +120,12 @@ const routes: Array<RouteRecordRaw> = [
         props: true
       },
       {
+        path: '/instrument-edit/:instrumentId',
+        name: 'instrumentEditPage',
+        component: InstrumentEditView,
+        props: true
+      },
+      {
         path: '/guide',
         name: 'guidePage',
         component: GuideView
@@ -139,9 +146,9 @@ const routes: Array<RouteRecordRaw> = [
         component: ArchiveSearchResultsView
       },
       {
-        path: '/archive/management',
-        name: 'archiveManagementPage',
-        component: ArchiveManagementView
+        path: '/archiveManage',
+        name: 'archiveManage',
+        component: ArchiveManageView
       },
       {
         path: '/exam',
