@@ -351,3 +351,11 @@ export const getAffairNodes = async (affairId : string)=>{
     })
     return affairNodes
 }
+
+export const openTalkBar = () => {
+    store.state.talkBarAppend = true
+}
+
+export const closeTalkBar = () => {
+    store.state.talkBarAppend = false
+}

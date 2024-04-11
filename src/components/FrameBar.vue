@@ -21,8 +21,8 @@
 
     </div>
     <div class="button-bar flex-row">
-      <div class="box-icon button-hover" style="font-size: 16px">
-        <i class='bx bxs-cog' ></i>
+      <div class="box-icon button-hover" style="font-size: 16px" @click="openTalkBar">
+        <i class='bx bxs-message-alt-dots'></i>
       </div>
       <div class="box-icon button-hover" style="font-size: 19px" @click="onMinimize">
         <i class='bx bx-minus'></i>
@@ -36,12 +36,10 @@
 
 <script setup lang="ts">
 import store from "@/store";
-import HIcon from "@/components/HIcon.vue";
-import HSearch from "@/components/HSearch.vue";
 import HBackKey from "@/components/HBackKey.vue";
 import {computed, ref} from "vue";
-import router from "@/router";
-import {useRoute, useRouter} from "vue-router";
+import { openTalkBar } from "@/assets/api";
+
 const onClose = () => {
   console.log('close');
   window.electronAPI.close();

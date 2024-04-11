@@ -12,7 +12,8 @@ export default createStore({
     ifBackKey: false,
     token: '',
     role:'',
-    permission:''
+    permission:'',
+    talkBarAppend: false
   },
   getters: {
   },
