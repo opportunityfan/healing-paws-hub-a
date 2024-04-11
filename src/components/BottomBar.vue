@@ -1,5 +1,5 @@
 <template>
-  <div class="bottom-bar-main" :style="{width: data.append? '500px' : '40px'}">
+  <div class="bottom-bar-main" :style="{width: data.append? '800px' : '40px'}">
     <div class="bottom-item-container flex-row" style="justify-content: flex-start; gap: 20px">
       <div class="bottom-item-menu" style="width: 40px; z-index: 10;" :class="{'append' : data.append}" @click="onAppend">
         <div class="box-icon center">

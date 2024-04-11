@@ -7,6 +7,7 @@
         <router-view/>
       </div>
     </div>
+    <talk-bar></talk-bar>
   </div>
 </template>
 
@@ -26,6 +27,7 @@
 body
   margin: 0
   user-select none
+  border-radius 10px
 
 .main-div
   position absolute
@@ -40,6 +42,7 @@ import FrameBar from "@/components/FrameBar";
 import {onMounted} from "vue";
 import {changeTheme} from "@/assets/api";
 import SideBar from "@/components/SideBar.vue";
+import TalkBar from "@/components/TalkBar.vue";
 
 onMounted(() => {
   changeTheme("bright");
