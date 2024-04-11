@@ -29,6 +29,9 @@
               <div class="bottom-item flex-row" v-if="data.append && data.page === 1">
                 <div class="text-bold-inverse">器械管理</div>
               </div>
+              <div class="bottom-item flex-row" v-if="data.append && data.page === 1">
+                <div class="text-bold-inverse">科室管理</div>
+              </div>
               <div class="bottom-item" style="width: 40px" @click="onNext">
                 <div class="box-icon center">
                   <i class='bx bx-chevron-right'></i>
