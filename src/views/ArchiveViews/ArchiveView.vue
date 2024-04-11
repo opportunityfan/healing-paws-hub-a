@@ -8,7 +8,7 @@ import {goto, gotoArchiveSearchResultsWithNames} from "@/assets/api";
 import axios from "@/assets/axios";
 import store from "@/store";
 
-let diseaseTypes = reactive(["传染病","寄生虫病","内科","外产科疾病"])
+let diseaseTypes = reactive(["传染病","寄生虫病","内科","外产科疾病","常用手术","免疫"])
 let diseaseNamesOrderedByType: Record<string, any> = reactive({})
 
 function getDiseaseNamesByType(diseaseType: string){
@@ -66,10 +66,8 @@ function consoleLogToken(){
 
 <template>
   <div class="full">
-    <HScroller scroll-direction="column" class="full scroller-view">
-      <HButton @click="goto('/archive/management')">前往管理员页面</HButton>
-      <HButton @click="consoleLogToken"></HButton>
-      <div class="flex-column">
+    <HScroller scroll-direction="column" class="scroller-view" style="width:100%;height:80%">
+      <div class="flex-column" style="border:1px solid var(--theme-color)">
         <div class="diseaseType" v-for="(diseaseType,index) in diseaseTypes" :key="index">
           {{diseaseType}}
           <br>
@@ -83,30 +81,30 @@ function consoleLogToken(){
           </div>
         </div>
       </div>
-      <div>
-        <HButton @click="searchArchives">确认选择</HButton>
-      </div>
       <br>
       <br>
       <br>
     </HScroller>
+    <HButton @click="searchArchives">确认选择</HButton>
+    <HButton @click="consoleLogToken">获取当前token 调试用</HButton>
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="stylus">
 
-.diseaseNameButton {
-  width: 100px;
-  margin: 10px
-}
+.diseaseNameButton
+  width 100px
+  margin 10px
 
-.diseaseType {
-  font-size: 20px;
-  color: var(--font-title-color);
-  font-weight: 550;
-  text-align: left;
-  padding: 20px;
-  margin: 0
-}
+.diseaseType
+  font-size 20px
+  color var(--font-title-color)
+  font-weight 550
+  text-align left
+  padding 20px
+  margin 0
+
+.option-box
+  border 1px solid var(--theme-color)
 
 </style>

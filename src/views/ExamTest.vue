@@ -38,6 +38,7 @@ function Last(){
     })
   }
   else{
+    answer.value='';
     imd.value=imd.value-1;
   }
 }
@@ -52,6 +53,7 @@ function Next(){
   }
   else{
     imd.value=imd.value+1;
+    answer.value='';
   }
 }
 
@@ -105,15 +107,21 @@ onMounted(()=>{
 
 <template>
   <div>
-    <div>
-      倒计
-      <vue-countdown v-if="item.totalTime" @end="onCountdownEnd" :time="item.totalTime * 60 * 1000" v-slot="{ hours, minutes, seconds }">
-        {{ hours }} : {{ minutes }} : {{ seconds }}
-      </vue-countdown>
-    </div>
-    <h4>
-      {{ item.examName }}
-    </h4>
+    <el-row justify="space-between">
+      <el-col :span="8">
+        <div>
+          {{ item.examName }}
+        </div>
+      </el-col>
+      <el-col :span="8">
+        <div>
+          倒计时
+          <vue-countdown v-if="item.totalTime" @end="onCountdownEnd" :time="item.totalTime * 60 * 1000" v-slot="{ hours, minutes, seconds }">
+            {{ hours }} : {{ minutes }} : {{ seconds }}
+          </vue-countdown>
+        </div>
+      </el-col>
+    </el-row>
     <div>
       <el-button @click="submit(item)">
         交卷
@@ -128,11 +136,11 @@ onMounted(()=>{
         </el-select>
       </el-button>
     </div>
-    <div class="hang">
-      <div class="zuo">
+    <div>
+      <div>
         <el-button @click="Last">上一题</el-button>
       </div>
-      <div class="you">
+      <div>
         <el-button @click="Next">下一题</el-button>
       </div>
     </div>

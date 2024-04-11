@@ -29,6 +29,9 @@
               <div class="bottom-item flex-row" v-if="data.append && data.page === 1">
                 <div class="text-bold-inverse">器械管理</div>
               </div>
+              <div class="bottom-item flex-row" v-if="data.append && data.page === 1">
+                <div class="text-bold-inverse">科室管理</div>
+              </div>
               <div class="bottom-item" style="width: 40px" @click="onNext">
                 <div class="box-icon center">
                   <i class='bx bx-chevron-right'></i>
@@ -37,7 +40,7 @@
             </div>
             <div class="flex-row" style="justify-content: flex-start; gap: 20px; height: 100%" v-else>
               <div class="bottom-item flex-row" v-if="data.append && data.page === 2">
-                <div class="text-bold-inverse">病历管理</div>
+                <div class="text-bold-inverse" @click="goto('/archiveManage')">病历管理</div>
               </div>
               <div class="bottom-item flex-row" v-if="data.append && data.page === 2">
                 <div class="text-bold-inverse">考试管理</div>

@@ -24,7 +24,7 @@ import ExamStart from "@/views/ExamStart.vue";
 import ExamTest from "@/views/ExamTest.vue";
 import ExamRecordView from "@/views/ExamRecordView.vue";
 import RoleSelectView from "@/views/UserView/RoleSelectView.vue";
-import ArchiveManagementView from "@/views/ArchiveViews/ArchiveManagementView.vue"
+import ArchiveManageView from "@/views/ManageViews/ArchiveManageViews/ArchiveManageView.vue"
 import ExamManageView from "@/views/ExamManageView.vue";
 import ExamAddView from "@/views/ExamAddView.vue";
 import ExamUpdateView from "@/views/ExamUpdateView.vue";
@@ -35,6 +35,10 @@ import ManageMainView from "@/views/ManageViews/ManageMainView.vue";
 import AffairManageSearchView from "@/views/ManageViews/AffairManageViews/AffairManageSearchView.vue";
 import AffairManageView from "@/views/ManageViews/AffairManageViews/AffairManageView.vue";
 import AffairNodeMangeView from "@/views/ManageViews/AffairManageViews/AffairNodeMangeView.vue";
+import DepartmentManageView from "@/views/ManageViews/DepartmentAndItemManage/DepartmentManageView.vue";
+import DepartmentEditView from "@/views/ManageViews/DepartmentAndItemManage/DepartmentEditView.vue";
+import ItemManageView from "@/views/ManageViews/DepartmentAndItemManage/ItemManageView.vue";
+import ItemEditView from "@/views/ManageViews/DepartmentAndItemManage/ItemEditView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -142,9 +146,9 @@ const routes: Array<RouteRecordRaw> = [
         component: ArchiveSearchResultsView
       },
       {
-        path: '/archive/management',
-        name: 'archiveManagementPage',
-        component: ArchiveManagementView
+        path: '/archiveManage',
+        name: 'archiveManage',
+        component: ArchiveManageView
       },
       {
         path: '/exam',
@@ -216,6 +220,27 @@ const routes: Array<RouteRecordRaw> = [
             path:'/affairManageSearch',
             name:'affairManageSearchPage',
             component: AffairManageSearchView
+          },
+          {
+            path:'/departmentManage',
+            name:'departmentManageView',
+            component:DepartmentManageView
+          },
+          {
+            path:'/departmentEdit/:id',
+            name:'departmentManageEditPage',
+            component:DepartmentEditView,
+            props:true
+          },
+          {
+            path:'/itemManage',
+            name:'itemManagePage',
+            component:ItemManageView
+          },
+          {
+            path:'/itemEdit',
+            name:'itemEditPage',
+            component:ItemEditView
           }
         ]
       },
