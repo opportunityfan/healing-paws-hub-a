@@ -102,6 +102,8 @@ const getDepartmentById = async () => {
       department.introduction = temp.introduction
       department.connect = temp.connectID
       department.staff = temp.staffList
+      department.pic = temp.pic
+      department.image = new Img(temp.pic,1,1)
     })
   }else{
     data.isNew = true
@@ -142,9 +144,18 @@ const requestItems = async (pageNum : number, pageSize : number) =>{
   })
   return currentItems
 }
+function generateRandomString(length: number): string {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
 const createDepartment = () => {
   const jsondata = {
-    id : department.id,
+    id : generateRandomString(8),
     departmentName : department.name,
     introduction : department.introduction,
     connectID : department.connect,
@@ -162,7 +173,23 @@ const createDepartment = () => {
   })
 }
 const updateDepartment = () => {
-  console.log()
+  const jsondata = {
+    id : department.id,
+    departmentName : department.name,
+    introduction : department.introduction,
+    connectID : department.connect,
+    staffList : department.staff,
+  }
+  const formdata = new FormData()
+  formdata.append('pic',picFile.value)
+  formdata.append('department',new Blob([JSON.stringify(jsondata)],{type:"application/json"}))
+  axios.put('/department',formdata,{
+    headers:{
+      token : store.state.token,
+    }
+  }).then(res=>{
+    console.log(res.data)
+  })
 }
 const addPanel = () => {
   if(staffData.isStaffPanel){

@@ -180,36 +180,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'examRecord',
         component: ExamRecordView
       },
-      {
-        path: '/examManage',
-        name: 'examManage',
-        component: ExamManageView
-      },
-      {
-        path: '/examAdd',
-        name: 'examAdd',
-        component: ExamAddView
-      },
-      {
-        path: '/examUpdate/:id',
-        name: 'examUpdate',
-        component: ExamUpdateView
-      },
-      {
-        path: '/subject',
-        name: 'subject',
-        component: SubjectView
-      },
-      {
-        path: '/subjectAdd',
-        name: 'subjectAdd',
-        component: SubjectAddView
-      },
-      {
-        path: '/subjectUpdate/:id',
-        name: 'subjectUpdate',
-        component: SubjectUpdateView
-      },
+
       {
         path:'/manageMain',
         name:'manageMainPage',
@@ -241,7 +212,37 @@ const routes: Array<RouteRecordRaw> = [
             path:'/itemEdit',
             name:'itemEditPage',
             component:ItemEditView
-          }
+          },
+          {
+            path: '/examManage',
+            name: 'examManage',
+            component: ExamManageView
+          },
+          {
+            path: '/examAdd',
+            name: 'examAdd',
+            component: ExamAddView
+          },
+          {
+            path: '/examUpdate/:id',
+            name: 'examUpdate',
+            component: ExamUpdateView
+          },
+          {
+            path: '/subject',
+            name: 'subject',
+            component: SubjectView
+          },
+          {
+            path: '/subjectAdd',
+            name: 'subjectAdd',
+            component: SubjectAddView
+          },
+          {
+            path: '/subjectUpdate/:id',
+            name: 'subjectUpdate',
+            component: SubjectUpdateView
+          },
         ]
       },
       {

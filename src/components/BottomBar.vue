@@ -43,10 +43,10 @@
                 <div class="text-bold-inverse" @click="goto('/archiveManage')">病历管理</div>
               </div>
               <div class="bottom-item flex-row" v-if="data.append && data.page === 2">
-                <div class="text-bold-inverse">考试管理</div>
+                <div class="text-bold-inverse" @click="goto('/examManage')">考试管理</div>
               </div>
               <div class="bottom-item flex-row" v-if="data.append && data.page === 2">
-                <div class="text-bold-inverse">试题管理</div>
+                <div class="text-bold-inverse" @click="goto('/subject')">试题管理</div>
               </div>
               <div class="bottom-item" style="width: 40px" @click="onNext">
                 <div class="box-icon center">
