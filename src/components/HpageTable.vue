@@ -89,6 +89,7 @@ defineExpose({update})
 </script>
 
 <template>
+  <div>
   <h-loading :load="onLoad">
     <div class="page-Table">
         <div v-for="(item, index) in data.tagList" :key="index" class="item-part" @click="itemClick(item.id,index)" >
@@ -107,6 +108,7 @@ defineExpose({update})
       </div>
     </div>
   </h-loading>
+  </div>
 </template>
 
 <style scoped lang="stylus">

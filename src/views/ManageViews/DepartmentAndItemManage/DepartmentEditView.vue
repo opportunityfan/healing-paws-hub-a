@@ -7,7 +7,7 @@ import HImage from "@/components/HImage.vue";
 import HRadio from "@/components/HRadio.vue";
 import {reactive, ref} from "vue";
 import {useRoute} from "vue-router";
-import {goBack, Image as Img, tag} from "@/assets/api";
+import {goBack, goto, Image as Img, tag} from "@/assets/api";
 import HLoading from "@/components/HLoading.vue";
 import axios from "@/assets/axios";
 import store from "@/store";
@@ -54,6 +54,23 @@ const staffData = reactive<{
   position : '职位',
   phone : '电话',
   nowIndex : 0
+})
+const itemData = reactive<{
+  isEditPanel : boolean
+  name : string
+  introduction : string
+  usage : string
+  price : string
+  departmentId : string
+  type : string
+}>({
+  isEditPanel : false,
+  name : '物品',
+  introduction : '介绍',
+  usage : '用处',
+  price : '10',
+  departmentId : department.id,
+  type : 'normal'
 })
 const staffTable = ref()
 const picFile = ref()
@@ -230,6 +247,23 @@ const editStaff = () =>{
   staffTable.value.update()
   staffData.isStaffPanel = false
 }
+const itemPanel = () => {
+  itemData.isEditPanel = !itemData.isEditPanel
+}
+const addItem = () => {
+  const formdata = new FormData()
+  formdata.append('item',new Blob([JSON.stringify(itemData)],{type:"application/json"}))
+  axios.post('/item',formdata,{
+    headers:{
+      token : store.state.token
+    }
+  }).then(res=>{
+    console.log(res.data)
+  })
+}
+const goItemEdit = (id : string) => {
+  goto('/instrument-edit/'+id)
+}
 </script>
 
 <template>
@@ -296,15 +330,28 @@ const editStaff = () =>{
               <HFormInput v-model="staffData.phone" name="手机号" style="width: 160px"></HFormInput>
             </div>
             <div class="staff-button-block">
-              <HButton v-if="!staffData.editOrAdd" height="20px" @click="addStaff" class="staff-button">添加人员</HButton>
-              <HButton v-if="staffData.editOrAdd" height="20px" @click="editStaff"  class="staff-button">修改人员</HButton>
+              <HButton v-if="!staffData.editOrAdd" height="20px" @click="addStaff" class="staff-button">确认添加</HButton>
+              <HButton v-if="staffData.editOrAdd" height="20px" @click="editStaff"  class="staff-button">确认修改</HButton>
             </div>
           </div>
         </div>
         <div  class="right-panel">
           <div class="text-bold">科室物品</div>
           <HpageTable :request-items="requestItems" totalPages="1" @itemClick="goItemEdit" ></HpageTable>
-          <HButton height="30px" style="margin-top: 5px" >添加物品</HButton>
+          <HButton height="30px" style="margin-top: 5px" @click="itemPanel">添加物品</HButton>
+
+          <div class="item-add-panel" v-if="itemData.isEditPanel">
+            <div class="flex-row" style="width: 100%; gap: 10px; margin: 4px 0">
+              <div class="text-bold" style="flex-shrink: 0; margin-left: 6px">名称</div>
+              <HFormInput v-model="itemData.name" name="名称" style="width: 160px"></HFormInput>
+            </div>
+            <div class="flex-row" style="width: 100%; gap: 10px; margin: 4px 0">
+              <div class="text-bold" style="flex-shrink: 0; margin-left: 6px">说明</div>
+              <HFormInput v-model="itemData.introduction" name="说明" style="width: 160px"></HFormInput>
+            </div>
+            <HButton height="30px" @click="addItem" class="staff-button">确认添加</HButton>
+          </div>
+
         </div>
       </div>
 
@@ -336,4 +383,7 @@ const editStaff = () =>{
   width 50%
   margin 6px
 
+.item-add-panel
+  border 1px solid var(--theme-color)
+  border-radius 16px
 </style>

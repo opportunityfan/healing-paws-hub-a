@@ -38,9 +38,9 @@ const requestDepartments = async (pageNum : number, pageSize : number) =>{
   <div class="main-panel full">
     <HSearchBar style="width: 85%" searchUrl="/department/search" @onEnter="goDepartmentEdit"></HSearchBar>
     <div style="width: 85%">
-      <div class="subtitle" style="text-align: left;margin-top:10px; margin-left:3px">事务列表</div>
+      <div class="subtitle" style="text-align: left;margin-top:10px; margin-left:3px">科室列表</div>
       <HpageTable :request-items="requestDepartments" totalPages="2" @itemClick="goDepartmentEdit"></HpageTable>
-      <HButton height="30px" style="margin-top: 5px" @click="goDepartmentEdit('0')">添加事务</HButton>
+      <HButton height="30px" style="margin-top: 5px" @click="goDepartmentEdit('0')">添加科室</HButton>
     </div>
   </div>
 </template>
