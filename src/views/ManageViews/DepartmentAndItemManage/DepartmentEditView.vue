@@ -7,7 +7,7 @@ import HImage from "@/components/HImage.vue";
 import HRadio from "@/components/HRadio.vue";
 import {reactive, ref} from "vue";
 import {useRoute} from "vue-router";
-import {goBack, Image, tag} from "@/assets/api";
+import {goBack, Image as Img, tag} from "@/assets/api";
 import HLoading from "@/components/HLoading.vue";
 import axios from "@/assets/axios";
 import store from "@/store";
@@ -20,7 +20,7 @@ const department = reactive<{
   connect : Array<string>,
   staff : Array<{id:string,name:string,position:string,phone:string}>,
   pic : string
-  image : Image
+  image : Img
 }>({
   id : route.params.id as string,
   name : '科室',
@@ -29,7 +29,7 @@ const department = reactive<{
   staff : [],
   pic : '',
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  image : new Image(require('@/assets/avatar.jpg'),1,1)
+  image : new Img(require('@/assets/avatar.jpg'),1,1)
 })
 const data = reactive<{
   isNew : boolean
@@ -39,16 +39,42 @@ const data = reactive<{
 
 })
 const staffData = reactive<{
+  editOrAdd : boolean
   isStaffPanel : boolean
-  id? : string,
-  name? : string,
-  position? : string,
-  phone? : string
+  id : string,
+  name : string,
+  position : string,
+  phone : string,
+  nowIndex : number
 }>({
-  isStaffPanel : false
+  editOrAdd : false,   //默认false表示add
+  isStaffPanel : false,
+  id : 'id',
+  name : '名字',
+  position : '职位',
+  phone : '电话',
+  nowIndex : 0
 })
+const staffTable = ref()
 const picFile = ref()
 
+const isMouseOverAvatar = ref(false)
+const onMouseEnterAvatar = () =>{
+  isMouseOverAvatar.value = true
+}
+const onMouseLeaveAvatar = () => {
+  isMouseOverAvatar.value = false
+}
+const handleImage = (image : File) =>{
+  console.log('图片文件信息',image)
+  let imageFile = new Image()
+  imageFile.src = window.URL.createObjectURL(image)
+  imageFile.onload = () => {
+    department.image = new Img(imageFile.src, imageFile.width, imageFile.height)
+  }
+  department.pic= image.path
+  picFile.value = image
+}
 const deleteDepartment = async () => {
   axios.delete('/department/'+department.id,{
     headers:{
@@ -123,25 +149,59 @@ const createDepartment = () => {
     introduction : department.introduction,
     connectID : department.connect,
     staffList : department.staff,
-
   }
-
   const formdata = new FormData()
+  formdata.append('pic',picFile.value)
   formdata.append('department',new Blob([JSON.stringify(jsondata)],{type:"application/json"}))
   axios.post('/department',formdata,{
     headers:{
       token : store.state.token,
-
     }
-
-
   }).then(res=>{
     console.log(res.data)
   })
 }
-const addStaff = () => {
-  staffData.isStaffPanel = !staffData.isStaffPanel
-
+const updateDepartment = () => {
+  console.log()
+}
+const addPanel = () => {
+  if(staffData.isStaffPanel){
+    staffData.isStaffPanel = !staffData.isStaffPanel
+  }else{
+    staffData.editOrAdd = false
+    staffData.id = 'id'
+    staffData.name = '名称'
+    staffData.position = '职位'
+    staffData.phone = '电话'
+    staffData.isStaffPanel = !staffData.isStaffPanel
+  }
+  return;
+}
+const editPanel = (index:number) => {
+  staffData.nowIndex = index
+  staffData.editOrAdd = true
+  staffData.id = department.staff[index].id
+  staffData.name = department.staff[index].name
+  staffData.position = department.staff[index].position
+  staffData.phone = department.staff[index].phone
+  if(staffData.isStaffPanel === false){
+    staffData.isStaffPanel = true
+  }
+}
+const addStaff = () =>{
+  department.staff.push({id:staffData.id,name:staffData.name,position:staffData.position,phone:staffData.phone})
+  staffTable.value.update()
+  staffData.isStaffPanel = false
+}
+const editStaff = () =>{
+  console.log('修改成功')
+  department.staff[staffData.nowIndex].id = staffData.id
+  department.staff[staffData.nowIndex].name = staffData.name
+  department.staff[staffData.nowIndex].position = staffData.position
+  department.staff[staffData.nowIndex].phone = staffData.phone
+  console.log('修改成功')
+  staffTable.value.update()
+  staffData.isStaffPanel = false
 }
 </script>
 
@@ -164,19 +224,23 @@ const addStaff = () => {
           </div>
           <div class="right-panel">
             <div class="flex-row" style="width: 100%; gap: 20px; margin: 6px 0">
-  <!--            <div class="text-bold" style="flex-shrink: 0">图片编辑</div>-->
-  <!--            <div style="position: relative; width: fit-content" class="avatar-box"-->
-  <!--                 @mouseenter="onMouseEnterAvatar"-->
-  <!--                 @mouseleave="onMouseLeaveAvatar">-->
-  <!--              <HImage :image="affair.image" :size="100" ></HImage>-->
-  <!--              <div :style="{opacity : isMouseOverAvatar ? '1' : '0'}"-->
-  <!--                   class="center add-icon" >-->
-  <!--                <HFileUpload @handleFile="handleImage"></HFileUpload>-->
-  <!--              </div>-->
-  <!--            </div>-->
-              <HButton @click="createDepartment"  v-if="data.isNew">创建科室</HButton>
-              <HButton @click="updateDepartment"  v-if="!data.isNew">更新科室</HButton>
-              <HButton @click="deleteDepartment" type="danger">删除科室</HButton>
+              <div>
+                <div class="text-bold" style="flex-shrink: 0">图片编辑</div>
+                <div style="position: relative; width: fit-content" class="avatar-box"
+                     @mouseenter="onMouseEnterAvatar"
+                     @mouseleave="onMouseLeaveAvatar">
+                  <HImage :image="department.image" :size="100" ></HImage>
+                  <div :style="{opacity : isMouseOverAvatar ? '1' : '0'}"
+                       class="center add-icon" >
+                    <HFileUpload @handleFile="handleImage"></HFileUpload>
+                  </div>
+                </div>
+              </div>
+              <div style="width: 100%" >
+                <HButton @click="createDepartment"  v-if="data.isNew" height="30px">创建科室</HButton>
+                <HButton @click="updateDepartment"  v-if="!data.isNew" height="30px">更新科室</HButton>
+                <HButton @click="deleteDepartment" type="danger" height="30px">删除科室</HButton>
+              </div>
             </div>
         </div>
       </div>
@@ -184,31 +248,35 @@ const addStaff = () => {
       <div class="main-panel">
         <div class="left-panel">
           <div class="text-bold">科室人员</div>
-          <HpageTable :request-items="requestStaffs" totalPages="2" @itemClick="editStaff"></HpageTable>
-          <HButton height="30px" style="margin-top: 5px" @click="addStaff">添加人员</HButton>
-          <div class="staff-add-panel" v-if="data.isStaffPanel">
-            <div class="flex-row" style="width: 100%; gap: 20px; margin: 6px 0">
+          <HpageTable :request-items="requestStaffs" totalPages="1" @itemClickIndex="editPanel" ref="staffTable"></HpageTable>
+          <HButton height="30px" style="margin-top: 5px" @click="addPanel">添加人员</HButton>
+          <div class="staff-add-panel" v-if="staffData.isStaffPanel">
+            <div class="flex-row" style="width: 100%; gap: 10px; margin: 4px 0">
               <div class="text-bold" style="flex-shrink: 0; margin-left: 6px">人员id</div>
               <HFormInput v-model="staffData.id" name="人员id" style="width: 160px"></HFormInput>
             </div>
 
-            <div class="flex-row" style="width: 100%; gap: 20px; margin: 6px 0">
+            <div class="flex-row" style="width: 100%; gap: 10px; margin: 4px 0">
               <div class="text-bold" style="flex-shrink: 0; margin-left: 6px">名称</div>
               <HFormInput v-model="staffData.name" name="名称" style="width: 160px"></HFormInput>
             </div>
-            <div class="flex-row" style="width: 100%; gap: 20px; margin: 6px 0">
+            <div class="flex-row" style="width: 100%; gap: 10px; margin: 4px 0">
               <div class="text-bold" style="flex-shrink: 0; margin-left: 6px">职位</div>
               <HFormInput v-model="staffData.position" name="职位" style="width: 160px"></HFormInput>
             </div>
-            <div class="flex-row" style="width: 100%; gap: 20px; margin: 6px 0">
+            <div class="flex-row" style="width: 100%; gap: 10px; margin: 4px 0">
               <div class="text-bold" style="flex-shrink: 0; margin-left: 6px">手机号</div>
               <HFormInput v-model="staffData.phone" name="手机号" style="width: 160px"></HFormInput>
+            </div>
+            <div class="staff-button-block">
+              <HButton v-if="!staffData.editOrAdd" height="20px" @click="addStaff" class="staff-button">添加人员</HButton>
+              <HButton v-if="staffData.editOrAdd" height="20px" @click="editStaff"  class="staff-button">修改人员</HButton>
             </div>
           </div>
         </div>
         <div  class="right-panel">
           <div class="text-bold">科室物品</div>
-          <HpageTable :request-items="requestItems" totalPages="2" @itemClick="goItemEdit"></HpageTable>
+          <HpageTable :request-items="requestItems" totalPages="1" @itemClick="goItemEdit" ></HpageTable>
           <HButton height="30px" style="margin-top: 5px" >添加物品</HButton>
         </div>
       </div>
@@ -233,4 +301,12 @@ const addStaff = () => {
 .staff-add-panel
   border 1px solid var(--theme-color)
   border-radius 16px
+
+.staff-button-block
+  display: flex;
+  justify-content: center;
+.staff-button
+  width 50%
+  margin 6px
+
 </style>

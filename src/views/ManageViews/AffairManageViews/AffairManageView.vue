@@ -26,7 +26,6 @@ const roles = ref([{
   value: 'doctor'
 }])
 
-const isMouseOverAvatar = ref(false)
 const data= reactive<{
   show : boolean
   tooltipX : number
@@ -60,7 +59,7 @@ const affair = reactive<{
   image: new Img(require('@/assets/avatar.jpg'),1,1)
 })
 const picFile = ref()
-
+const isMouseOverAvatar = ref(false)
 const onMouseEnterAvatar = () =>{
   isMouseOverAvatar.value = true
 }
