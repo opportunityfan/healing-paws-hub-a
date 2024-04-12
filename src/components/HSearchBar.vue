@@ -124,7 +124,7 @@ const onMouseEnter = (index: number) => {
                @keydown.tab="onTab"
         />
       </div>
-      <transition name="search-panel">
+
         <div class="search-panel" v-if="isFocus" @mouseenter="selectPanel = true" @mouseleave="selectPanel = false">
           <div v-for="(item, index) in autoCompletes" :key="index"
                :class="['search-panel-item', {'selected': selectedIndex === index}]"
@@ -133,7 +133,7 @@ const onMouseEnter = (index: number) => {
             {{item.name}}
           </div>
         </div>
-      </transition>
+
     </div>
   </div>
 </template>
@@ -164,6 +164,7 @@ const onMouseEnter = (index: number) => {
   position: relative;
   background: var(--background-color);
   border-radius: 999px;
+  z-index 10
 }
 
 .search-bar {
@@ -192,6 +193,7 @@ const onMouseEnter = (index: number) => {
 }
 
 .search-panel {
+  position relative
   width: 100%;
   height: auto;
   display: flex;

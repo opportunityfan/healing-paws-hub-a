@@ -33,7 +33,7 @@ const requestNewAffair = async (count : number) => {
   const newPostList = new Array<Post>()
   await axios.get('/affair',{
     params:{
-      pageNum: 1,
+      pageNum: count,
       pageSize: 5
     },
     headers:{
@@ -63,17 +63,40 @@ const requestNewAffair = async (count : number) => {
 
 <template>
 
-    <div class="main-panel full">
+    <div class="full">
       <HSearchBar style="width: 85%" searchUrl="/affair/fuzzy" @onEnter="goAffair"></HSearchBar>
-      <div class="affair-bar" style="height: 100%">
-        <PostFlowVertical :request-new-post="requestNewAffair" urlPrefix="/affair/" style="flex-grow: 1" width="300"></PostFlowVertical>
+
+      <div class="main-panel">
+        <div class="left-panel">
+          <div class="affair-bar" style="height: 100%">
+            <PostFlowVertical :request-new-post="requestNewAffair" urlPrefix="/affair/" style="flex-grow: 1" width="200"></PostFlowVertical>
+          </div>
+        </div>
+        <div class="right-panel">
+          <div class="affair-bar" style="height: 100%">
+            <PostFlowVertical :request-new-post="requestNewAffair" urlPrefix="/affair/" style="flex-grow: 1" width="200"></PostFlowVertical>
+          </div>
+        </div>
       </div>
     </div>
 </template>
 
 <style scoped lang="stylus">
-.main-panel
-  justify-content space-evenly
+
 .affair-bar
   width 100%
+.main-panel
+  display flex
+  justify-content space-between
+  align-items stretch
+  margin 30px 20px
+  width 80%
+.left-panel
+  flex 1
+  padding 0
+
+.right-panel
+  flex 1
+  margin 0 10px
+
 </style>
