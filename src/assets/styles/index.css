@@ -216,3 +216,21 @@ textarea:focus-visible {
         transform: rotate(.25turn);
     }
 }
+
+@keyframes rotate180 {
+    from {
+        transform: rotate(0);
+    }
+    to {
+        transform: rotate(.5turn);
+    }
+}
+
+@keyframes rotate360 {
+    from {
+        transform: rotate(0);
+    }
+    to {
+        transform: rotate(1turn);
+    }
+}
