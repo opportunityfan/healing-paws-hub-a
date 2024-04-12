@@ -5,7 +5,16 @@
     <div class="flex-column" style="height: 100%;flex-grow: 1;min-width: 0;min-height: 0;">
       <FrameBar></FrameBar>
       <div style="width: 100%; overflow: hidden; height: calc(100% - 35px);max-width: 100%">
-        <router-view/>
+        <router-view v-slot="{ Component }">
+          <transition
+              name="animate__animated animate__fade"
+              enter-active-class="animate__fadeIn"
+              leave-active-class="animate__fadeOut"
+              mode="out-in"
+          >
+            <component :is="Component"></component>
+          </transition>
+        </router-view>
       </div>
     </div>
   </div>

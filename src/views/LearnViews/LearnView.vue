@@ -3,7 +3,7 @@
     <div class="affair-bar flex-column" style="height: 50%">
       <div class="flex-row">
         <div class = "sub-title">
-          事务学习
+          职能学习
         </div>
         <div class="box-icon button-hover" @click="goAffairSearchView()">
           <i class='bx bx-dots-horizontal-rounded'></i>
@@ -36,70 +36,8 @@ import axios from "@/assets/axios";
 import store from "@/store";
 import {temp} from "three/examples/jsm/nodes/core/VarNode";
 import HLoading from "@/components/HLoading.vue";
-let affairs = [
-  {
-    id: '0',
-    title:'手术1',
-    description: 'this is description',
-    backgroundImage: {
-      src: require("@/assets/login-background.png"),
-      width: 3035,
-      height: 4299
-    }
-  },
-  {
-    id: '1',
-    title:'手术2',
-    description: 'this is description',
-    backgroundImage: {
-      src: require("@/assets/login-background.png"),
-      width: 3035,
-      height: 4299
-    }
-  },
-  {
-    id: '2',
-    title:'手术3',
-    description: 'this is description',
-    backgroundImage: {
-      src: require("@/assets/login-background.png"),
-      width: 3035,
-      height: 4299
-    }
-  }]
-let instruments = [
-  {
-    id: '3',
-    title:'手术刀1',
-    description: 'this is description',
-    backgroundImage: {
-      src: require("@/assets/login-background.png"),
-      width: 3035,
-      height: 4299
-    }
-  },
-  {
-    id: '4',
-    title:'手术刀2',
-    description: 'this is description',
-    backgroundImage: {
-      src: require("@/assets/login-background.png"),
-      width: 3035,
-      height: 4299
-    }
-  },
-  {
-    id: '5',
-    title:'手术刀3',
-    description: 'this is description',
-    backgroundImage: {
-      src: require("@/assets/login-background.png"),
-      width: 3035,
-      height: 4299
-    }
-  }]
 
-let affairId = 0
+
 
 const requestNewAffair = async (count : number) => {
   const newPostList = new Array<Post>()
@@ -136,7 +74,7 @@ const requestNewInstrument = async (count : number) => {
       token : store.state.token
     },
     params:{
-      pageNum : instrumentNum,
+      pageNum : count,
       pageSize : 7,
       name: ''
     }
@@ -154,7 +92,6 @@ const requestNewInstrument = async (count : number) => {
       }
       newPostList.push(new Post(item.id,item.name,item.introduction,tempImage))
     }
-    instrumentNum++
   })
   return newPostList
 }

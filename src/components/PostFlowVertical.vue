@@ -1,5 +1,6 @@
 <template>
   <div class="post-flow-main-v">
+
     <HScroller scroll-direction="column">
       <div class="post-flow-bar-v flex-column" :style="{width: props.width === 0 ? '100%' : props.width + 'px'}">
         <div v-for="(post, index) in data.postList" :key="index" :style="{height: props.height + 'px'}" class="post-bar-v">
@@ -8,6 +9,7 @@
         <div class="more" ref="moreRef"></div>
       </div>
     </HScroller>
+
   </div>
 </template>
 
@@ -34,9 +36,11 @@ const props = withDefaults(defineProps<{
 const data = reactive<{
   postList: Post[]
   updating: boolean
+  nowPageNum : number
 }>({
   postList: [],
-  updating: false
+  updating: false,
+  nowPageNum : 1
 })
 
 const moreRef = ref<VueElement>()
@@ -46,11 +50,12 @@ onMounted(() => {
     if (isIntersecting) {
       if (!data.updating) {
         data.updating = true
-        props.requestNewPost(props.updatePostCount).then((res) => {
+        props.requestNewPost(data.nowPageNum).then((res) => {
           res.forEach((post) => {
             data.postList.push(post)
           })
         }).finally(() => {
+          data.nowPageNum++
           data.updating = false
         })
       }
@@ -64,7 +69,8 @@ onMounted(() => {
 
 <style scoped lang="stylus">
 .post-flow-main-v
-  height 100%
+  height 400px
+
   width 100%
   max-width 100%
   max-height  100%
