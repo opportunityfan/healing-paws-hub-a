@@ -120,46 +120,51 @@ function deleteDiseases() {
 
 <template>
   <div class="full">
-    <HScroller scroll-direction="column" class="scroller-view" style="width:100%;height:70%">
-      <div class="flex-column" style="border:1px solid var(--theme-color)">
-        <div class="diseaseType" v-for="(diseaseType,index) in diseaseTypes" :key="index">
-          {{diseaseType}}
-          <br>
-          <br>
-          <div class="flex-row flex-wrap">
-            <div v-for="diseaseName in diseaseNamesOrderedByType[diseaseType]" :key="diseaseName.id">
-              <div class="diseaseNameButton" @click="chooseDisease(diseaseName)">
-                <DiseaseNameButton :isChosen="chosenDiseases.includes(diseaseName.name)" height="50px">{{diseaseName.name}}</DiseaseNameButton>
-              </div>
+    <div class="diseaseChooseBox">
+      <HScroller scroll-direction="column" class="scroller-view">
+        <div class="flex-column">
+          <div class="diseaseType" v-for="(diseaseType,index) in diseaseTypes" :key="index">
+            <div class="diseaseTypeTitle">
+              {{diseaseType}}
             </div>
-            <DiseaseNameButton @click="()=>{isClicked=diseaseType}" height="50px">
-              <div v-show="isClicked!==diseaseType" style="font-size: 30px">+</div>
-              <HInput
-                  name=""
-                  v-show="isClicked===diseaseType"
-                  style="display: inline-block"
-                  v-model="diseaseNameToAdd"
-              ></HInput>
-            </DiseaseNameButton>
-            <div v-show="isClicked===diseaseType">
-              <DiseaseNameButton
-                  height="20px"
-                  style="width: 20px"
-                  @click="addDisease(diseaseType)"
-              >√</DiseaseNameButton>
-              <DiseaseNameButton
-                  height="20px"
-                  style="width: 20px"
-                  @click="()=>{isClicked=''}"
-              >x</DiseaseNameButton>
+            <div class="flex-row flex-wrap">
+              <div v-for="diseaseName in diseaseNamesOrderedByType[diseaseType]" :key="diseaseName.id">
+                <DiseaseNameButton
+                    :isChosen="chosenDiseases.includes(diseaseName.name)"
+                    height="50px"
+                    class="diseaseNameButton"
+                    @click="chooseDisease(diseaseName)"
+                >{{diseaseName.name}}</DiseaseNameButton>
+              </div>
+              <DiseaseNameButton @click="()=>{isClicked=diseaseType}" height="50px" class="diseaseNameButton">
+                <div v-show="isClicked!==diseaseType" style="font-size: 30px">+</div>
+                <HInput
+                    name=""
+                    v-show="isClicked===diseaseType"
+                    style="display: inline-block"
+                    v-model="diseaseNameToAdd"
+                ></HInput>
+              </DiseaseNameButton>
+              <div v-show="isClicked===diseaseType">
+                <DiseaseNameButton
+                    height="20px"
+                    style="width: 20px"
+                    @click="addDisease(diseaseType)"
+                >√</DiseaseNameButton>
+                <DiseaseNameButton
+                    height="20px"
+                    style="width: 20px"
+                    @click="()=>{isClicked=''}"
+                >x</DiseaseNameButton>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <br>
-      <br>
-      <br>
-    </HScroller>
+        <br>
+        <br>
+        <br>
+      </HScroller>
+    </div>
     <div class="flex-row">
       <HButton @click="searchArchives" style="margin-right: 10px">搜索符合的病例</HButton>
       <HButton @click="deleteDiseases" style="margin-right: 10px">删除选中的病种</HButton>
@@ -169,6 +174,10 @@ function deleteDiseases() {
 </template>
 
 <style scoped lang="stylus">
+
+.diseaseChooseBox
+  height 70%
+  border 3px solid var(--theme-color)
 
 .diseaseNameButton
   width 100px
@@ -181,6 +190,9 @@ function deleteDiseases() {
   text-align left
   padding 20px
   margin 0
+
+.diseaseTypeTitle
+  margin 10px
 
 .option-box
   border 1px solid var(--theme-color)
