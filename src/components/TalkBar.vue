@@ -9,37 +9,61 @@
       <div class="talk-bar-shadow" v-if="store.state.talkBarAppend"></div>
     </transition>
     <div
-        class="talk-bar-main"
+        class="talk-bar-main full"
         v-click-outside="closeTalkBar"
         :style="{right: store.state.talkBarAppend? '0' : 'calc(-70% - 10px)'}">
       <div class="full flex-column" style="--animate-duration: 0.25s">
-        <div class="flex-row" style="width: 100%;gap: 10px">
-          <div class="subtitle">智能助教</div>
-          <div class="hint" style="transform: translate(0, 3px)">你的AI学习助手</div>
+        <div class="flex-row" style="width: 100%;justify-content: space-between">
+          <div class="flex-row" style="gap: 10px">
+            <div class="subtitle">智能助教</div>
+            <div class="hint" style="transform: translate(0, 3px)">你的AI学习助手</div>
+          </div>
+          <div class="flex-row sync" @click="onFlush">
+            <div style="font-size: 12px">重置会话</div>
+            <div class="box-icon" style="font-size: 20px">
+              <i class='bx bx-sync'></i>
+            </div>
+          </div>
         </div>
         <HDivider style="padding: 10px 0"></HDivider>
-        <div style="flex-grow: 1; width: calc(100% + 15px)">
+        <div style="flex-grow: 1; width: calc(100% + 15px); min-height: 0">
           <HScroller :scroll-direction="'column'">
             <div class="history-content">
-              <div v-for="(history, index) in store.state.talkHistories" :key="index">
-                <div v-if="history.selfSend" class="flex-row history" style="justify-content: flex-end">
-                  <div class="content text-inverse" style="background-color: var(--theme-color)">{{ history.content }}</div>
-                  <HAvatar :size="35" style="padding: 0"></HAvatar>
+              <transition-group
+                  name="animate__animated animate__fade"
+                  enter-active-class="animate__fadeInBottom"
+                  leave-active-class="animate__fadeOut"
+                  mode="out-in"
+              >
+                <div v-for="(history, index) in store.state.talkHistories" :key="index">
+                  <div v-if="history.selfSend" class="flex-row history" style="justify-content: flex-end">
+                    <div class="content text-inverse" style="background-color: var(--theme-color)">{{ history.content }}</div>
+                    <HAvatar :size="35" style="padding: 0"></HAvatar>
+                  </div>
+                  <div v-else class="flex-row history" style="justify-content: flex-start">
+                    <HIcon :size="35"></HIcon>
+                    <div class="content text" style="background-color: var(--grey-color-bright)">
+                      <div v-if="history.content.length > 0"> {{ history.content }} </div>
+                      <div class="spinner1" style="width: 30px; height: 30px; background-color: var(--black-color); --b: 4px" v-else></div>
+                    </div>
+                  </div>
                 </div>
-                <div v-else class="flex-row history" style="justify-content: flex-start">
-                  <HIcon :size="35"></HIcon>
-                  <div class="content text" style="background-color: var(--grey-color-bright)">{{ history.content }}</div>
-                </div>
-              </div>
+              </transition-group>
             </div>
           </HScroller>
         </div>
         <HDivider style="padding: 10px 0"></HDivider>
-        <div class="talk-input-area flex-column">
+        <div class="talk-input-area flex-column" style="flex-shrink: 0">
           <textarea style="flex-grow: 1; font-size: 14px" v-model="data.text"></textarea>
-          <div class="flex-row" style="width: 100%; justify-content: flex-end">
-            <div class="submit-button border-radius-regular flex-row text-inverse" style="justify-content: center" @click="onSubmit">
-              <div>发送</div>
+          <div class="flex-row" style="width: 100%; justify-content: flex-end; padding-top: 10px">
+            <div class="submit-button border-radius-regular flex-row text-inverse"
+                 style="justify-content: center"
+                 @click="onSubmit"
+                 :class="{'forbidden' : data.loading}"
+            >
+              <div style="font-size: 16px">
+                <i class='bx bx-send'></i>
+              </div>
             </div>
           </div>
         </div>
@@ -56,20 +80,9 @@ import HDivider from "@/components/HDivider.vue";
 import HScroller from "@/components/HScroller.vue";
 import {onMounted, VueElement, ref, reactive} from "vue";
 import HAvatar from "@/components/HAvatar.vue";
-import {string} from "three/examples/jsm/nodes/shadernode/ShaderNode";
 import {sendToGpt, startGptTalk} from "@/assets/api/gpt";
 
 onMounted(() => {
-  store.state.talkHistories = [
-    {
-      content: '不是哥们儿',
-      selfSend: false
-    },
-    {
-      content: '你先开的',
-      selfSend: true
-    }
-  ]
   startTalk()
 })
 
@@ -79,25 +92,36 @@ const startTalk = async () => {
 const data = reactive<{
   conversation_id : string
   text: string
+  loading: boolean
 }>({
   text: '',
-  conversation_id : ''
+  conversation_id : '',
+  loading: false
 })
 
-const onSubmit =  () => {
+const onSubmit = () => {
+  if (data.text === '' || data.loading) return
   store.state.talkHistories.push({
     content: data.text,
     selfSend: true
   })
-
+  data.loading = true
+  store.state.talkHistories.push({
+    content: '',
+    selfSend: false
+  })
   sendToGpt(data.conversation_id,data.text).then(res=>{
-    store.state.talkHistories.push({
-      content: res,
-      selfSend: false
-    })
+    store.state.talkHistories[store.state.talkHistories.length - 1].content = res
+    data.loading = false
   })
   data.text = ''
+}
 
+const onFlush = async () => {
+  data.loading = true
+  data.conversation_id = await startGptTalk()
+  store.state.talkHistories = []
+  data.loading = false
 }
 </script>
 
@@ -155,14 +179,30 @@ const onSubmit =  () => {
   border-radius 10px
   overflow hidden
   padding 10px 10px
+  max-width 70%
+  text-align left
   user-select: text
 
 .submit-button
   height 30px
-  width 60px
+  width 50px
   background-color var(--theme-color)
   transition all 0.2s
-  margin-top 10px
   &:hover
     background-color var(--theme-color-dark)
+
+.sync
+  color var(--grey-color)
+  transition all 0.2s
+  cursor pointer
+  &:hover
+    color var(--grey-color-dark)
+    .box-icon
+      animation rotate360 2s infinite
+
+.forbidden
+  background-color var(--grey-color)
+  cursor no-drop
+  &:hover
+    background-color var(--grey-color)
 </style>
