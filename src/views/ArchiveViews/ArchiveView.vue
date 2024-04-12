@@ -66,30 +66,39 @@ function consoleLogToken(){
 
 <template>
   <div class="full">
-    <HScroller scroll-direction="column" class="scroller-view" style="width:100%;height:80%">
-      <div class="flex-column" style="border:1px solid var(--theme-color)">
-        <div class="diseaseType" v-for="(diseaseType,index) in diseaseTypes" :key="index">
-          {{diseaseType}}
-          <br>
-          <br>
-          <div class="flex-row flex-wrap">
-            <div v-for="diseaseName in diseaseNamesOrderedByType[diseaseType]" :key="diseaseName.id">
-              <div class="diseaseNameButton" @click="chooseDisease(diseaseName.name)">
-                <DiseaseNameButton :isChosen="chosenDiseases.includes(diseaseName.name)" height="50px">{{diseaseName.name}}</DiseaseNameButton>
+    <div class="diseaseChooseBox">
+      <HScroller scroll-direction="column">
+        <div class="flex-column">
+          <div class="diseaseType" v-for="(diseaseType,index) in diseaseTypes" :key="index">
+            <div class="diseaseTypeTitle">
+              {{diseaseType}}
+            </div>
+            <div class="flex-row flex-wrap">
+              <div v-for="diseaseName in diseaseNamesOrderedByType[diseaseType]" :key="diseaseName.id">
+                <DiseaseNameButton
+                    class="diseaseNameButton"
+                    @click="chooseDisease(diseaseName.name)"
+                    :isChosen="chosenDiseases.includes(diseaseName.name)"
+                    height="50px"
+                >{{diseaseName.name}}</DiseaseNameButton>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <br>
-      <br>
-      <br>
-    </HScroller>
+        <br>
+        <br>
+        <br>
+      </HScroller>
+    </div>
     <HButton @click="searchArchives">确认选择</HButton>
   </div>
 </template>
 
 <style scoped lang="stylus">
+
+.diseaseChooseBox
+  height 85%
+  border 3px solid var(--theme-color)
 
 .diseaseNameButton
   width 100px
@@ -102,6 +111,9 @@ function consoleLogToken(){
   text-align left
   padding 20px
   margin 0
+
+.diseaseTypeTitle
+  margin 10px
 
 .option-box
   border 1px solid var(--theme-color)
