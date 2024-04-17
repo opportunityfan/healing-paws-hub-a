@@ -19,7 +19,7 @@
             <HIcon :size="50"></HIcon>
             <div class="title-inverse foldable" style="flex-grow: 0; text-align: center">Healp</div>
           </div>
-          <side-bar-item-group>
+          <side-bar-item-group v-if="!store.state.isAdmin">
             <side-bar-item name="study" @click="goto('/learn')">
               <div class="flex-row" style="justify-content: center; transition: gap 0.5s" :style="{gap: store.state.sidebar_fold?'0':'20px'}">
                 <div class="box-icon">
@@ -60,6 +60,50 @@
                 <div class="foldable">Manage</div>
               </div>
             </side-bar-item>
+          </side-bar-item-group>
+          <side-bar-item-group v-if="store.state.isAdmin">
+
+            <side-bar-item name="事务管理" @click="goto('/affairManageSearch')">
+              <div class="flex-row" style="justify-content: center; transition: gap 0.5s" :style="{gap: store.state.sidebar_fold?'0':'20px'}">
+                <div class="box-icon">
+                  <i class='bx bx-book'></i>
+                </div>
+                <div class="foldable">事务管理</div>
+              </div>
+            </side-bar-item>
+            <side-bar-item name="病例管理" @click="goto('/archiveManage')">
+              <div class="flex-row" style="justify-content: center; transition: gap 0.5s" :style="{gap: store.state.sidebar_fold?'0':'20px'}">
+                <div class="box-icon">
+                  <i class='bx bx-archive'></i>
+                </div>
+                <div class="foldable">病例管理</div>
+              </div>
+            </side-bar-item>
+            <side-bar-item name="科室管理" @click="goto('/departmentManage')">
+              <div class="flex-row" style="justify-content: center; transition: gap 0.5s" :style="{gap: store.state.sidebar_fold?'0':'20px'}">
+                <div class="box-icon">
+                  <i class='bx bxs-analyse'></i>
+                </div>
+                <div class="foldable">科室管理</div>
+              </div>
+            </side-bar-item>
+            <side-bar-item name="考试管理" @click="goto('/examManage')">
+              <div class="flex-row" style="justify-content: center; transition: gap 0.5s" :style="{gap: store.state.sidebar_fold?'0':'20px'}">
+                <div class="box-icon">
+                  <i class='bx bx-spreadsheet' ></i>
+                </div>
+                <div class="foldable">考试管理</div>
+              </div>
+            </side-bar-item>
+            <side-bar-item name="试题管理" @click="goto('/subject')">
+              <div class="flex-row" style="justify-content: center; transition: gap 0.5s" :style="{gap: store.state.sidebar_fold?'0':'20px'}">
+                <div class="box-icon">
+                  <i class='bx bx-command' ></i>
+                </div>
+                <div class="foldable">试题管理</div>
+              </div>
+            </side-bar-item>
+
           </side-bar-item-group>
         </div>
         <div class="sidebar-bottom-block border-radius-regular">
@@ -165,6 +209,7 @@ const onSignOut = () => {
   height calc(100% + 40px)
 
 .foldable
+  white-space nowrap
   width 100px
   text-align left
   flex-grow 1

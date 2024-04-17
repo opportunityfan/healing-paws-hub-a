@@ -16,8 +16,8 @@
             v-for="(item,index) in info.postListColumn[i-1]"
             :key="index"
             :post="item"
-            :style="{width: (info.columnWidth) + 'px'}"
-            style="height: 200px"
+            :style="{width: (info.columnWidth-10) + 'px'}"
+            style="height: 200px;margin:20px 20px;"
         ></PostBlock>
       </div>
 
@@ -46,7 +46,7 @@ const props = withDefaults(defineProps<{
   getPostList: async (info : any) => {
     return {newInfo: info, newPostList: []}
   },
-  currentI: {before_id: 0, per_page: 6, quality: 'sample'}
+  currentI: {before_id: 0, per_page: 6}
 })
 
 const info = reactive<{

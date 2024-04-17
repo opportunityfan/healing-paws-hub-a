@@ -13,6 +13,7 @@ import HLoading from "@/components/HLoading.vue";
 import HRadio from "@/components/HRadio.vue";
 import HImage from "@/components/HImage.vue";
 import HButton from "@/components/HButton.vue";
+import HImageUpload from "@/components/HImageUpload.vue";
 const route = useRoute()
 
 const roles = ref([{
@@ -58,6 +59,7 @@ const affair = reactive<{
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   image: new Img(require('@/assets/avatar.jpg'),1,1)
 })
+const imageUpload = ref()
 const picFile = ref()
 const isMouseOverAvatar = ref(false)
 const onMouseEnterAvatar = () =>{
@@ -107,7 +109,7 @@ const onUpdate = async (formdata : FormData) => {
   formdata.append('role',affair.role)
 
   if(data.isNewAffair){//创建
-    formdata.append('pic',picFile.value)
+    formdata.append('pic',imageUpload.value.getPicFile())
     axios.post('/affair',formdata,{
       headers:{
         token:store.state.token
@@ -117,8 +119,8 @@ const onUpdate = async (formdata : FormData) => {
     })
   }
   else {
-    if(picFile.value){
-      formdata.append('pic',picFile.value)
+    if(imageUpload.value.getPicFile()){
+      formdata.append('pic',imageUpload.value.getPicFile())
     }
     axios.put('/affair', formdata, {
       headers: {
@@ -169,15 +171,8 @@ const deleteAffair = () => {
         <div class="right-panel">
           <div class="flex-row" style="width: 100%; gap: 20px; margin: 6px 0">
             <div class="text-bold" style="flex-shrink: 0">封面编辑</div>
-            <div style="position: relative; width: fit-content" class="avatar-box"
-                 @mouseenter="onMouseEnterAvatar"
-                 @mouseleave="onMouseLeaveAvatar">
-              <HImage :image="affair.image" :size="100" :lazy-load="false"></HImage>
-              <div :style="{opacity : isMouseOverAvatar ? '1' : '0'}"
-                   class="center add-icon" >
-                <HFileUpload @handleFile="handleImage"></HFileUpload>
-              </div>
-            </div>
+
+            <HImageUpload :image="affair.image" ref="imageUpload"></HImageUpload>
             <HButton @click="deleteAffair" type="danger">删除事务</HButton>
           </div>
 

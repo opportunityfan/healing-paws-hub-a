@@ -17,6 +17,7 @@ export default createStore({
     talkBarAppend: false,
     talkHistories: new Array<TalkHistory>(),
     messageList: new Array<Message>(),
+    isAdmin: false
   },
   getters: {
   },

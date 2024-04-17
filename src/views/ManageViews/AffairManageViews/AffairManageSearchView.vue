@@ -7,6 +7,8 @@ import router from "@/router";
 import axios from "@/assets/axios";
 import store from "@/store";
 import HButton from "@/components/HButton.vue";
+import {ref} from "vue";
+import HLoading from "@/components/HLoading.vue";
 
 const requestAffairs = async (pageNum : number, pageSize : number) => {
   const currentItems = new Array<tag>()
@@ -19,7 +21,7 @@ const requestAffairs = async (pageNum : number, pageSize : number) => {
       'token':store.state.token
     }
   }).then(res=>{
-    for(let item of res.data.data){
+    for(let item of res.data.data.listData){
       currentItems.push(new tag(item.id,item.name))
     }
   }).catch(e=>{
@@ -28,20 +30,37 @@ const requestAffairs = async (pageNum : number, pageSize : number) => {
   console.log(currentItems)
   return currentItems
 }
+const totalPages=ref(0)
+const onLoad = async () => {
+  await axios.get('/affair',{
+    params:{
+      pageNum : 1,
+      pageSize : 10
+    },
+    headers:{
+      'token':store.state.token
+    }
+  }).then(res=>{
+    totalPages.value = res.data.data.totalPages
+  })
+  return
+}
 
 const goAffairManage = async (affairId : string) => {
   await router.push({name:'affairManagePage',params:{affairId:affairId}})
 }
 </script>
 <template>
+  <h-loading :load="onLoad">
   <div class="main-panel full">
     <HSearchBar style="width: 85%" searchUrl="/affair/fuzzy" @onEnter="goAffairManage"></HSearchBar>
     <div style="width: 85%">
       <div class="subtitle" style="text-align: left;margin-top:10px; margin-left:3px">事务列表</div>
-      <HpageTable :request-items="requestAffairs" totalPages="2" @itemClick="goAffairManage"></HpageTable>
+      <HpageTable :request-items="requestAffairs" :totalPages=totalPages @itemClick="goAffairManage"></HpageTable>
       <HButton height="30px" style="margin-top: 5px" @click="goAffairManage('0')">添加事务</HButton>
     </div>
   </div>
+  </h-loading>
 </template>
 
 <style scoped lang="stylus">
