@@ -191,7 +191,7 @@ const routes: Array<RouteRecordRaw> = [
           },
           {
             path:'/departmentManage',
-            name:'departmentManageView',
+            name:'departmentManagePage',
             component:DepartmentManageView
           },
           {
@@ -281,7 +281,7 @@ router.beforeEach((to,from,next)=>{
   if(store.state.online&&to.name==='login'){
     next(false)
   }else{
-    if(to.name==='learnPage'||to.name==='guidePage'||to.name==='archivePage'||to.name==='examPage'||to.name==='editPage'||to.name==='manageMainPage'){
+    if(to.name==='learnPage'||to.name==='guidePage'||to.name==='archivePage'||to.name==='examPage'||to.name==='editPage'||to.name==='manageMainPage'||to.name==='affairManageSearchPage'||to.name==='archiveManage'||to.name==='departmentManagePage'||to.name==='subject'||to.name==='examManage'){
       store.state.ifBackKey = false
     }else {
       store.state.ifBackKey = true

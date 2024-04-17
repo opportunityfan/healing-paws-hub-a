@@ -79,20 +79,20 @@
                 <div class="foldable">病例管理</div>
               </div>
             </side-bar-item>
-            <side-bar-item name="考试管理" @click="goto('/examManage')">
+            <side-bar-item name="科室管理" @click="goto('/departmentManage')">
               <div class="flex-row" style="justify-content: center; transition: gap 0.5s" :style="{gap: store.state.sidebar_fold?'0':'20px'}">
                 <div class="box-icon">
                   <i class='bx bxs-analyse'></i>
                 </div>
-                <div class="foldable">考试管理</div>
+                <div class="foldable">科室管理</div>
               </div>
             </side-bar-item>
-            <side-bar-item name="科室管理" @click="goto('/departmentManage')">
+            <side-bar-item name="考试管理" @click="goto('/examManage')">
               <div class="flex-row" style="justify-content: center; transition: gap 0.5s" :style="{gap: store.state.sidebar_fold?'0':'20px'}">
                 <div class="box-icon">
                   <i class='bx bx-spreadsheet' ></i>
                 </div>
-                <div class="foldable">科室管理</div>
+                <div class="foldable">考试管理</div>
               </div>
             </side-bar-item>
             <side-bar-item name="试题管理" @click="goto('/subject')">
@@ -209,6 +209,7 @@ const onSignOut = () => {
   height calc(100% + 40px)
 
 .foldable
+  white-space nowrap
   width 100px
   text-align left
   flex-grow 1
