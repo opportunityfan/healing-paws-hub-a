@@ -107,13 +107,20 @@ export const signIn = (data:any) => {
 
              store.state.token = res.data.data.token
              store.state.role = res.data.data.role
+
              getUserInfo().then(res => {
                  store.state.online = true
              })
-             goto('/main').then()
-             if(res.data.msg.substring(0,3) === 'NEW'){
-                 goto('/RoleSelectView').then()
+             if(store.state.role === 'admin'){
+                 store.state.isAdmin = true;
+                 goto('/manageMain').then()
+             }else{
+                 goto('/main').then()
+                 if(res.data.msg.substring(0,3) === 'NEW'){
+                     goto('/RoleSelectView').then()
+                 }
              }
+
          }
      }).catch(err=>{
          console.log("network Error！")

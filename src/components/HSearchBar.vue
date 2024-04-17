@@ -171,7 +171,7 @@ const onMouseEnter = (index: number) => {
   top: 0;
   width: 100%;
   height: auto;
-  position: absolute;
+  position: relative;
   background: var(--background-color);
   border-radius: 15px;
   overflow: hidden;

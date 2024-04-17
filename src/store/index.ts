@@ -15,7 +15,8 @@ export default createStore({
     role:'',
     permission:'',
     talkBarAppend: false,
-    talkHistories: new Array<TalkHistory>()
+    talkHistories: new Array<TalkHistory>(),
+    isAdmin: false
   },
   getters: {
   },
