@@ -1,11 +1,15 @@
 <template>
-  <div></div>
+  <div>
+    <slot name="default"></slot>
+  </div>
 </template>
 
-<script>
-export default {
-  name: "HAlert"
-}
+<script setup lang="ts">
+
+// eslint-disable-next-line no-undef
+const props = defineProps<{
+  modelValue: boolean
+}>()
 </script>
 
 <style scoped>
