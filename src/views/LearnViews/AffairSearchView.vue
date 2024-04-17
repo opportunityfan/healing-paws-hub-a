@@ -11,6 +11,8 @@ import store from "@/store";
 import {reactive} from "vue";
 import PostFlowVertical from "@/components/PostFlowVertical.vue";
 import PostFlow from "@/components/PostFlow.vue";
+import PostPlayerColumnInfinity from "@/components/postPlayerColumnInfinity.vue";
+import HScroller from "@/components/HScroller.vue";
 
 let affairs = reactive<{id:string,name:string}[]>([])
 function getAffairs(pageNum : number, pageSize: number){
@@ -33,7 +35,7 @@ const requestNewAffair = async (count : number) => {
   const newPostList = new Array<Post>()
   await axios.get('/affair',{
     params:{
-      pageNum: 1,
+      pageNum: count,
       pageSize: 5
     },
     headers:{
@@ -59,21 +61,65 @@ const requestNewAffair = async (count : number) => {
   })
   return newPostList
 }
+const getAffairList = async (info :any) => {
+  const newPostList = new Array<Post>()
+  await axios.get('/affair',{
+    params:{
+      pageNum: info.before_id+1,
+      pageSize: info.per_page
+    },
+    headers:{
+      'token':store.state.token
+    }
+  }).then(res=>{
+    console.log(res.data.data)
+    for(let item of res.data.data){
+      let tempImage
+      if(item.pic === null){
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const image = new Image(require("@/assets/login-background.png"),3035,4299)
+        tempImage = image
+      }else{
+        const image = new Image(item.pic,item.picSize[0],item.picSize[1])
+        tempImage = image
+      }
+
+      newPostList.push(new Post(item.id,item.name,item.description,tempImage))
+    }
+  }).catch(e=>{
+    console.log(e)
+  })
+  info.before_id++
+  return {newInfo : info,newPostList:newPostList}
+}
 </script>
 
 <template>
 
-    <div class="main-panel full">
+    <div class="full flex-column">
       <HSearchBar style="width: 85%" searchUrl="/affair/fuzzy" @onEnter="goAffair"></HSearchBar>
-      <div class="affair-bar" style="height: 100%">
-        <PostFlowVertical :request-new-post="requestNewAffair" urlPrefix="/affair/" style="flex-grow: 1" width="300"></PostFlowVertical>
+      <div style="flex-grow: 1;width: 100%; min-height: 0">
+        <post-player-column-infinity :get-post-list="getAffairList" >
+        </post-player-column-infinity>
+
       </div>
+
     </div>
 </template>
 
 <style scoped lang="stylus">
-.main-panel
-  justify-content space-evenly
+
 .affair-bar
   width 100%
+.main-panel
+  margin 30px 20px
+  width 80%
+.left-panel
+  flex 1
+  padding 0
+
+.right-panel
+  flex 1
+  margin 0 10px
+
 </style>

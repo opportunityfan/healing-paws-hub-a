@@ -130,6 +130,7 @@ const onNodeAdd =  () => {
       id : nodeIndex.toString(),
       position : {x: ((nodeIndex) * 50) + 100, y: ((nodeIndex+1) * 100) + 100},
       label : tempNode.name,
+      class:'mid-node',
       data: {
         nodeId:res.data.data.id
       }
@@ -161,7 +162,6 @@ const onSave = () => {
 
 onEdgesChange(()=>{
   console.log('edges情况',edges.value)
-
 })
 const removeSelected = () => {
   let tnodes = getSelectedNodes.value

@@ -34,9 +34,11 @@ const props = withDefaults(defineProps<{
 const data = reactive<{
   postList: Post[]
   updating: boolean
+  nowPageNum : number
 }>({
   postList: [],
-  updating: false
+  updating: false,
+  nowPageNum : 1
 })
 
 const moreRef = ref<VueElement>()
@@ -46,11 +48,12 @@ onMounted(() => {
     if (isIntersecting) {
       if (!data.updating) {
         data.updating = true
-        props.requestNewPost(props.updatePostCount).then((res) => {
+        props.requestNewPost(data.nowPageNum).then((res) => {
           res.forEach((post) => {
             data.postList.push(post)
           })
         }).finally(() => {
+          data.nowPageNum ++
           data.updating = false
         })
       }

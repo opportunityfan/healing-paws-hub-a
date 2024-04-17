@@ -105,6 +105,7 @@ const onUpdate = async (formdata : FormData) => {
   formdata.append('name',affair.name)
   formdata.append('description',affair.description)
   formdata.append('role',affair.role)
+
   if(data.isNewAffair){//创建
     formdata.append('pic',picFile.value)
     axios.post('/affair',formdata,{
