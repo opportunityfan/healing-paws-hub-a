@@ -2,7 +2,7 @@
 import HSearchBar from "@/components/HSearchBar.vue";
 import PostFlowVertical from "@/components/PostFlowVertical.vue";
 import HpageTable from "@/components/HpageTable.vue";
-import {tag} from "@/assets/api";
+import {showMessage, tag} from "@/assets/api";
 import router from "@/router";
 import axios from "@/assets/axios";
 import store from "@/store";
@@ -21,11 +21,15 @@ const requestAffairs = async (pageNum : number, pageSize : number) => {
       'token':store.state.token
     }
   }).then(res=>{
-    for(let item of res.data.data.listData){
-      currentItems.push(new tag(item.id,item.name))
+    if(res.data.code==200) {
+      for (let item of res.data.data.listData) {
+        currentItems.push(new tag(item.id, item.name))
+      }
+    }else{
+      showMessage(`${res.data.msg}`,'error')
     }
-  }).catch(e=>{
-    console.log(e)
+  }).catch(()=>{
+    showMessage('网络错误','error')
   })
   console.log(currentItems)
   return currentItems
@@ -41,7 +45,13 @@ const onLoad = async () => {
       'token':store.state.token
     }
   }).then(res=>{
-    totalPages.value = res.data.data.totalPages
+    if(res.data.code==200) {
+      totalPages.value = res.data.data.totalPages
+    }else{
+      showMessage(`${res.data.msg}`,'error')
+    }
+  }).catch(()=>{
+    showMessage('网络错误','error')
   })
   return
 }

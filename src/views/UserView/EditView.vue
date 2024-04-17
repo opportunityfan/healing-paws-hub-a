@@ -6,7 +6,7 @@ import {reactive, ref, watch} from "vue";
 import HInput from "@/components/HInput.vue";
 import HButton from "@/components/HButton.vue";
 import HAvatar from "@/components/HAvatar.vue";
-import {getUserInfo, goRoleSelect} from "@/assets/api";
+import {getUserInfo, goRoleSelect, showMessage} from "@/assets/api";
 import {sendToGpt, startGptTalk} from "@/assets/api/gpt"
 import HFileUpload from "@/components/HFileUpload.vue";
 const data = reactive<{
@@ -46,6 +46,13 @@ const updateUserData = async () =>{
     }
   }).then((res)=>{
     console.log(res.data)
+    if(res.data.code==200){
+      showMessage('更新信息成功！','success')
+    }else{
+      showMessage(`${res.data.data}`, 'error')
+    }
+  }).catch(()=>{
+    showMessage('网络错误','error')
   })
   let res = getUserInfo()
   console.log(res)
@@ -62,8 +69,16 @@ const upLoadImage = async (image : File) => {
       'token' : store.state.token
     }
   }).then((res)=>{
+
     console.log(res.data)
-    store.state.avatar_url = res.data.data
+    if(res.data.code==200) {
+      store.state.avatar_url = res.data.data
+      showMessage('头像更新成功！','success')
+    }else{
+      showMessage(`${res.data.data}`, 'error')
+    }
+  }).catch(()=>{
+    showMessage('网络错误','error')
   })
 }
 watch(

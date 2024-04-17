@@ -2,7 +2,7 @@
 
 <script setup lang="ts">
 import HSearchBar from "@/components/HSearchBar.vue";
-import {goAffair, goAffairSearchView, Image, Post, testaxios} from "@/assets/api";
+import {goAffair, goAffairSearchView, Image, Post, showMessage, testaxios} from "@/assets/api";
 import axios from "@/assets/axios";
 import store from "@/store";
 import PostPlayerColumnInfinity from "@/components/postPlayerColumnInfinity.vue";
@@ -19,21 +19,25 @@ const getAffairList = async (info :any) => {
     }
   }).then(res=>{
     console.log(res.data.data)
-    for(let item of res.data.data.listData){
-      let tempImage
-      if(item.pic === null){
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const image = new Image(require("@/assets/login-background.png"),3035,4299)
-        tempImage = image
-      }else{
-        const image = new Image(item.pic,item.picSize[0],item.picSize[1])
-        tempImage = image
-      }
+    if(res.data.code==200) {
+      for (let item of res.data.data.listData) {
+        let tempImage
+        if (item.pic === null) {
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          const image = new Image(require("@/assets/login-background.png"), 3035, 4299)
+          tempImage = image
+        } else {
+          const image = new Image(item.pic, item.picSize[0], item.picSize[1])
+          tempImage = image
+        }
 
-      newPostList.push(new Post(item.id,item.name,item.description,tempImage))
+        newPostList.push(new Post(item.id, item.name, item.description, tempImage))
+      }
+    }else{
+      showMessage(`${res.data.msg}`,'error')
     }
   }).catch(e=>{
-    console.log(e)
+    showMessage('网络错误','error')
   })
   info.before_id++
   return {newInfo : info,newPostList:newPostList}

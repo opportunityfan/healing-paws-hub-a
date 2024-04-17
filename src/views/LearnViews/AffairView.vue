@@ -6,7 +6,7 @@ import {reactive} from "vue";
 import {useRoute} from 'vue-router'
 import FlowDia from "@/components/FlowDia.vue";
 
-import {affairNode, getAffairNodes, goAffairNode, goto} from "@/assets/api";
+import {affairNode, getAffairNodes, goAffairNode, goto, showMessage} from "@/assets/api";
 import HStatistic from "@/components/HStatistic.vue";
 import HDivider from "@/components/HDivider.vue";
 import axios from "@/assets/axios";
@@ -36,7 +36,13 @@ const getAffairById = async () => {
     }
   }).then(res=>{
     console.log('拿affair返回',res.data)
-    affair.name = res.data.data.name
+    if(res.data.code==200) {
+      affair.name = res.data.data.name
+    }else{
+      showMessage(`${res.data.msg}`,'error')
+    }
+  }).catch(()=>{
+    showMessage('网络错误','error')
   })
 }
 

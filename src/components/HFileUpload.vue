@@ -17,24 +17,8 @@ const handleImage = (event : any) =>{
   selectedFile.value = files[0]
   emit('handleFile',selectedFile.value)
   console.log('handleImage')
+}
 
-}
-const upLoadImage = async () => {
-  if(!selectedFile.value){
-    alert('请先选图片')
-    return
-  }
-  const formData = new FormData()
-  formData.append('avatar',selectedFile.value)
-  await axios.post('/sysUser/setAvatar',formData,{
-    headers:{
-      'token' : store.state.token
-    }
-  }).then((res)=>{
-    console.log(res.data)
-    store.state.avatar_url = res.data.data
-  })
-}
 </script>
 
 <template>

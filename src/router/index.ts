@@ -201,16 +201,6 @@ const routes: Array<RouteRecordRaw> = [
             props:true
           },
           {
-            path:'/itemManage',
-            name:'itemManagePage',
-            component:ItemManageView
-          },
-          {
-            path:'/itemEdit',
-            name:'itemEditPage',
-            component:ItemEditView
-          },
-          {
             path: '/examManage',
             name: 'examManage',
             component: ExamManageView

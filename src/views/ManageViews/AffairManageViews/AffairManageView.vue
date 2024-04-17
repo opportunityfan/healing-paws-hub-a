@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {useRoute} from "vue-router";
 import FlowDia from "@/components/FlowDia.vue";
-import {goAffairNodeManage, goBack, Image as Img} from "@/assets/api";
+import {goAffairNodeManage, goBack, Image as Img, showMessage} from "@/assets/api";
 import {onBeforeUnmount, onMounted, reactive, ref} from "vue";
 
 import HFormInput from "@/components/HFormInput.vue";
@@ -60,14 +60,7 @@ const affair = reactive<{
   image: new Img(require('@/assets/avatar.jpg'),1,1)
 })
 const imageUpload = ref()
-const picFile = ref()
-const isMouseOverAvatar = ref(false)
-const onMouseEnterAvatar = () =>{
-  isMouseOverAvatar.value = true
-}
-const onMouseLeaveAvatar = () => {
-  isMouseOverAvatar.value = false
-}
+
 const getAffairById = async () => {
   axios.get('/affair/'+affair.id,{
     headers:{
@@ -75,12 +68,18 @@ const getAffairById = async () => {
     }
   }).then(res=>{
     console.log('拿affair返回',res.data)
-    affair.name = res.data.data.name
-    affair.description = res.data.data.description
-    affair.pic = res.data.data.pic
-    affair.picSize = res.data.data.picSize
-    affair.role = res.data.data.role
-    affair.image = new Img(affair.pic,1,1)
+    if(res.data.code==200) {
+      affair.name = res.data.data.name
+      affair.description = res.data.data.description
+      affair.pic = res.data.data.pic
+      affair.picSize = res.data.data.picSize
+      affair.role = res.data.data.role
+      affair.image = new Img(affair.pic, 1, 1)
+    }else{
+      showMessage(`${res.data.msg}`,'error')
+    }
+  }).catch(()=>{
+    showMessage('网络错误','error')
   })
 }
 
@@ -93,16 +92,7 @@ const onLoad = async () =>{
   }
   return
 }
-const handleImage = (image : File) =>{
-  console.log('图片文件信息',image)
-  let imageFile = new Image()
-  imageFile.src = window.URL.createObjectURL(image)
-  imageFile.onload = () => {
-    affair.image = new Img(imageFile.src, imageFile.width, imageFile.height)
-  }
-  affair.pic= image.path
-  picFile.value = image
-}
+
 const onUpdate = async (formdata : FormData) => {
   formdata.append('name',affair.name)
   formdata.append('description',affair.description)
@@ -128,6 +118,13 @@ const onUpdate = async (formdata : FormData) => {
       }
     }).then(res => {
       console.log('保存、更新的返回结果', res.data)
+      if (res.data.code === 200) {
+        showMessage('修改成功!','success')
+      }else{
+        showMessage(`${res.data.msg}`,'error')
+      }
+    }).catch(()=>{
+      showMessage('网络错误','error')
     })
   }
 }
@@ -141,10 +138,15 @@ const deleteAffair = () => {
     }
   }).then(res=>{
     console.log(res.data)
-    if(res.data.code===200){
-      console.log('删除成功！')
+    if (res.data.code === 200) {
+      console.log('update affair node success')
+      showMessage('修改成功!','success')
       goBack()
+    }else{
+      showMessage(`${res.data.msg}`,'error')
     }
+  }).catch(()=>{
+    showMessage('网络错误','error')
   })
 }
 </script>

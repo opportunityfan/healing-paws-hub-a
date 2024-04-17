@@ -95,6 +95,8 @@ export const testaxios = ()=>{
         }
     }).then((res)=>{
         console.log(res)
+    }).catch(()=>{
+        showMessage('网络错误','error')
     })
 }
 export const signIn = (data:any) => {
@@ -132,7 +134,14 @@ export const signUp = (data : any)=>{
             'Content-Type' : 'application/json'
         }
     }).then((res)=>{
-        console.log(res)
+
+        if(res.data.code==200){
+            console.log(res.data)
+        }else{
+            showMessage(`${res.data.msg}`,'error')
+        }
+    }).catch(()=>{
+        showMessage('网络错误','error')
     })
 
     goto('/check-email').then();
@@ -144,10 +153,16 @@ export const getUserInfo = async () => {
             'token' : store.state.token
         }
     }).then((res)=>{
-        userInfo = res.data.data
-        store.state.nick_name = userInfo.username
-        store.state.avatar_url = userInfo.avatar
-        store.state.email = userInfo.account
+        if(res.data.code==200) {
+            userInfo = res.data.data
+            store.state.nick_name = userInfo.username
+            store.state.avatar_url = userInfo.avatar
+            store.state.email = userInfo.account
+        }else{
+            showMessage(`${res.data.msg}`,'error')
+        }
+    }).catch(()=>{
+        showMessage('网络错误','error')
     })
     return userInfo
 }
@@ -160,6 +175,8 @@ export const signOut = () => {
         }
     }).then((res)=>{
         console.log(res.data)
+    }).catch(()=>{
+        showMessage('网络错误','error')
     })
 }
 
@@ -175,7 +192,11 @@ export const getAffairNode = async (id : string) : Promise<affairNode | undefine
     }).then((res) => {
         if (res.data.code === 200) {
             obj = res.data.data
+        }else{
+            showMessage(`${res.data.msg}`,'error')
         }
+    }).catch(()=>{
+        showMessage('网络错误','error')
     })
     return obj
 }
@@ -196,7 +217,11 @@ export const getInstrument = async (id : string) : Promise<instrument | undefine
                 }
                 obj.image = new Image(res.data.data.pic, res.data.data.picSize[0], res.data.data.picSize[1])
             }
+        }else{
+            showMessage(`${res.data.msg}`,'error')
         }
+    }).catch(()=>{
+        showMessage('网络错误','error')
     })
     return obj
 }
@@ -213,7 +238,12 @@ export const setAffairNode = async (node : affairNode) => {
     }).then((res) => {
         if (res.data.code === 200) {
             console.log('update affair node success')
+            showMessage('修改成功!','success')
+        }else{
+            showMessage(`${res.data.msg}`,'error')
         }
+    }).catch(()=>{
+        showMessage('网络错误','error')
     })
 }
 
@@ -231,6 +261,8 @@ export const setInstrument = async (instrument : instrument, image? : File) => {
         if (res.data.code === 200) {
             console.log('update instrument node success')
         }
+    }).catch(()=>{
+        showMessage('网络错误','error')
     })
 }
 
@@ -289,13 +321,20 @@ export const autoComplete = async (searchUrl : string,word : string) :Promise<ta
             'token' : store.state.token
         }
     }).then((res)=>{
-        const affairs = res.data.data
-        console.log(affairs)
-        if(affairs)
-        affairs.forEach((e:any) => {
-            const tempTag = new tag(e.id,e.name)
-            names.push(tempTag)
-        })
+
+        console.log(res.data)
+        if(res.data.code==200) {
+            const affairs = res.data.data
+            if (affairs)
+                affairs.forEach((e: any) => {
+                    const tempTag = new tag(e.id, e.name)
+                    names.push(tempTag)
+                })
+        }else{
+            showMessage(`${res.data.msg}`,"error")
+        }
+    }).catch(()=>{
+        showMessage('网络错误','error')
     })
     console.log(names)
     return names
@@ -312,22 +351,30 @@ export const autoCompleteWXJ = async (searchUrl : string,word : string) :Promise
             'token' : store.state.token
         }
     }).then((res)=>{
-        const items = res.data
+
         console.log(res.data)
-        if(searchUrl === '/item/search') {
-            if (items)
-                items.forEach((e: any) => {
-                    const tempTag = new tag(e.id, e.name)
-                    names.push(tempTag)
-                })
-        }else if(searchUrl === '/department/search'){
-            if (items)
-                items.forEach((e: any) => {
-                    const tempTag = new tag(e.id, e.departmentName)
-                    names.push(tempTag)
-                })
+        if(res.data.code==200) {
+            const items = res.data
+            if (searchUrl === '/item/search') {
+                if (items)
+                    items.forEach((e: any) => {
+                        const tempTag = new tag(e.id, e.name)
+                        names.push(tempTag)
+                    })
+            } else if (searchUrl === '/department/search') {
+                if (items)
+                    items.forEach((e: any) => {
+                        const tempTag = new tag(e.id, e.departmentName)
+                        names.push(tempTag)
+                    })
+            }
+            console.log(items)
+        }else{
+            showMessage(`${res.data.msg}`,"error")
         }
-        console.log(items)
+
+    }).catch(()=>{
+        showMessage('网络错误','error')
     })
     console.log(names)
     return names
@@ -351,9 +398,15 @@ export const getAffairNodes = async (affairId : string)=>{
         }
     }).then((res) =>{
         console.log(res.data)
-        res.data.data.forEach((node: any) => {
-            affairNodes.push(new affairNode(node.id,node.name,node.content,node.contentImg,node.contentVideo))
-        })
+        if(res.data.code==200) {
+            res.data.data.forEach((node: any) => {
+                affairNodes.push(new affairNode(node.id, node.name, node.content, node.contentImg, node.contentVideo))
+            })
+        }else{
+            showMessage(`${res.data.msg}`,"error")
+        }
+    }).catch(()=>{
+        showMessage('网络错误','error')
     })
     return affairNodes
 }
