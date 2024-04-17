@@ -2,6 +2,7 @@
 import {useRoute} from "vue-router";
 import axios from "axios";
 import {onMounted, ref} from "vue";
+import HButton from "@/components/HButton.vue";
 
 const router=useRoute();
 const item = ref<any>({});
@@ -26,8 +27,11 @@ onMounted(()=>{
       {{item.examName}}
     </h1>
     <h4 class="head">
+      考试时间：{{item.startTime}}-{{item.endTime}}
+      <br>
+      共计{{item.totalTime}}分钟
+      <br>
       考试分数：{{item.totalScore}}
-      考试时间：{{item.startTime}}-{{item.endTime}} 共计{{item.totalTime}}分钟
     </h4>
     <div>
       考试规则：
@@ -35,20 +39,11 @@ onMounted(()=>{
       1.考试需要在规定时间内完成考试内容
       <br>
       2.不得作弊
-      <br>
-      3.，，，，，，，
-      <br>
-      4，，，，，，，，
-      <br>
-      5，，，，，，，
-      <div>
-
-      </div>
     </div>
     <router-link :to="`/examTest/${item.id}`">
-      <el-button>
+      <HButton>
         开始考试
-      </el-button>
+      </HButton>
     </router-link>
   </div>
 </template>

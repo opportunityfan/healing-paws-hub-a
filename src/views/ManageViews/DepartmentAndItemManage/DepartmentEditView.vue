@@ -83,8 +83,9 @@ const onMouseEnterAvatar = () =>{
 const onMouseLeaveAvatar = () => {
   isMouseOverAvatar.value = false
 }
-const handleImage = (image : File) =>{
+const handleImage = (image : File,test : string) =>{
   console.log('图片文件信息',image)
+  console.log('测试文本',test)
   let imageFile = new Image()
   imageFile.src = window.URL.createObjectURL(image)
   imageFile.onload = () => {

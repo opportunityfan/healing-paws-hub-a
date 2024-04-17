@@ -117,15 +117,18 @@ function clearup(){
     <div class="xia">
       <HTable :tabledata="tabledata"></HTable>
     </div>
-    <el-pagination
-        small
-        background
-        layout="prev, pager, next"
-        :page-size="pagesize"
-        :total="7"
-        class="mt-4"
-        @current-change="pagechange"
-    />
+    <br>
+    <el-row justify="center">
+      <el-pagination
+          small
+          layout="prev, pager, next"
+          :page-size="pagesize"
+          :total="7"
+          class="mt-4 fenye"
+          @current-change="pagechange"
+      />
+    </el-row>
+
   </div>
 </template>
 
@@ -144,5 +147,8 @@ function clearup(){
   .you{
     flex: 1;
   }
+}
+.fenye{
+  color:#5A8100;
 }
 </style>
