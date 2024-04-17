@@ -171,15 +171,7 @@ const deleteAffair = () => {
         <div class="right-panel">
           <div class="flex-row" style="width: 100%; gap: 20px; margin: 6px 0">
             <div class="text-bold" style="flex-shrink: 0">封面编辑</div>
-<!--            <div style="position: relative; width: fit-content" class="avatar-box"-->
-<!--                 @mouseenter="onMouseEnterAvatar"-->
-<!--                 @mouseleave="onMouseLeaveAvatar">-->
-<!--              <HImage :image="affair.image" :size="100" :lazy-load="false"></HImage>-->
-<!--              <div :style="{opacity : isMouseOverAvatar ? '1' : '0'}"-->
-<!--                   class="center add-icon" >-->
-<!--                <HFileUpload @handleFile="handleImage"></HFileUpload>-->
-<!--              </div>-->
-<!--            </div>-->
+
             <HImageUpload :image="affair.image" ref="imageUpload"></HImageUpload>
             <HButton @click="deleteAffair" type="danger">删除事务</HButton>
           </div>

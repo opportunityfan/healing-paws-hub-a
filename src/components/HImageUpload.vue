@@ -5,17 +5,21 @@ import HFileUpload from "@/components/HFileUpload.vue";
 import {ref, withDefaults, defineProps, reactive, defineExpose} from "vue";
 import {Image as Img} from "@/assets/api";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const defaultImage = new Img(require("@/assets/avatar.jpg"),100,100)
 const props = withDefaults(defineProps<{
-  image : Img
+  image? : Img
 }>(),{
 
 })
 const data = reactive<{
   image : Img,
-  pic : string
+  pic : string,
+  isHaveImage : boolean
 }>({
-  image : props.image,
-  pic : ''
+  image : props.image? props.image:defaultImage,
+  pic : '',
+  isHaveImage : !!props.image
 })
 const isMouseOverAvatar = ref(false)
 const picFile = ref()
@@ -41,6 +45,7 @@ const handleImage = (image : File) =>{
   }
   data.pic= image.path
   picFile.value = image
+  data.isHaveImage = true
 }
 </script>
 
@@ -48,7 +53,10 @@ const handleImage = (image : File) =>{
   <div style="position: relative; width: fit-content" class="avatar-box"
        @mouseenter="onMouseEnterAvatar"
        @mouseleave="onMouseLeaveAvatar">
-    <HImage :image="data.image" :size="100" :lazy-load="false"></HImage>
+    <HImage :image="data.image" :size="100" :lazy-load="false" :v-if="data.isHaveImage"></HImage>
+    <div :v-if="!data.isHaveImage">
+    <i class='bx bxs-camera-plus' ></i>
+    </div>
     <div :style="{opacity : isMouseOverAvatar ? '1' : '0'}"
          class="center add-icon" >
       <HFileUpload @handleFile="handleImage"></HFileUpload>
