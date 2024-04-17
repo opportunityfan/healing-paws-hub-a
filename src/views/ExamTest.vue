@@ -7,6 +7,7 @@ import {compute} from "three/examples/jsm/nodes/gpgpu/ComputeNode";
 import {goto} from "@/assets/api";
 import store from "@/store";
 import MarkdownRenderer from "@/components/MarkdownRenderer.vue";
+import HButton from "@/components/HButton.vue";
 
 const value2=ref(0);
 const router=useRoute();
@@ -14,6 +15,18 @@ const item = ref<any>({});
 const imd = ref<number>(0);
 const ans = ref<string[]>([]);
 const answer = ref('');
+const item1 = ref<any>({});
+const issubmit = ref(false);
+function state(item2:any){
+  issubmit.value=true;
+  item1.value=item2;
+}
+
+function insure(){
+  submit(item1.value);
+  issubmit.value=false;
+}
+
 async function getData(){
   const res=await axios.get('http://150.158.110.63:8080/exam',{
     params:{
@@ -67,6 +80,7 @@ function record(){
   console.log(answer.value);
   ans.value[imd.value]=answer.value;
   console.log(ans.value);
+  answer.value='';
 }
 
 async function submit(item:any){
@@ -124,26 +138,26 @@ onMounted(()=>{
       </el-col>
     </el-row>
     <div>
-      <el-button @click="submit(item)">
-        交卷
+      <el-button>
+        考试题目跳转
+        <el-select v-model="value2" @change="select">
+          <el-option v-for="( s , index) in item.questionList" :label="index+1" :key="index" :value="index">
+          </el-option>
+        </el-select>
       </el-button>
     </div>
     <br>
     <el-row>
       <el-col :span="8">
-        <el-button @click="Last">上一题</el-button>
+        <HButton @click="Last">上一题</HButton>
       </el-col>
       <el-col :span="8">
-        <el-button>
-          考试题目跳转
-          <el-select v-model="value2" @change="select">
-            <el-option v-for="( s , index) in item.questionList" :label="index+1" :key="index" :value="index">
-            </el-option>
-          </el-select>
-        </el-button>
+        <HButton @click="state(item)">
+          交卷
+        </HButton>
       </el-col>
       <el-col :span="8">
-        <el-button @click="Next">下一题</el-button>
+        <HButton @click="Next">下一题</HButton>
       </el-col>
     </el-row>
     <div>
@@ -156,6 +170,13 @@ onMounted(()=>{
         </el-input>
       </div>
     </div>
+    <el-dialog v-model="issubmit" title="交卷" width="500" :center="true" class="xdialog">
+      <span>是否确认交卷</span>
+      <template #footer>
+        <el-button color="#9FB66B" @click="insure()"><span>确认</span></el-button>
+        <el-button color="#5A8100" @click="issubmit=false">取消</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
