@@ -104,7 +104,6 @@ export const signIn = (data:any) => {
          }
      }).then((res)=>{
          if(res.data.code==200){
-
              store.state.token = res.data.data.token
              store.state.role = res.data.data.role
              getUserInfo().then(res => {
@@ -114,9 +113,11 @@ export const signIn = (data:any) => {
              if(res.data.msg.substring(0,3) === 'NEW'){
                  goto('/RoleSelectView').then()
              }
+         } else {
+             showMessage(`${res.data.data}`, 'error')
          }
-     }).catch(err=>{
-         console.log("network Error！")
+     }).catch(() => {
+         showMessage('网络错误','error')
     })
 }
 export const signUp = (data : any)=>{
@@ -368,4 +369,23 @@ export class TalkHistory {
         this.selfSend = selfSend
 
     }
+}
+
+export class Message {
+    id : number;
+    content: string;
+    type: 'error'|'info'|'success'|'warning';
+    duration: number;
+    constructor(id: number, content: string, type: 'error'|'info'|'success'|'warning', duration: number) {
+        this.id = id
+        this.content = content
+        this.type = type
+        this.duration = duration
+    }
+}
+
+let messageId = 0
+
+export const showMessage = (content: string, type: 'error'|'info'|'success'|'warning', duration = 2000) => {
+    store.state.messageList.push(new Message(messageId++, content, type, duration))
 }

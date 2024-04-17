@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-import {TalkHistory} from "@/assets/api";
+import {TalkHistory, Message} from "@/assets/api";
 
 export default createStore({
   state: {
@@ -15,7 +15,8 @@ export default createStore({
     role:'',
     permission:'',
     talkBarAppend: false,
-    talkHistories: new Array<TalkHistory>()
+    talkHistories: new Array<TalkHistory>(),
+    messageList: new Array<Message>(),
   },
   getters: {
   },

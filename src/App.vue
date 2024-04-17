@@ -2,7 +2,7 @@
   <div class="main-div flex-row border-radius-regular padding-surround">
     <talk-bar></talk-bar>
     <SideBar></SideBar>
-    <div class="flex-column" style="height: 100%;flex-grow: 1;min-width: 0;min-height: 0;">
+    <div class="flex-column" style="height: 100%;flex-grow: 1;min-width: 0;min-height: 0;position: relative">
       <FrameBar></FrameBar>
       <div style="width: 100%; overflow: hidden; height: calc(100% - 35px);max-width: 100%">
         <router-view v-slot="{ Component }">
@@ -16,6 +16,7 @@
           </transition>
         </router-view>
       </div>
+      <HMessage></HMessage>
     </div>
   </div>
 </template>
@@ -52,6 +53,7 @@ import {onMounted} from "vue";
 import {changeTheme} from "@/assets/api";
 import SideBar from "@/components/SideBar.vue";
 import TalkBar from "@/components/TalkBar.vue";
+import HMessage from "@/components/HMessage.vue";
 
 onMounted(() => {
   changeTheme("bright");
