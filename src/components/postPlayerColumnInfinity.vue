@@ -1,46 +1,45 @@
 <template>
   <div style="width: 100%;height: 100%">
     <HScroller scrollDirection="column">
-    <div ref="containerRef" class="waterfall-div">
-
-      <div
-          v-for="i in info.columnCount"
-          :key="i"
-          class="waterfall-column"
-          :style="{
+      <div ref="containerRef" class="waterfall-div">
+        <div
+            v-for="i in info.columnCount"
+            :key="i"
+            class="waterfall-column"
+            :style="{
             width: info.columnWidth + 'px'
           }"
-          ref="columnsRef"
-      >
-        <PostBlock
-            v-for="(item,index) in info.postListColumn[i-1]"
-            :key="index"
-            :post="item"
-            :style="{width: (info.columnWidth-10) + 'px'}"
-            style="height: 200px;margin:20px 20px;"
-        ></PostBlock>
+            ref="columnsRef"
+        >
+          <PostBlock
+              v-for="(item,index) in info.postListColumn[i-1]"
+              :key="index"
+              :post="item"
+              :style="{width: (info.columnWidth-20) + 'px'}"
+              style="height: 200px;margin:20px auto"
+              @click="goto(props.urlPrefix + item.id)"
+          ></PostBlock>
+        </div>
       </div>
-
-    </div>
+      <div class="more" ref="moreRef" v-if="!noMore"></div>
+      <div class="no-more subtitle" v-if="noMore">{{ `共 ${info.postList.length} 项` }}</div>
     </HScroller>
-    <div class="more" ref="moreRef" v-if="!noMore"></div>
-    <div class="no-more" v-if="noMore">{{ `共 ${info.postList.length} 张` }}</div>
-
   </div>
 </template>
 
 <script setup lang="ts">
-import {reactive, onMounted, ref, onUnmounted} from "vue";
-import {Post} from "@/assets/api";
+import {reactive, onMounted, ref, onUnmounted, VueElement} from "vue";
+import {Post, goto} from "@/assets/api";
 import PostBlock from "@/components/PostBlock.vue";
 import HScroller from "@/components/HScroller.vue";
 
 // eslint-disable-next-line no-undef
 const props = withDefaults(defineProps<{
-  columnMinWidth: number,
+  columnMinWidth?: number,
   // getImageList: (info : any) => {newInfo : any, newImageList : image[]}
   getPostList: (info : any) => Promise<{newInfo : any, newPostList : Post[]}>,
-  currentI: any
+  currentI: any,
+  urlPrefix: string
 }>(), {
   columnMinWidth: 200,
   getPostList: async (info : any) => {
@@ -66,9 +65,9 @@ const info = reactive<{
   currentI: {...props.currentI}
 })
 
-const containerRef = ref<Element>()
-const moreRef = ref<Element>()
-const columnsRef = ref<Element[]>([])
+const containerRef = ref<VueElement>()
+const moreRef = ref<VueElement>()
+const columnsRef = ref<VueElement[]>([])
 
 let intervalHook : number
 const noMore = ref<boolean>(false)
@@ -78,13 +77,11 @@ onMounted(() => {
   intervalHook = setInterval(init, 300)
   const observer = new IntersectionObserver(([{ isIntersecting }]) => {
     if (isIntersecting) {
-      if (!info.updating) {
-        console.log('updating')
+      if (!info.updating && !noMore.value) {
         info.updating = true
         more().then(() => {
           info.updating = false
         })
-        console.log('async ok')
       }
     }
   }, {
@@ -120,15 +117,15 @@ const init = () => {
   }
   info.columnWidth = containerRef.value!.clientWidth / info.columnCount
 
-  // 检查moreRef是否在可视区域内
-  if (moreRef.value!.getBoundingClientRect().top < window.innerHeight) {
-    if (!info.updating) {
-      console.log('init updating')
-      info.updating = true
-      more().then(() => {
-        info.updating = false
-      })
-      console.log('init async ok')
+  if (!noMore.value) {
+    // 检查moreRef是否在可视区域内
+    if (moreRef.value!.getBoundingClientRect().top < window.innerHeight) {
+      if (!info.updating) {
+        info.updating = true
+        more().then(() => {
+          info.updating = false
+        })
+      }
     }
   }
 }
@@ -151,7 +148,7 @@ const more = async () => {
   const {newInfo, newPostList} = await props.getPostList(info.currentI)
   if (newPostList.length == 0) {
     noMore.value = true
-    clearInterval(intervalHook)
+    // clearInterval(intervalHook)
     return
   }
   for (let item in newPostList) {
@@ -173,6 +170,7 @@ const more = async () => {
   box-sizing: border-box;
   padding: 5px;
   height: fit-content;
+  min-width: 0;
 }
 .more {
   height: 50px;

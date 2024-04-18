@@ -41,15 +41,12 @@ const getAffairList = async (info :any) => {
 </script>
 
 <template>
-
-    <div class="full flex-column">
+    <div class="full flex-column" style="gap: 20px">
       <HSearchBar style="width: 85%" searchUrl="/affair/fuzzy" @onEnter="goAffair"></HSearchBar>
       <div style="flex-grow: 1;width: 100%; min-height: 0">
-        <post-player-column-infinity :get-post-list="getAffairList" >
+        <post-player-column-infinity :get-post-list="getAffairList" url-prefix="/affair/">
         </post-player-column-infinity>
-
       </div>
-
     </div>
 </template>
 
