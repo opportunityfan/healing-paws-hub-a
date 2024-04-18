@@ -3,7 +3,7 @@
 import HButton from "@/components/HButton.vue";
 import HSearchBar from "@/components/HSearchBar.vue";
 import HpageTable from "@/components/HpageTable.vue";
-import {tag} from "@/assets/api";
+import {showMessage, tag} from "@/assets/api";
 import axios from "@/assets/axios";
 import store from "@/store";
 import router from "@/router";
@@ -25,11 +25,15 @@ const requestDepartments = async (pageNum : number, pageSize : number) =>{
     }
   }).then(res=>{
     console.log(res.data)
-    for(let item of res.data.data.listData){
-      currentItems.push(new tag(item.id,item.departmentName))
+    if(res.data.code==200) {
+      for (let item of res.data.data.listData) {
+        currentItems.push(new tag(item.id, item.departmentName))
+      }
+    }else{
+      showMessage(`${res.data.msg}`,'error')
     }
-  }).catch(e=>{
-    console.log(e)
+  }).catch(()=>{
+    showMessage('网络错误','error')
   })
   console.log(currentItems)
   return currentItems
@@ -46,7 +50,13 @@ const onLoad = async () => {
     }
   }).then(res=>{
     console.log(res.data)
-    totalPages.value = res.data.data.totalPages
+    if(res.data.code==200) {
+      totalPages.value = res.data.data.totalPages
+    }else{
+      showMessage(`${res.data.msg}`,'error')
+    }
+  }).catch(()=>{
+    showMessage('网络错误','error')
   })
   return
 }

@@ -29,7 +29,7 @@
 <script setup lang="ts">
 
 import PostFlow from "@/components/PostFlow.vue";
-import {goAffairSearchView, goInstrumentSearchView, Post, Image} from "@/assets/api";
+import {goAffairSearchView, goInstrumentSearchView, Post, Image, showMessage} from "@/assets/api";
 
 
 import axios from "@/assets/axios";
@@ -48,20 +48,24 @@ const requestNewAffair = async (count : number) => {
     }
   }).then(res=>{
     console.log(res.data.data)
-    for(let item of res.data.data){
-      let tempImage
-      if(item.pic === null){
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const image = new Image(require("@/assets/login-background.png"),3035,4299)
-        tempImage = image
-      }else{
-        const image = new Image(item.pic,item.picSize[0],item.picSize[1])
-        tempImage = image
+    if(res.data.code==200) {
+      for (let item of res.data.data) {
+        let tempImage
+        if (item.pic === null) {
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          const image = new Image(require("@/assets/login-background.png"), 3035, 4299)
+          tempImage = image
+        } else {
+          const image = new Image(item.pic, item.picSize[0], item.picSize[1])
+          tempImage = image
+        }
+        newPostList.push(new Post(item.id, item.name, item.description, tempImage))
       }
-      newPostList.push(new Post(item.id,item.name,item.description,tempImage))
+    }else{
+      showMessage(`${res.data.msg}`,'error')
     }
-  }).catch(e=>{
-    console.log(e)
+  }).catch(()=>{
+    showMessage('网络错误','error')
   })
   return newPostList
 }
@@ -80,18 +84,24 @@ const requestNewInstrument = async (count : number) => {
     }
   }).then(res=>{
     console.log(res.data)
-    for(let item of res.data.data){
-      let tempImage
-      if(item.pic === null){
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const image = new Image(require("@/assets/login-background.png"),3035,4299)
-        tempImage = image
-      }else{
-        const image = new Image(item.pic,1,1)
-        tempImage = image
+    if(res.data.code==200) {
+      for (let item of res.data.data) {
+        let tempImage
+        if (item.pic === null) {
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          const image = new Image(require("@/assets/login-background.png"), 3035, 4299)
+          tempImage = image
+        } else {
+          const image = new Image(item.pic, 1, 1)
+          tempImage = image
+        }
+        newPostList.push(new Post(item.id, item.name, item.introduction, tempImage))
       }
-      newPostList.push(new Post(item.id,item.name,item.introduction,tempImage))
+    }else{
+      showMessage(`${res.data.msg}`,'error')
     }
+  }).catch(()=>{
+    showMessage('网络错误','error')
   })
   return newPostList
 }

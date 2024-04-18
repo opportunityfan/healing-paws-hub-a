@@ -7,7 +7,7 @@ import HImage from "@/components/HImage.vue";
 import HRadio from "@/components/HRadio.vue";
 import {reactive, ref} from "vue";
 import {useRoute} from "vue-router";
-import {goBack, goto, Image as Img, tag} from "@/assets/api";
+import {goBack, goto, Image as Img, showMessage, tag} from "@/assets/api";
 import HLoading from "@/components/HLoading.vue";
 import axios from "@/assets/axios";
 import store from "@/store";
@@ -103,8 +103,13 @@ const deleteDepartment = async () => {
     console.log(res.data)
     if(res.data.code===200){
       console.log('删除成功！')
+      showMessage('删除成功!','success')
       goBack()
+    }else{
+      showMessage(`${res.data.msg}`,'error')
     }
+  }).catch(()=>{
+    showMessage('网络错误','error')
   })
 }
 const getDepartmentById = async () => {
@@ -116,13 +121,19 @@ const getDepartmentById = async () => {
       }
     }).then(res => {
       console.log('拿department返回', res.data)
-      const temp = res.data.data
-      department.name = temp.departmentName
-      department.introduction = temp.introduction
-      department.connect = temp.connectID
-      department.staff = temp.staffList
-      department.pic = temp.pic
-      department.image = new Img(temp.pic,1,1)
+      if(res.data.code==200) {
+        const temp = res.data.data
+        department.name = temp.departmentName
+        department.introduction = temp.introduction
+        department.connect = temp.connectID
+        department.staff = temp.staffList
+        department.pic = temp.pic
+        department.image = new Img(temp.pic, 1, 1)
+      }else{
+        showMessage(`${res.data.msg}`,'error')
+      }
+    }).catch(()=>{
+      showMessage('网络错误','error')
     })
   }else{
     data.isNew = true
@@ -150,11 +161,17 @@ const requestItems = async (pageNum : number, pageSize : number) =>{
     }
   }).then(res=>{
     console.log('科室的物品',res.data.data)
-    if(res.data.data) {
-      for (let item of res.data.data) {
-        currentItems.push(new tag(item.id, item.name))
+    if(res.data.code==200) {
+      if (res.data.data) {
+        for (let item of res.data.data) {
+          currentItems.push(new tag(item.id, item.name))
+        }
       }
+    }else{
+      showMessage(`${res.data.msg}`,'error')
     }
+  }).catch(()=>{
+    showMessage('网络错误','error')
   })
   return currentItems
 }
@@ -184,6 +201,13 @@ const createDepartment = () => {
     }
   }).then(res=>{
     console.log(res.data)
+    if(res.data.code==200){
+      showMessage('创建成功!','success')
+    }else{
+      showMessage(`${res.data.msg}`,'error')
+    }
+  }).catch(()=>{
+    showMessage('网络错误','error')
   })
 }
 const updateDepartment = () => {
@@ -203,6 +227,13 @@ const updateDepartment = () => {
     }
   }).then(res=>{
     console.log(res.data)
+    if(res.data.code==200){
+      showMessage('更新成功!','success')
+    }else{
+      showMessage(`${res.data.msg}`,'error')
+    }
+  }).catch(()=>{
+    showMessage('网络错误','error')
   })
 }
 const addPanel = () => {
@@ -256,7 +287,15 @@ const addItem = () => {
     }
   }).then(res=>{
     console.log(res.data)
-    itemTable.value.update()
+    if(res.data.code==200){
+      showMessage('更新成功!','success')
+      itemTable.value.update()
+    }else{
+      showMessage(`${res.data.msg}`,'error')
+    }
+
+  }).catch(()=>{
+    showMessage('网络错误','error')
   })
 }
 const goItemEdit = (id : string) => {
