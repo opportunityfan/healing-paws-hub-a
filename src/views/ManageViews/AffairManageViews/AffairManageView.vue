@@ -94,6 +94,7 @@ const onLoad = async () =>{
 }
 
 const onUpdate = async (formdata : FormData) => {
+  console.log('ref',imageUpload.value)
   formdata.append('name',affair.name)
   formdata.append('description',affair.description)
   formdata.append('role',affair.role)

@@ -2,12 +2,12 @@
 import HSearchBar from "@/components/HSearchBar.vue";
 import PostFlowVertical from "@/components/PostFlowVertical.vue";
 import HpageTable from "@/components/HpageTable.vue";
-import {showMessage, tag} from "@/assets/api";
+import {goAffair, showMessage, tag} from "@/assets/api";
 import router from "@/router";
 import axios from "@/assets/axios";
 import store from "@/store";
 import HButton from "@/components/HButton.vue";
-import {ref} from "vue";
+import {computed, onMounted, onUnmounted, ref, VueElement, watch} from "vue";
 import HLoading from "@/components/HLoading.vue";
 import HATable from "@/components/HATable.vue";
 import HPagination from "@/components/HPagination.vue";
@@ -15,6 +15,12 @@ import HIconButton from "@/components/HIconButton.vue";
 
 const dataList = ref()
 const totalPages=ref(0)
+const pageSize = ref(7)
+const totalItems = ref(0)
+
+
+
+
 const requestAffairs = async (pageNum : number, pageSize : number) => {
   const currentItems = new Array<tag>()
   await axios.get('/affair',{
@@ -45,7 +51,7 @@ const onLoad = async () => {
   await axios.get('/affair',{
     params:{
       pageNum : 1,
-      pageSize : 10
+      pageSize : pageSize.value
     },
     headers:{
       'token':store.state.token
@@ -56,6 +62,8 @@ const onLoad = async () => {
     if(res.data.code==200) {
       dataList.value = res.data.data.listData
       totalPages.value = res.data.data.totalPages
+      totalItems.value = pageSize.value*totalPages.value
+      console.log('总数：',totalItems.value)
     }else{
       showMessage(`${res.data.msg}`,'error')
     }
@@ -64,7 +72,7 @@ const onLoad = async () => {
   })
   return
 }
-onLoad()
+
 const goAffairManage = async (affairId : string) => {
   await router.push({name:'affairManagePage',params:{affairId:affairId}})
 }
@@ -75,9 +83,9 @@ const tableCols = [
     scopedSlots:'Name'
   },
   {
-    title:'年龄',
+    title:'角色',
     key:'role',
-    scopedSlots:''
+    scopedSlots:'Role'
   },
   {
     title:'操作',
@@ -85,36 +93,46 @@ const tableCols = [
     scopedSlots: 'Operation'
   }
 ]
-
+const roleToChinese = (role : string) => {
+  if(role === 'doctor'){
+    return '医师'
+  }else if(role === 'assistantDoctor'){
+    return '医助'
+  }else if(role === 'receptionist'){
+    return '前台'
+  }
+}
 </script>
 <template>
-<!--  <h-loading :load="onLoad">-->
-<!--  <div class="main-panel full">-->
-<!--    <HSearchBar style="width: 85%" searchUrl="/affair/fuzzy" @onEnter="goAffairManage"></HSearchBar>-->
-<!--    <div style="width: 85%">-->
-<!--      <div class="subtitle" style="text-align: left;margin-top:10px; margin-left:3px">事务列表</div>-->
-<!--      <HpageTable :request-items="requestAffairs" :totalPages=totalPages @itemClick="goAffairManage"></HpageTable>-->
-<!--      <HButton height="30px" style="margin-top: 5px" @click="goAffairManage('0')">添加事务</HButton>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--  </h-loading>-->
-<div class="page-table">
-  <HATable :dataList="dataList" :cols="tableCols">
-    <template #Name="{data}">
-      <span style="color: #9FB66B;display: inline-block;width: 50%;white-space: nowrap">
-        {{data}}
-      </span>
-    </template>
-    <template #Operation="{row}">
-      <div class="flex-row">
-      <HButton style="width: 25px;margin: auto 5px" height="20px" @click="goAffairManage(row['id'])"><i class='bx bx-edit-alt'></i></HButton>
-      <HButton style="width: 25px;margin: auto 5px" height="20px"></HButton>
+  <h-loading :load="onLoad">
+    <div class="main-panel full flex-column" >
+      <HSearchBar style="width: 85%" searchUrl="/affair/fuzzy" @onEnter="goAffairManage"></HSearchBar>
+      <div class="page-table" >
+        <div class="subtitle" style="text-align: left;margin-top:10px; margin-left:3px">事务列表</div>
+          <HATable :dataList="dataList" :cols="tableCols">
+            <template #Name="{data}">
+              <span style="white-space: nowrap" class="text">
+                {{data}}
+              </span>
+            </template>
+            <template #Role="{data}">
+              <span style="white-space: nowrap" class="text">
+                {{roleToChinese(data)}}
+              </span>
+            </template>
+            <template #Operation="{row}">
+              <div class="flex-row">
+              <HButton style="width: 25px;margin: auto 5px" height="20px" @click="goAffairManage(row['id'])"><i class='bx bx-edit-alt'></i></HButton>
+              <HButton style="width: 25px;margin: auto 5px" height="20px" type="danger"><i class='bx bx-trash'></i></HButton>
+              </div>
+            </template>
+          </HATable>
+          <HPagination @onPageChange="requestAffairs" :itemsPerPage="pageSize" :total-pages="totalPages">
+          </HPagination>
+        <HButton height="30px" style="margin-top: 5px" @click="goAffairManage('0')">添加事务</HButton>
       </div>
-    </template>
-  </HATable>
-  <HPagination @onPageChange="requestAffairs">
-  </HPagination>
-</div>
+    </div>
+  </h-loading>
 </template>
 
 <style scoped lang="stylus">
@@ -123,5 +141,6 @@ const tableCols = [
 .affair-bar
   width 100%
 .page-table
-  width fit-content
+  flex-grow 1
+  width 85%
 </style>

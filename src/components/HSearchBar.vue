@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, defineEmits, withDefaults, defineProps } from 'vue'
-import {tag, autoComplete, goto, goAffair, autoCompleteItem, autoCompleteWXJ} from '@/assets/api';
+import {tag, autoComplete, goto, goAffair, autoCompleteWXJ} from '@/assets/api';
 import { onBeforeRouteUpdate, useRoute } from "vue-router";
 
 const isFocus = ref(false)
@@ -53,14 +53,15 @@ const onInput = (e: any) => {
   if(props.searchUrl === '/affair/fuzzy'){
     autoComplete(props.searchUrl, value).then((res) => {
       autoCompletes.value = res
-      selectedIndex.value = -1
+      selectedIndex.value = 0
     })
   }else{
     autoCompleteWXJ(props.searchUrl,value).then(res => {
       autoCompletes.value = res
-      selectedIndex.value = -1
+      selectedIndex.value = 0
     })
   }
+  console.log('搜索框长度',autoCompletes.value.length)
 }
 
 const onKeyDown = (e: any) => {
@@ -85,11 +86,15 @@ const onTab = (e: any) => {
 }
 
 const onEnter = (e: any) => {
-  if (selectedIndex.value >= 0) {
+  if (selectedIndex.value >= 1) {
     onSelected(autoCompletes.value[selectedIndex.value])
   }
-  const id = autoCompletes.value[selectedIndex.value].id
-
+  let id: string
+  if(autoCompletes.value.length>=1) {
+    id = autoCompletes.value[selectedIndex.value].id
+  }else{
+    id = ''
+  }
   emit('onEnter',id)
   //goAffair(id)
   // 转义+号等特殊字符

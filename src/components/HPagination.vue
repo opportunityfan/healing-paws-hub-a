@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import {defineEmits, defineProps, reactive, withDefaults} from "vue";
 import {tag} from "@/assets/api";
+import HButton from "@/components/HButton.vue";
+import HFormInput from "@/components/HFormInput.vue";
 
 const props = withDefaults(defineProps<{
   itemsPerPage?: number,
@@ -40,15 +42,16 @@ const emit = defineEmits(['onPageChange'])
 
 
     <div class="pagination">
-        <span class="box-icon button-hover" style="font-size: 16px" @click="prePage">
+        <HButton class="box-icon button-hover page-button" height="20px" style="font-size: 20px" @click="prePage">
           <i class='bx bx-chevron-left'></i>
-        </span>
-      <span>
+        </HButton>
+<!--      <HFormInput name="页码" v-model="data.currentPage" style="height: 26px;width: 24px"></HFormInput>-->
+        <span style="display: inline-block;line-height: 26px;">
           {{data.currentPage}}/{{totalPages}}
         </span>
-      <span class="box-icon button-hover" style="font-size: 16px" @click="nextPage">
+      <HButton class="box-icon button-hover page-button" height="20px" style="font-size: 20px" @click="nextPage">
           <i class='bx bx-chevron-right' ></i>
-        </span>
+        </HButton>
     </div>
 
 </template>
@@ -58,5 +61,12 @@ const emit = defineEmits(['onPageChange'])
   display flex
   justify-content center
   margin-top 3px
-  font-size 12px
+  font-size 14px
+
+.page-block
+  border 1px solid var(--theme-color)
+
+.page-button
+  width 24px
+  margin 3px 4px
 </style>

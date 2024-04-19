@@ -312,7 +312,12 @@ export const gotoArchiveDetailPageWithId = async (name : string, archiveId : str
 }
 
 export const goAffair = (affairId : string)=>{
-    gotoWithProp('affairPage',affairId).then()
+    console.log('跳转的事务id',affairId)
+    if(affairId){
+        gotoWithProp('affairPage',affairId).then()
+    }else{
+        showMessage('未找到此条目！','info')
+    }
 }
 
 export const goAffairNode = async (nodeId: string) =>{
@@ -352,8 +357,6 @@ export const autoComplete = async (searchUrl : string,word : string) :Promise<ta
                     const tempTag = new tag(e.id, e.name)
                     names.push(tempTag)
                 })
-        }else{
-            showMessage(`${res.data.msg}`,"error")
         }
     }).catch(()=>{
         showMessage('网络错误','error')
@@ -391,8 +394,6 @@ export const autoCompleteWXJ = async (searchUrl : string,word : string) :Promise
                     })
             }
             console.log(items)
-        }else{
-            showMessage(`${res.data.msg}`,"error")
         }
 
     }).catch(()=>{

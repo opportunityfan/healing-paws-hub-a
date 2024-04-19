@@ -301,6 +301,22 @@ const addItem = () => {
 const goItemEdit = (id : string) => {
   goto('/instrument-edit/'+id)
 }
+
+const staffList = ref()
+const staffCols = [
+  {
+    title:'',
+    key:'',
+    scopedSlots:''
+  }
+]
+const itemCols = [
+  {
+    title:'',
+    key:'',
+    scopedSlots:''
+  }
+]
 </script>
 
 <template>
