@@ -26,8 +26,8 @@ function getArchivesByDiseaseNames(){
       'token':store.state.token
     }
   }).then((res)=>{
-    console.log(res.data.data)
-    res.data.data.forEach((archive)=>{
+    console.log(res.data.data.listData)
+    res.data.data.listData.forEach((archive)=>{
       archiveInfos.push({
         id: archive.id,
         title: archive.name,

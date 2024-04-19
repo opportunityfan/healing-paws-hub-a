@@ -168,6 +168,7 @@ export const getUserInfo = async () => {
 }
 export const signOut = () => {
     store.state.online = false
+    store.state.isAdmin = false
     goto('/login').then()
     axios.post('/sysUser/logout',{},{
         headers:{
@@ -175,6 +176,7 @@ export const signOut = () => {
         }
     }).then((res)=>{
         console.log(res.data)
+
     }).catch(()=>{
         showMessage('网络错误','error')
     })

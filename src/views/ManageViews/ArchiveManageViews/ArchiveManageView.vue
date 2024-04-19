@@ -23,7 +23,7 @@ function getDiseaseNamesByType(diseaseType: string) {
       'token': store.state.token
     }
   }).then((res) => {
-    diseaseNamesOrderedByType[diseaseType] = res.data.data
+    diseaseNamesOrderedByType[diseaseType] = res.data.data.listData
   })
 }
 
@@ -136,26 +136,28 @@ function deleteDiseases() {
                     @click="chooseDisease(diseaseName)"
                 >{{diseaseName.name}}</DiseaseNameButton>
               </div>
-              <DiseaseNameButton @click="()=>{isClicked=diseaseType}" height="50px" class="diseaseNameButton">
-                <div v-show="isClicked!==diseaseType" style="font-size: 30px">+</div>
-                <HInput
-                    name=""
-                    v-show="isClicked===diseaseType"
-                    style="display: inline-block"
-                    v-model="diseaseNameToAdd"
-                ></HInput>
-              </DiseaseNameButton>
-              <div v-show="isClicked===diseaseType">
-                <DiseaseNameButton
-                    height="20px"
-                    style="width: 20px"
-                    @click="addDisease(diseaseType)"
-                >√</DiseaseNameButton>
-                <DiseaseNameButton
-                    height="20px"
-                    style="width: 20px"
-                    @click="()=>{isClicked=''}"
-                >x</DiseaseNameButton>
+              <div style="display: inline-flex">
+                <DiseaseNameButton @click="()=>{isClicked=diseaseType}" height="50px" class="diseaseNameButton">
+                  <div v-show="isClicked!==diseaseType" style="font-size: 30px">+</div>
+                  <HInput
+                      name=""
+                      v-show="isClicked===diseaseType"
+                      style="display: inline-block"
+                      v-model="diseaseNameToAdd"
+                  ></HInput>
+                </DiseaseNameButton>
+                <div v-show="isClicked===diseaseType">
+                  <DiseaseNameButton
+                      height="20px"
+                      style="width: 20px; margin-left: 0px"
+                      @click="addDisease(diseaseType)"
+                  >√</DiseaseNameButton>
+                  <DiseaseNameButton
+                      height="20px"
+                      style="width: 20px; margin-left: 0px"
+                      @click="()=>{isClicked=''}"
+                  >x</DiseaseNameButton>
+                </div>
               </div>
             </div>
           </div>

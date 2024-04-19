@@ -5,10 +5,11 @@ import {useRoute} from "vue-router";
 import axios from "@/assets/axios";
 import store from "@/store";
 import HScroller from "@/components/HScroller.vue";
+import HImage from "@/components/HImage.vue";
 import HInput from "@/components/HInput.vue";
 import HButton from "@/components/HButton.vue";
 import HFileUpload from "@/components/HFileUpload.vue";
-import {Image, goBack} from "@/assets/api";
+import {goBack, Image as Img} from "@/assets/api";
 
 let archiveDetailInfo = reactive({
   id: "",
@@ -22,9 +23,6 @@ let archiveDetailInfo = reactive({
 
 const route = useRoute()
 console.log('archiveId' in route.params)
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const altImage = new Image(require("@/assets/login-background.png"), 1280, 720)
 
 function getArchiveDetailsById() {
   if ('archiveId' in route.params) {
@@ -49,14 +47,25 @@ function getArchiveDetailsById() {
 
 getArchiveDetailsById()
 
-function consoleLogArchiveDetailInfo(){
-  console.log(archiveDetailInfo)
+let images = reactive({})
+
+function upLoadImages(image: File, type: string) {
+  Object.assign(images, {
+    [type]: image
+  })
+  let imageFile = new Image()
+  imageFile.src = window.URL.createObjectURL(image)
+  imageFile.onload = () => {
+    archiveDetailInfo[type] = imageFile.src
+  }
+  console.log(images)
 }
 
 function postArchiveDetailInfo(){
   const formdata = new FormData
   formdata.append("name", archiveDetailInfo.name)
   formdata.append("description", archiveDetailInfo.description)
+  formdata.append("descriptionImg", images.descriptionImg)
   formdata.append("checkItem", archiveDetailInfo.checkItem)
   formdata.append("diagnosis", archiveDetailInfo.diagnosis)
   formdata.append("remedy", archiveDetailInfo.remedy)
@@ -73,6 +82,7 @@ function postArchiveDetailInfo(){
       }
       else{
         console.log("修改失败")
+        console.log(res.data)
       }
     })
   }
@@ -94,13 +104,6 @@ function postArchiveDetailInfo(){
     })
   }
 }
-
-// let images = reactive({})
-//
-// function upLoadImages(image: File) {
-//   Object.assign(images, {
-//   })
-// }
 
 </script>
 
@@ -131,24 +134,43 @@ function postArchiveDetailInfo(){
               name="接诊（基本情况、临床症状）"
               v-model="archiveDetailInfo.description"
           ></HInput>
-<!--          <div style="position: relative; width: fit-content" class="avatar-box">-->
-<!--            <HImage :image="affair.image" :size="100" :lazy-load="false"></HImage>-->
-<!--            <div class="center add-icon" >-->
-<!--              <HFileUpload @handleFile="upLoadImages"></HFileUpload>-->
-<!--            </div>-->
-<!--          </div>-->
+          <div class="upload-box">
+            <HFileUpload
+                @handleFile="upLoadImages($event, 'descriptionImg')"
+                style="position:absolute; top: 25px; left: 25px"
+            ></HFileUpload>
+            <img :src="archiveDetailInfo.descriptionImg" class="upload-image">
+          </div>
           <HInput
               name="检查"
               v-model="archiveDetailInfo.checkItem"
           ></HInput>
+          <div class="upload-box">
+            <HFileUpload
+                @handleFile="upLoadImages($event, 'checkItemImg')"
+                style="position:absolute; top: 25px; left: 25px"
+            ></HFileUpload>
+          </div>
           <HInput
               name="诊断结果"
               v-model="archiveDetailInfo.diagnosis"
           ></HInput>
+          <div class="upload-box">
+            <HFileUpload
+                @handleFile="upLoadImages($event, 'diagnosisImg')"
+                style="position:absolute; top: 25px; left: 25px"
+            ></HFileUpload>
+          </div>
           <HInput
               name="治疗方案"
               v-model="archiveDetailInfo.remedy"
           ></HInput>
+          <div class="upload-box">
+            <HFileUpload
+                @handleFile="upLoadImages($event, 'remedyImg')"
+                style="position:absolute; top: 25px; left: 25px"
+            ></HFileUpload>
+          </div>
           <HButton @click="postArchiveDetailInfo">确认</HButton>
         </div>
       </div>
@@ -174,9 +196,15 @@ function postArchiveDetailInfo(){
   padding 20px
   margin 0
 
-.archive-image
+.upload-image
   width 100%
   padding-top 20px
   padding-bottom 10px
+
+.upload-box
+  border 3px solid var(--theme-color)
+  height 150px
+  width 150px
+  position relative
 
 </style>

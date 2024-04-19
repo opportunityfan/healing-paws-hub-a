@@ -22,7 +22,7 @@ function getDiseaseNamesByType(diseaseType: string){
       'token':store.state.token
     }
   }).then((res)=>{
-    diseaseNamesOrderedByType[diseaseType] = res.data.data
+    diseaseNamesOrderedByType[diseaseType] = res.data.data.listData
   })
 }
 
