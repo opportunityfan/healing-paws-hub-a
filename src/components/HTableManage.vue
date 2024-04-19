@@ -61,18 +61,18 @@ export default {
   <table class="xtable">
     <colgroup>
       <col width="15%">
-      <col width="30%">
-      <col width="15%">
-      <col width="15%">
+      <col width="40%">
+      <col width="10%">
+      <col width="10%">
       <col width="25%">
     </colgroup>
     <thead>
     <tr>
-      <th>name</th>
-      <th>date</th>
-      <th>score</th>
-      <th>flag</th>
-      <th>operation</th>
+      <th class="tabletitle">name</th>
+      <th class="tabletitle">date</th>
+      <th class="tabletitle">score</th>
+      <th class="tabletitle">flag</th>
+      <th class="tabletitle">operation</th>
     </tr>
     </thead>
     <tbody>
@@ -125,5 +125,38 @@ export default {
 <style lang="stylus">
 .xdialog{
   background-color: #FFF9E9;
+}
+.xtable{
+  width: 100%;
+  border-collapse: collapse;
+  td{
+    height :43px;
+    line-height : 43px;
+
+  }
+  tr{
+    &:nth-child(even){
+      td{
+        background-color #5A8100
+        color #FFF9E9
+      }
+    }
+    &:nth-child(odd){
+      td{
+        color #5A8100
+      }
+    }
+  }
+
+}
+.tabletitle{
+  color:#5A8100;
+  height:43px;
+  line-height : 43px;
+  border-bottom: 1px solid #5A8100;
+}
+.tdlink{
+  text-decoration: none;
+  color: inherit;
 }
 </style>

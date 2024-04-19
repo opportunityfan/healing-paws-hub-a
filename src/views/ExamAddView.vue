@@ -40,6 +40,8 @@ const formref=ref<FormInstance>();
 const isAdd=ref(false);
 const questiondata=ref([]);
 const examList=ref<string[]>([]);
+const pagenum=ref(1);
+const pagesize=ref(7);
 function submit(){
   formref.value?.validate((valid)=>{
     if(valid){
@@ -60,13 +62,17 @@ async function getsubmit(newexam:object){
 async function getdata(){
   const res = await axios.get('http://150.158.110.63:8080/question/page',{
     params:{
-      pageNum: 1,
-      pageSize: 10,
+      pageNum: pagenum.value,
+      pageSize: pagesize.value,
     }
   })
-  questiondata.value=res.data.data;
+  questiondata.value=res.data.data.listData;
 }
 
+async function  pagechange(page:number){
+  pagenum.value=page;
+  await getdata();
+}
 
 function Add(Value:boolean,Id:string){
   console.log(Value);
@@ -156,6 +162,15 @@ onMounted(()=>{
       <el-button @click="insured()">确认</el-button>
       <el-button @click="isAdd=false">取消</el-button>
     </template>
+    <el-pagination
+        small
+        background
+        layout="prev, pager, next"
+        :page-size="pagesize"
+        :total="100"
+        class="mt-4"
+        @current-change="pagechange"
+    />
   </el-dialog>
   </div>
 </template>

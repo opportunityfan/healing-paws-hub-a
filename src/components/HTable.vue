@@ -1,8 +1,10 @@
 <script lang="ts">
 import {string} from "three/examples/jsm/nodes/shadernode/ShaderNode";
 import {defineComponent} from "vue";
-
+import {CaretBottom, CaretTop, DCaret} from '@element-plus/icons-vue'
 export default defineComponent({
+  components: {CaretBottom, CaretTop, DCaret},
+  emits: ['trans'],
   props: {
     tabledata: {
       type:Array,
@@ -11,12 +13,25 @@ export default defineComponent({
   },
   data(){
     return {
-      abc:"123"
+      abc:"123",
+      timesort: 0,
     }
   },
   methods:{
     toexam(href:string){
       window.location.href=href;
+    },
+    sort(){
+      if(this.timesort===0){
+        this.timesort=1;
+      }
+      else if(this.timesort===1){
+        this.timesort=2;
+      }
+      else{
+        this.timesort=0;
+      }
+      this.$emit('trans',this.timesort);
     }
   }
 })
@@ -32,7 +47,15 @@ export default defineComponent({
   <thead>
   <tr>
     <th class="tabletitle">考试名称</th>
-    <th class="tabletitle">考试时间</th>
+    <th class="tabletitle" @click="sort()">
+      <el-row align="middle" justify="center">
+        考试时间
+        <el-icon v-if="timesort===0"><DCaret /></el-icon>
+        <el-icon v-if="timesort===1"><CaretTop /></el-icon>
+        <el-icon v-if="timesort===2"><CaretBottom /></el-icon>
+      </el-row>
+
+    </th>
     <th class="tabletitle">考试分数</th>
   </tr>
   </thead>

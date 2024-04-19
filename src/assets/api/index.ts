@@ -188,6 +188,7 @@ export const getUserInfo = async () => {
 }
 export const signOut = () => {
     store.state.online = false
+    store.state.isAdmin = false
     goto('/login').then()
     axios.post('/sysUser/logout',{},{
         headers:{
@@ -195,6 +196,7 @@ export const signOut = () => {
         }
     }).then((res)=>{
         console.log(res.data)
+
     }).catch(()=>{
         showMessage('网络错误','error')
     })
@@ -257,7 +259,7 @@ export const setAffairNode = async (node : affairNode) => {
         }
     }).then((res) => {
         if (res.data.code === 200) {
-            console.log('update affair node success')
+
             showMessage('修改成功!','success')
         }else{
             showMessage(`${res.data.msg}`,'error')
@@ -461,6 +463,35 @@ export class Message {
         this.duration = duration
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 let messageId = 0
 
