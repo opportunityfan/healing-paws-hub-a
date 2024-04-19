@@ -11,7 +11,6 @@ const getInstrumentList = async (info :any) => {
     params:{
       pageNum: info.before_id+1,
       pageSize: info.per_page,
-      name: ''
     },
     headers:{
       'token':store.state.token
@@ -25,10 +24,10 @@ const getInstrumentList = async (info :any) => {
         const image = new Image(require("@/assets/login-background.png"),3035,4299)
         tempImage = image
       }else{
-        const image = new Image(item.pic,item.picSize[0],item.picSize[1])
+        const image = new Image(item.pic,1,1)
         tempImage = image
       }
-      newPostList.push(new Post(item.id,item.name,item.description,tempImage))
+      newPostList.push(new Post(item.id,item.name,item.introduction,tempImage))
     }
   }).catch(e=>{
     console.log(e)
@@ -42,7 +41,7 @@ const getInstrumentList = async (info :any) => {
   <div class="full flex-column" style="gap: 20px">
     <HSearchBar style="width: 85%" search-url="/item/search" @onEnter="goItem"></HSearchBar>
     <div style="flex-grow: 1;width: 100%; min-height: 0">
-      <post-player-column-infinity :get-post-list="getInstrumentList" url-prefix="/instrument/">
+      <post-player-column-infinity :get-post-list="getInstrumentList" url-prefix="/item">
       </post-player-column-infinity>
     </div>
   </div>

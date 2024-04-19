@@ -73,19 +73,19 @@ let instrumentNum = 1
 const requestNewInstrument = async (count : number) => {
   const newPostList = new Array<Post>()
 
-  await axios.get('/item/search',{
+  await axios.get('/item/page',{
     headers:{
       token : store.state.token
     },
     params:{
       pageNum : count,
-      pageSize : 7,
-      name: ''
+      pageSize : 7
+
     }
   }).then(res=>{
     console.log(res.data)
     if(res.data.code==200) {
-      for (let item of res.data.data) {
+      for (let item of res.data.data.listData) {
         let tempImage
         if (item.pic === null) {
           // eslint-disable-next-line @typescript-eslint/no-var-requires
