@@ -1,7 +1,7 @@
 <template>
   <div
       class="h-button border-radius-thin"
-      :class="props.type==='danger'?'h-button-danger':'h-button'"
+      :class="props.type"
       :style="{
         height: props.height === '' ? '40px' : props.height,
       }"
@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import{defineProps, withDefaults} from 'vue'
 const props = withDefaults(defineProps<{
-  type?: string
+  type?: 'primary'|'danger'|'secondary'
   size?: string
   height?: string
 }>(),{
@@ -29,17 +29,25 @@ const props = withDefaults(defineProps<{
   height 40px
   position relative
   margin: 20px 0
-  background-color var(--theme-color)
-  color var(--font-inverse-color)
   font-size 14px
   transition background-color 0.1s
   cursor pointer
 
-.h-button:hover
-  background-color var(--theme-color-dark)
+.primary
+  background-color var(--theme-color)
+  color var(--font-inverse-color)
+  &:hover
+    background-color var(--theme-color-dark)
 
-.h-button-danger
+.danger
   background-color var(--accent-color)
-.h-button-danger:hover
-  background-color var(--accent-color-dark)
+  color var(--font-inverse-color)
+  &:hover
+    background-color var(--accent-color-dark)
+
+.secondary
+  background-color var(--grey-color-bright)
+  color var(--black-color)
+  &:hover
+    background-color var(--grey-color)
 </style>

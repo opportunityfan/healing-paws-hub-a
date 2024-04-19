@@ -81,11 +81,31 @@ export const changeTheme = (theme : string) => {
 }
 
 export const goto = async (path : string) => {
-    await router.push(path);
+    store.state.beforeBack().then((res) => {
+        if (res) {
+            store.state.beforeBack = async () => {
+                return true
+            }
+            router.push(path);
+        }
+    })
 }
 
 export const goBack = async () =>{
-    await router.back()
+    store.state.beforeBack().then((res) => {
+        if (res) {
+            store.state.beforeBack = async () => {
+                return true
+            }
+            router.back();
+        }
+    })
+}
+
+export type beforeBackFunction = () => Promise<boolean>
+
+export const onBeforeBack = (f : beforeBackFunction) => {
+    store.state.beforeBack = f
 }
 
 export const testaxios = ()=>{

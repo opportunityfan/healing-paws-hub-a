@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-import {TalkHistory, Message} from "@/assets/api";
+import {TalkHistory, Message, beforeBackFunction} from "@/assets/api";
 
 export default createStore({
   state: {
@@ -17,7 +17,10 @@ export default createStore({
     talkBarAppend: false,
     talkHistories: new Array<TalkHistory>(),
     messageList: new Array<Message>(),
-    isAdmin: false
+    isAdmin: false,
+    beforeBack: async () : Promise<boolean> => {
+      return true
+    }
   },
   getters: {
   },

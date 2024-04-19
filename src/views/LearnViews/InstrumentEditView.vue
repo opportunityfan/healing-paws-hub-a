@@ -40,13 +40,28 @@
         </div>
       </HScroller>
     </h-loading>
+    <HAlert v-model="data.alert">
+      <div class="flex-column" style="gap: 10px; text-align: left">
+        <div class="flex-row" style="width: 100%">
+          <div class="box-icon">
+            <i class='bx bx-save'></i>
+          </div>
+          <div class="text-bold">修改</div>
+        </div>
+        <div class="text" style="padding-bottom: 20px; width: 100%">你希望保存更改吗？</div>
+        <div class="flex-row" style=" width: 100%;gap: 10px; justify-content: flex-end">
+          <h-button type="secondary" height="30px" style="margin: 0; width: 60px; font-size: 12px" id="cancel">取消</h-button>
+          <h-button height="30px" style="margin: 0; width: 60px; font-size: 12px" @click="onSave" id="confirm">确认</h-button>
+        </div>
+      </div>
+    </HAlert>
   </div>
 </template>
 
 <script setup lang="ts">
 import MarkdownEditor from "@/components/MarkdownEditor.vue"
-import {getInstrument, Image as Img, instrument, setInstrument} from "@/assets/api";
-import {reactive, ref} from "vue";
+import {getInstrument, Image as Img, instrument, setInstrument, onBeforeBack} from "@/assets/api";
+import {onMounted, reactive, ref, nextTick} from "vue";
 import HLoading from "@/components/HLoading.vue";
 import HScroller from "@/components/HScroller.vue";
 import HButton from "@/components/HButton.vue";
@@ -54,6 +69,7 @@ import HFormInput from "@/components/HFormInput.vue";
 import HRadio from "@/components/HRadio.vue";
 import HImage from "@/components/HImage.vue"
 import HFileUpload from "@/components/HFileUpload.vue"
+import HAlert from "@/components/HAlert.vue";
 
 // eslint-disable-next-line no-undef
 const props = defineProps<{instrumentId: string}>()
@@ -63,10 +79,12 @@ const data = reactive<{
   star : boolean
   complete: boolean
   selectedImage?: File
+  alert: boolean
 }>({
-  instrument : new instrument('', '', '', '', 0, '', '', ''),
+  instrument : new instrument('', '', '', '', 0, '', ''),
   star : false,
   complete : false,
+  alert: false
 })
 
 const roles = ref([{
@@ -122,6 +140,28 @@ const handleImage = (image : File) =>{
   // }
 
 }
+
+onMounted(() => {
+  onBeforeBack(() => {
+    data.alert = true
+    return new Promise<boolean>((resolve) => {
+      nextTick(() => {
+        const confirm = document.getElementById('confirm')
+        confirm?.addEventListener('click', () => {
+          onSave()
+          resolve(true)
+        })
+        const cancel = document.getElementById('cancel')
+        cancel?.addEventListener('click', () => {
+          data.alert = false
+          resolve(false)
+        })
+      })
+    })
+  })
+})
+
+
 </script>
 
 <style scoped>
