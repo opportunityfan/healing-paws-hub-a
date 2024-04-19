@@ -44,7 +44,7 @@ async function getData(){
   }).then((result)=>{
       console.log(result.data)
         console.log(result.data.data);
-        tabledata.value=result.data.data;
+        tabledata.value=result.data.data.listData;
         console.log(tabledata.value);
       }
   );
@@ -124,7 +124,7 @@ function clearup(){
         background
         layout="prev, pager, next"
         :page-size="pagesize"
-        :total="7"
+        :total="100"
         class="mt-4"
         @current-change="pagechange"
     />

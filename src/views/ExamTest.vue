@@ -8,6 +8,7 @@ import {goto} from "@/assets/api";
 import store from "@/store";
 import MarkdownRenderer from "@/components/MarkdownRenderer.vue";
 import HButton from "@/components/HButton.vue";
+import HScroller from "@/components/HScroller.vue";
 
 const value2=ref(0);
 const router=useRoute();
@@ -121,54 +122,59 @@ onMounted(()=>{
 </script>
 
 <template>
-  <div>
-    <el-row justify="space-between">
-      <el-col :span="8">
-        <div>
-          {{ item.examName }}
-        </div>
-      </el-col>
-      <el-col :span="8">
-        <div>
-          倒计时
-          <vue-countdown v-if="item.totalTime" @end="onCountdownEnd" :time="item.totalTime * 60 * 1000" v-slot="{ hours, minutes, seconds }">
-            {{ hours }} : {{ minutes }} : {{ seconds }}
-          </vue-countdown>
-        </div>
-      </el-col>
-    </el-row>
-    <div>
-      <el-button>
-        考试题目跳转
-        <el-select v-model="value2" @change="select">
-          <el-option v-for="( s , index) in item.questionList" :label="index+1" :key="index" :value="index">
-          </el-option>
-        </el-select>
-      </el-button>
+  <div class="full0">
+    <div class="full1">
+      <el-row justify="space-between">
+        <el-col :span="8">
+          <div>
+            {{ item.examName }}
+          </div>
+        </el-col>
+        <el-col :span="8">
+          <div>
+            倒计时
+            <vue-countdown v-if="item.totalTime" @end="onCountdownEnd" :time="item.totalTime * 60 * 1000" v-slot="{ hours, minutes, seconds }">
+              {{ hours }} : {{ minutes }} : {{ seconds }}
+            </vue-countdown>
+          </div>
+        </el-col>
+      </el-row>
+      <div>
+        <el-button>
+          考试题目跳转
+          <el-select v-model="value2" @change="select">
+            <el-option v-for="( s , index) in item.questionList" :label="index+1" :key="index" :value="index">
+            </el-option>
+          </el-select>
+        </el-button>
+      </div>
+      <br>
+      <el-row>
+        <el-col :span="8">
+          <HButton @click="Last">上一题</HButton>
+        </el-col>
+        <el-col :span="8">
+          <HButton @click="state(item)">
+            交卷
+          </HButton>
+        </el-col>
+        <el-col :span="8">
+          <HButton @click="Next">下一题</HButton>
+        </el-col>
+      </el-row>
     </div>
     <br>
-    <el-row>
-      <el-col :span="8">
-        <HButton @click="Last">上一题</HButton>
-      </el-col>
-      <el-col :span="8">
-        <HButton @click="state(item)">
-          交卷
-        </HButton>
-      </el-col>
-      <el-col :span="8">
-        <HButton @click="Next">下一题</HButton>
-      </el-col>
-    </el-row>
-    <div>
-      <br>
-      <div v-if="item.questionList && item.questionList.length>0">
-        <markdown-renderer :markdown="'#### 题目描述：'+'\n'+question.statement"></markdown-renderer>
-        <markdown-renderer :markdown="'#### 题目分数：'+question.score"></markdown-renderer>
-        <markdown-renderer :markdown="'#### 请输入答案：'"></markdown-renderer>
-        <el-input v-model="answer" @blur="record()">
-        </el-input>
-      </div>
+    <div class="full2">
+      <HScroller scroll-direction="column">
+        <div v-if="item.questionList && item.questionList.length>0">
+          <markdown-renderer :markdown="'#### 题目描述：'"></markdown-renderer>
+          <markdown-renderer :markdown="question.statement" class="full"></markdown-renderer>
+          <markdown-renderer :markdown="'#### 题目分数：'+question.score"></markdown-renderer>
+          <markdown-renderer :markdown="'#### 请输入答案：'"></markdown-renderer>
+          <el-input v-model="answer" @blur="record()">
+          </el-input>
+        </div>
+      </HScroller>
     </div>
     <el-dialog v-model="issubmit" title="交卷" width="500" :center="true" class="xdialog">
       <span>是否确认交卷</span>
@@ -190,5 +196,15 @@ onMounted(()=>{
   .you{
     flex: 1;
   }
+}
+.full0{
+  height: 100%;
+  display flex;
+  flex-direction column;
+  width 100%;
+}
+.full2{
+  height calc(100%-152px);
+  overflow auto;
 }
 </style>

@@ -22,7 +22,7 @@ onMounted(()=>{
 </script>
 
 <template>
-  <div>
+  <div class="full">
     <h1 class="head">
       {{item.examName}}
     </h1>
@@ -33,7 +33,7 @@ onMounted(()=>{
       <br>
       考试分数：{{item.totalScore}}
     </h4>
-    <div>
+    <div class="hello">
       考试规则：
       <br>
       1.考试需要在规定时间内完成考试内容
@@ -51,5 +51,8 @@ onMounted(()=>{
 <style scoped lang="stylus">
 .head{
   color #5A8100
+}
+.hello{
+  color #9FB66B
 }
 </style>

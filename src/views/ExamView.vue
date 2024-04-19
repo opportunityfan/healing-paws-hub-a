@@ -19,7 +19,7 @@ const value2=ref('');
 const tabledata=ref([]);
 const pagenum=ref(1);
 const pagesize=ref(7);
-const sort=ref('');
+const sort=ref(0);
 let c=ref(null);
 let d=ref(null);
 async function getData(){
@@ -35,7 +35,7 @@ async function getData(){
   console.log(choose.value);
   const res=await axios.get('/exam/page/multi',{
     params: {
-      sortTime: sort.value==="sortTime",
+      sortTime: sort.value,
       // // sortScore: sort.value==="sortScore",
       examName: text.value,
       type: choose.value,
@@ -46,7 +46,7 @@ async function getData(){
     }
   }).then((result)=>{
         console.log(result.data.data);
-        tabledata.value=result.data.data;
+        tabledata.value=result.data.data.listData;
       }
   );
 }
@@ -67,10 +67,15 @@ function operation(order:string){
   getData();
 }
 function clearup(){
-  sort.value='';
+  sort.value=0;
   text.value='';
   choose.value=null;
   value2.value='';
+  getData();
+}
+
+function times(x:number){
+  sort.value=x;
   getData();
 }
 </script>
@@ -115,7 +120,7 @@ function clearup(){
       </div>
     </div>
     <div class="xia">
-      <HTable :tabledata="tabledata"></HTable>
+      <HTable :tabledata="tabledata" @trans="times"></HTable>
     </div>
     <br>
     <el-row justify="center">
@@ -123,7 +128,7 @@ function clearup(){
           small
           layout="prev, pager, next"
           :page-size="pagesize"
-          :total="7"
+          :total="100"
           class="mt-4 fenye"
           @current-change="pagechange"
       />
