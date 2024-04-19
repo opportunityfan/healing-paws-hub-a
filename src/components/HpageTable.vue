@@ -120,11 +120,7 @@ defineExpose({update})
 .page-Table:hover
   border-color var(--theme-color)
   transition 0.3s
-.pagination
-  display flex
-  justify-content center
-  margin-top 3px
-  font-size 12px
+
 .item-part
   margin 10px 20px
   color var(--font-text-color)
