@@ -70,6 +70,7 @@ async function getdata(){
     }
   })
   questiondata.value=res.data.data;
+  console.log(res);
 }
 
 
@@ -112,7 +113,7 @@ async function getdata2(){
       id : router.params.id,
     }
   })
-  return res2.data.data;
+  return res2.data.data.listData;
 }
 
 onMounted(()=>{

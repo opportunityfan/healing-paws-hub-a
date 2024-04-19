@@ -18,7 +18,8 @@ async function getdata(){
       pageSize: pageSize.value,
     }
   })
-  questiondata.value=res.data.data;
+  questiondata.value=res.data.data.listData;
+  console.log(questiondata.value);
 }
 
 function state2(ID:string){
@@ -75,7 +76,7 @@ onMounted(()=>{
       </thead>
       <tbody>
       <tr v-for="item in questiondata" :key="item.id">
-        <td>{{item.statement}}</td>
+        <td>{{item.name}}</td>
         <td>{{item.score}}</td>
         <td>
           {{item.type.join(',')}}
