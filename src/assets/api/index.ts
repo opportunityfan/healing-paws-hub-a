@@ -444,48 +444,6 @@ export class Message {
 
 
 
-const qsort = (nums : Array<number>) => {
-    const sort = (left : number,right : number) => {
-        if(left === right){
-            return
-        }
-        const mid = (left + right) / 2
-        let l = left
-        let r = right
-        while (l !== r) {
-            while (nums[l] >= nums[mid] && l < r) {
-                l++;
-            }
-            while (nums[r] < nums[mid] && r > l) {
-                r--;
-            }
-            const temp = nums[l]
-            nums[l] = nums[r]
-            nums[r] = temp
-        }
-
-        sort(left, l)
-        sort(l, right)
-    }
-    sort(0,nums.length)
-    return nums
-
-}
-const getTriangle = (nums : Array<number>)=>{
-
-    const decendNums = qsort(nums)
-    let i = 0
-    while(i<nums.length-2){
-        if(decendNums[i]<(decendNums[i+1]+decendNums[i+2])){
-            return [decendNums[i],decendNums[i+1],decendNums[i+2]]
-        }else{
-            i++
-        }
-    }
-    return []
-}
-
-
 
 
 
