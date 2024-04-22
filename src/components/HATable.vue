@@ -78,6 +78,6 @@ table td, table th{
   padding 6px 12px
   border 1.2px solid var(--theme-color-bright)
   text-align left
-  font-size 12px
+  font-size 14px
 }
 </style>

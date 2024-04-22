@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {defineEmits, defineProps, reactive, withDefaults} from "vue";
+import {defineEmits, defineProps, reactive, watch, withDefaults, defineExpose} from "vue";
 import {tag} from "@/assets/api";
 import HButton from "@/components/HButton.vue";
 import HFormInput from "@/components/HFormInput.vue";
@@ -26,16 +26,27 @@ const data = reactive<{
 const prePage = ()=>{
   if(data.currentPage > 1) {
     data.currentPage--
-    emit('onPageChange',data.currentPage,props.itemsPerPage)
+    onPageChange()
   }
 }
 const nextPage = ()=>{
   if (data.currentPage < props.totalPages) {
     data.currentPage++
-    emit('onPageChange',data.currentPage,props.itemsPerPage)
+    onPageChange()
   }
 }
+
+const onPageChange = () => {
+  if(data.currentPage<=0){
+    data.currentPage = 1
+  }
+  if(data.currentPage>props.totalPages){
+    data.currentPage = props.totalPages
+  }
+  emit('onPageChange',data.currentPage,props.itemsPerPage)
+}
 const emit = defineEmits(['onPageChange'])
+defineExpose({data})
 </script>
 
 <template>
@@ -45,9 +56,8 @@ const emit = defineEmits(['onPageChange'])
         <HButton class="box-icon button-hover page-button" height="20px" style="font-size: 20px" @click="prePage">
           <i class='bx bx-chevron-left'></i>
         </HButton>
-<!--      <HFormInput name="页码" v-model="data.currentPage" style="height: 26px;width: 24px"></HFormInput>-->
-        <span style="display: inline-block;line-height: 26px;">
-          {{data.currentPage}}/{{totalPages}}
+      <HFormInput type="number" name="页码" v-model="data.currentPage" width="24px" height="22px" @keydown.enter="onPageChange"></HFormInput>
+        <span style="display: inline-block;line-height: 25px;">/ {{totalPages}}
         </span>
       <HButton class="box-icon button-hover page-button" height="20px" style="font-size: 20px" @click="nextPage">
           <i class='bx bx-chevron-right' ></i>

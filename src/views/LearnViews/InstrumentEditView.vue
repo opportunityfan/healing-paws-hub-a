@@ -154,7 +154,7 @@ onMounted(() => {
         const cancel = document.getElementById('cancel')
         cancel?.addEventListener('click', () => {
           data.alert = false
-          resolve(false)
+          resolve(true)
         })
       })
     })

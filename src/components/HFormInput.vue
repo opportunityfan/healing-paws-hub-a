@@ -1,8 +1,8 @@
 <template>
   <div class="form-input-main">
-    <div class="form-input-border" :style="{height: props.height}">
+    <div class="form-input-border" :style="{height: props.height, width: props.width}">
       <div class="form-input-placeholder hint" v-if="data.empty && !data.focus">{{ '<' + props.name + '>' }}</div>
-      <input class="form-input-field" v-model="data.content" @blur="onBlur" :type="props.password?'password':''" @focus="onFocus">
+      <input class="form-input-field" v-model="data.content" @blur="onBlur" :type="props.password?'password':props.type" @focus="onFocus">
     </div>
   </div>
 </template>
@@ -94,4 +94,10 @@ const onFocus = () => {
   transform translate(0,-50%)
   z-index -1
 
+/* 隐藏 number 类型 input 的上下箭头按钮 */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 </style>

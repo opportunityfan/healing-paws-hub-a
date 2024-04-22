@@ -46,12 +46,16 @@ export class affairNode{
     content: string
     contentImg: string
     contentVideo: string
-    constructor(id: string, name: string, content: string, contentImg: string, contentVideo: string) {
+    positionX: number
+    positionY: number
+    constructor(id: string, name: string, content: string, contentImg: string, contentVideo: string,positionX:number,positionY:number) {
         this.id = id
         this.name = name
         this.content = content
         this.contentImg = contentImg
         this.contentVideo = contentVideo
+        this.positionX = positionX
+        this.positionY = positionY
     }
 }
 
@@ -377,9 +381,9 @@ export const autoCompleteWXJ = async (searchUrl : string,word : string) :Promise
         }
     }).then((res)=>{
 
-        console.log(res.data)
+
         if(res.data.code==200) {
-            const items = res.data
+            const items = res.data.data
             if (searchUrl === '/item/search') {
                 if (items)
                     items.forEach((e: any) => {
@@ -393,13 +397,12 @@ export const autoCompleteWXJ = async (searchUrl : string,word : string) :Promise
                         names.push(tempTag)
                     })
             }
-            console.log(items)
         }
 
     }).catch(()=>{
         showMessage('网络错误','error')
     })
-    console.log(names)
+
     return names
 }
 export class tag{
@@ -411,7 +414,7 @@ export class tag{
     }
 }
 export const getAffairNodes = async (affairId : string)=>{
-    const affairNodes = Array<affairNode>()
+    const affairNodesAndEdges = {nodes : Array<affairNode>(),edges:Array<any>()}
     await axios.get('/affair/subs',{
         params:{
             affairId: affairId
@@ -420,18 +423,23 @@ export const getAffairNodes = async (affairId : string)=>{
             'token':store.state.token
         }
     }).then((res) =>{
-        console.log(res.data)
+        console.log('检查获取到的affairNode的position',res.data)
         if(res.data.code==200) {
-            res.data.data.forEach((node: any) => {
-                affairNodes.push(new affairNode(node.id, node.name, node.content, node.contentImg, node.contentVideo))
+            res.data.data.nodes.forEach((node: any) => {
+                affairNodesAndEdges.nodes.push(new affairNode(node.id, node.name, node.content, node.contentImg, node.contentVideo, node.positionX,node.positionY))
             })
+            if(res.data.data.edges) {
+                res.data.data.edges.forEach((edge: any) => {
+                    affairNodesAndEdges.edges.push(edge)
+                })
+            }
         }else{
             showMessage(`${res.data.msg}`,"error")
         }
     }).catch(()=>{
         showMessage('网络错误','error')
     })
-    return affairNodes
+    return affairNodesAndEdges
 }
 
 export const openTalkBar = () => {

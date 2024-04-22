@@ -3,18 +3,27 @@
 import HButton from "@/components/HButton.vue";
 import HSearchBar from "@/components/HSearchBar.vue";
 import HpageTable from "@/components/HpageTable.vue";
-import {showMessage, tag} from "@/assets/api";
+import {goBack, showMessage, tag} from "@/assets/api";
 import axios from "@/assets/axios";
 import store from "@/store";
 import router from "@/router";
 import HLoading from "@/components/HLoading.vue";
-import {ref} from "vue";
+import {reactive, ref} from "vue";
 import HATable from "@/components/HATable.vue";
 import HPagination from "@/components/HPagination.vue";
+import HAlert from "@/components/HAlert.vue";
 
 const pageSize = ref(7)
 const dataList = ref()
 const totalPages=ref(0)
+const pageNation = ref()
+const data = reactive<{
+  curDepartmentId : string
+  alert : boolean
+}>({
+  alert : false,
+  curDepartmentId :''
+})
 const goDepartmentEdit = async (id:string) =>{
   await router.push({name:'departmentEditPage',params:{id:id}})
 }
@@ -84,6 +93,33 @@ const tableCols = [
     scopedSlots: 'Operation'
   }
 ]
+const cancel = () => {
+  data.alert = false
+}
+const onDelete = async (departmentId : string) =>{
+
+  data.curDepartmentId = departmentId;
+  data.alert = true
+}
+const departmentDelete = async () =>{
+  axios.delete('/department/'+data.curDepartmentId,{
+    headers:{
+      token : store.state.token
+    }
+  }).then(res=>{
+    console.log(res.data)
+    if(res.data.code===200){
+      console.log('删除成功！')
+      showMessage('删除成功!','success')
+      requestDepartments(pageNation.value.data.currentPage,pageSize.value)
+    }else{
+      showMessage(`${res.data.msg}`,'error')
+    }
+  }).catch(()=>{
+    showMessage('网络错误','error')
+  })
+  data.alert = false
+}
 </script>
 
 <template>
@@ -103,16 +139,32 @@ const tableCols = [
         <template #Operation="{row}">
           <div class="flex-row">
             <HButton style="width: 25px;margin: auto 5px" height="20px" @click="goDepartmentEdit(row['id'])"><i class='bx bx-edit-alt'></i></HButton>
-            <HButton style="width: 25px;margin: auto 5px" height="20px" type="danger"><i class='bx bx-trash'></i></HButton>
+            <HButton style="width: 25px;margin: auto 5px" height="20px" type="danger" @click="onDelete(row['id'])"><i class='bx bx-trash'></i></HButton>
           </div>
         </template>
       </HATable>
-      <HPagination @onPageChange="requestDepartments" :itemsPerPage="pageSize" :total-pages="totalPages">
+      <HPagination @onPageChange="requestDepartments" :itemsPerPage="pageSize" :total-pages="totalPages" ref="pageNation">
       </HPagination>
       <HButton height="30px" style="margin-top: 5px" @click="goDepartmentEdit('0')">添加科室</HButton>
     </div>
   </div>
   </h-loading>
+
+  <HAlert v-model="data.alert">
+    <div class="flex-column" style="gap: 10px; text-align: left">
+      <div class="flex-row" style="width: 100%">
+        <div class="box-icon">
+          <i class='bx bx-trash'></i>
+        </div>
+        <div class="text-bold">删除</div>
+      </div>
+      <div class="text" style="padding-bottom: 20px; width: 100%">你确定删除该事务吗？</div>
+      <div class="flex-row" style=" width: 100%;gap: 10px; justify-content: flex-end">
+        <h-button type="secondary" height="30px" style="margin: 0; width: 60px; font-size: 12px" id="cancel" @click="cancel">取消</h-button>
+        <h-button type="danger" height="30px" style="margin: 0; width: 60px; font-size: 12px" @click="departmentDelete" id="confirm">确认</h-button>
+      </div>
+    </div>
+  </HAlert>
 </template>
 
 <style scoped lang="stylus">
