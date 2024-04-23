@@ -5,10 +5,11 @@ import {Background, Panel, PanelPosition} from '@vue-flow/additional-components'
 
 import {defineEmits, defineProps, reactive, ref, withDefaults} from "vue";
 import HButton from "@/components/HButton.vue";
-import {affair, affairNode, getAffairNodes} from "@/assets/api";
+import {affair, affairNode, getAffairNodes, showMessage} from "@/assets/api";
 import HInput from "@/components/HInput.vue";
 import axios from "@/assets/axios";
 import store from "@/store";
+import HFormInput from "@/components/HFormInput.vue";
 
 const props = withDefaults(defineProps<{
   affairId: string
@@ -29,27 +30,27 @@ const data = reactive<{
   isFitView : false
 })
 
-const tempNode = reactive({name:'name'})
+const tempNode = reactive({name:'默认节点名称'})
 
 const emit = defineEmits(['nodeClicked','nodeDoubleClicked','onSave'])
 const nodes = ref<Node[]>([])
-const {getSelectedNodes, removeNodes,toObject,onPaneReady, addEdges,onNodeClick,fitView, onNodeDoubleClick, onNodeContextMenu, onEdgeContextMenu ,onConnect, onEdgesChange,onNodesChange} = useVueFlow()
+const {getSelectedNodes, getSelectedEdges, removeNodes, removeEdges,toObject,onPaneReady, addEdges,addNodes,onNodeClick,fitView, onNodeDoubleClick, onNodeContextMenu, onEdgeContextMenu ,onConnect, onEdgesChange,onNodesChange} = useVueFlow()
 const edges = ref<Edge[]>([])
 
 const initGraph = async ()=>{
   getAffairNodes(props.affairId as string).then(res=>{
-    res.forEach(node=>{
-      data.nodes.push(new affairNode(node.id,node.name,node.content,node.contentImg,node.contentVideo))
+    res.nodes.forEach(node=>{
+      data.nodes.push(new affairNode(node.id,node.name,node.content,node.contentImg,node.contentVideo,node.positionX,node.positionY))
     })
 
-    for(let [index,node] of res.entries()){
+    for(let [index,node] of res.nodes.entries()){
       data.nodeIndex = index+1
       if(index!=0) {
         if(index!=data.nodes.length-1) {
           nodes.value.push({
-            id: (index+1).toString(),
+            id: node.id,
             label: node.name,
-            position: {x: ((index+1) * 50) + 100, y: ((index+1) * 100) + 100},
+            position: {x: node.positionX, y: node.positionY},
             class: 'mid-node',
             data:{
               nodeId: node.id
@@ -57,31 +58,40 @@ const initGraph = async ()=>{
           })
         }else{
           nodes.value.push({
-            id: (index+1).toString(),
+            id: node.id,
             label: node.name,
-            position: {x: ((index+1) * 50) + 100, y: ((index+1) * 100) + 100},
+            position: {x: node.positionX, y: node.positionY},
             class: 'end-node',
             data:{
               nodeId: node.id
             }
           })
         }
-        edges.value.push({
-          id:'e'+index.toString() + '-' + (index+1).toString(),
-          source: index.toString(),
-          target: (index+1).toString()
-        })
+        // edges.value.push({
+        //   id:'e'+index.toString() + '-' + (index+1).toString(),
+        //   source: index.toString(),
+        //   target: (index+1).toString()
+        // })
       }else{
         nodes.value.push({
-          id: (index+1).toString(),
+          id: node.id,
           label: node.name,
-          position: {x: ((index+1) * 50) + 100, y: ((index+1) * 100) + 100},
+          position: {x: node.positionX, y: node.positionY},
           class: 'start-node',
           data:{
             nodeId: node.id
           }
         })
       }
+    }
+    if(res.edges){
+      res.edges.forEach((edge,index)=>{
+        edges.value.push({
+          id:'e'+edge[0]+'-'+edge[1],
+          source: edge[0],
+          target: edge[1]
+        })
+      })
     }
   })
 
@@ -91,6 +101,7 @@ const initGraph = async ()=>{
 }//使用传入节点数据初始化flow图
 if(props.affairId !== '0') {
   initGraph()
+
 }
 onPaneReady((instance) => instance.fitView())//适应所有节点位置，保证pane的缩放能展示所有节点
 onNodeClick((event)=>{
@@ -111,62 +122,117 @@ onConnect((params)=>{
   console.log('edges情况',edges.value)
 })
 const showPanel = () => {
-  data.nodeEditPanel = true
+  data.nodeEditPanel = !data.nodeEditPanel
 }
 
 const onNodeAdd =  () => {
   data.nodeIndex++
-  const nodeIndex = data.nodeIndex
+
   const formData = new FormData()
   formData.append('name',tempNode.name)
   formData.append('content','节点内容')
+  formData.append('positionX','200')
+  formData.append('positionY','250')
+
   axios.post('/affairnode',formData,{
     headers:{
       token:store.state.token
     }
   }).then(res=>{
     console.log('添加一个节点的结果',res.data)
-    nodes.value.push({
-      id : nodeIndex.toString(),
-      position : {x: ((nodeIndex) * 50) + 100, y: ((nodeIndex+1) * 100) + 100},
-      label : tempNode.name,
-      class:'mid-node',
-      data: {
-        nodeId:res.data.data.id
-      }
-    })
-    data.isFitView=true
+    if(res.data.code==200) {
+      addNodes({
+        id: res.data.data.id,
+        position: {x: 200, y: 250},
+        label: tempNode.name,
+        class: 'mid-node',
+        data: {
+          nodeId: res.data.data.id
+        }
+      })
+
+      data.isFitView = true
+      showMessage('添加节点成功!','success')
+    }else{
+      showMessage(`${res.data.msg}`,'error')
+    }
+  }).catch(()=>{
+    showMessage('网络错误','error')
   })
 
 }
+
 onNodesChange(()=>{
   console.log('nodes情况',nodes.value)
   if(data.isFitView){
     fitView()
     data.isFitView = false
   }
+  const flowData = toObject()
+  console.log('流程图数据结构',toObject())
 })
+const updateAffairNode = (nodeId : string, positionX : number, positionY : number) => {
+  const formdata = new FormData()
+  console.log('检查id',nodeId)
+  console.log('检查x',Math.ceil(positionX).toString())
+  console.log('检查y',Math.ceil(positionY).toString())
+  formdata.append('id',nodeId)
+  formdata.append('positionX',Math.ceil(positionX).toString())
+  formdata.append('positionY',Math.ceil(positionY).toString())
+  axios.put('/affairnode',formdata,{
+    headers:{
+      token:store.state.token
+    }
+  }).then(res=>{
+    console.log('检查更新节点',res.data)
+
+  }).catch(()=>{
+    showMessage('网络错误','error')
+  })
+}
 
 const onSave = () => {
   const flowData = toObject()
+  console.log('保存的flowData',flowData)
+  console.log('flowData中的nodes',flowData.nodes)
+  console.log('flowData中的edges',flowData.edges)
   const affairNodes = Array<string>()
   const formdata = new FormData()
   formdata.append('id',props.affairId)
   flowData.nodes.forEach((node,index)=>{
-    affairNodes.push(node.data.nodeId)
-    formdata.append(`affairs[${index}]`,node.data.nodeId)
+    updateAffairNode(node.id,node.position.x,node.position.y)
+    affairNodes.push(node.id)
+    formdata.append(`affairs[${index}]`,node.id)
   })
+
+  const updateEdges = new Array<Array<string>>()
+  flowData.edges.forEach((edge,index)=>{
+    updateEdges.push([edge.source,edge.target])
+
+  })
+  updateEdges.forEach((edge,index)=>{
+    console.log('检查更新时的每个edge',JSON.stringify(edge))
+    formdata.append('edges',edge[0]+','+edge[1])
+  })
+
+  //formdata.append('edges',JSON.stringify(updateEdges))
+
   emit('onSave',formdata)
 
 }
 
 onEdgesChange(()=>{
   console.log('edges情况',edges.value)
+  console.log('见擦汗edge更新后的情况',toObject())
 })
 const removeSelected = () => {
   let tnodes = getSelectedNodes.value
   tnodes.forEach(node=>{
     removeNodes(node.id)
+  })
+  let tedges = getSelectedEdges.value
+  tedges.forEach(edge=>{
+    removeEdges(edge.id)
   })
   console.log('选中的nodes',tnodes)
 }
@@ -181,12 +247,13 @@ const removeSelected = () => {
   </div>
   <div class="edit-panel" v-if="isEditable">
     <HButton height="35px" class="button-block" @click="showPanel">添加节点</HButton>
-    <HButton height="35px" class="button-block" @click="removeSelected">删除节点</HButton>
+    <HButton height="35px" class="button-block" @click="removeSelected">删除所选</HButton>
     <HButton height="35px" class="button-block" @click="onSave">保存/创建</HButton>
 
   </div>
   <div class="edit-panel"  v-if="data.nodeEditPanel">
-    <HInput name="nodeName" v-model="tempNode.name" height="35px" class="button-block"></HInput>
+
+    <HFormInput name="节点名称" v-model="tempNode.name" class="button-block" width="190px" height="35px"></HFormInput>
     <HButton height="35px" class="button-block" @click="onNodeAdd">确认添加</HButton>
   </div>
 
@@ -236,6 +303,7 @@ const removeSelected = () => {
   display flex
   flex-direction row
   .button-block
-    width 200px
+    width 180px
     margin 10px 20px
+    height 35px
 </style>

@@ -94,6 +94,7 @@ const onLoad = async () =>{
 }
 
 const onUpdate = async (formdata : FormData) => {
+  console.log('ref',imageUpload.value)
   formdata.append('name',affair.name)
   formdata.append('description',affair.description)
   formdata.append('role',affair.role)
@@ -120,8 +121,6 @@ const onUpdate = async (formdata : FormData) => {
       console.log('保存、更新的返回结果', res.data)
       if (res.data.code === 200) {
         showMessage('修改成功!','success')
-      }else{
-        showMessage(`${res.data.msg}`,'error')
       }
     }).catch(()=>{
       showMessage('网络错误','error')

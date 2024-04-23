@@ -46,12 +46,16 @@ export class affairNode{
     content: string
     contentImg: string
     contentVideo: string
-    constructor(id: string, name: string, content: string, contentImg: string, contentVideo: string) {
+    positionX: number
+    positionY: number
+    constructor(id: string, name: string, content: string, contentImg: string, contentVideo: string,positionX:number,positionY:number) {
         this.id = id
         this.name = name
         this.content = content
         this.contentImg = contentImg
         this.contentVideo = contentVideo
+        this.positionX = positionX
+        this.positionY = positionY
     }
 }
 
@@ -81,11 +85,31 @@ export const changeTheme = (theme : string) => {
 }
 
 export const goto = async (path : string) => {
-    await router.push(path);
+    store.state.beforeBack().then((res) => {
+        if (res) {
+            store.state.beforeBack = async () => {
+                return true
+            }
+            router.push(path);
+        }
+    })
 }
 
 export const goBack = async () =>{
-    await router.back()
+    store.state.beforeBack().then((res) => {
+        if (res) {
+            store.state.beforeBack = async () => {
+                return true
+            }
+            router.back();
+        }
+    })
+}
+
+export type beforeBackFunction = () => Promise<boolean>
+
+export const onBeforeBack = (f : beforeBackFunction) => {
+    store.state.beforeBack = f
 }
 
 export const testaxios = ()=>{
@@ -292,7 +316,12 @@ export const gotoArchiveDetailPageWithId = async (name : string, archiveId : str
 }
 
 export const goAffair = (affairId : string)=>{
-    gotoWithProp('affairPage',affairId).then()
+    console.log('跳转的事务id',affairId)
+    if(affairId){
+        gotoWithProp('affairPage',affairId).then()
+    }else{
+        showMessage('未找到此条目！','info')
+    }
 }
 
 export const goAffairNode = async (nodeId: string) =>{
@@ -332,8 +361,6 @@ export const autoComplete = async (searchUrl : string,word : string) :Promise<ta
                     const tempTag = new tag(e.id, e.name)
                     names.push(tempTag)
                 })
-        }else{
-            showMessage(`${res.data.msg}`,"error")
         }
     }).catch(()=>{
         showMessage('网络错误','error')
@@ -354,9 +381,9 @@ export const autoCompleteWXJ = async (searchUrl : string,word : string) :Promise
         }
     }).then((res)=>{
 
-        console.log(res.data)
+
         if(res.data.code==200) {
-            const items = res.data
+            const items = res.data.data
             if (searchUrl === '/item/search') {
                 if (items)
                     items.forEach((e: any) => {
@@ -370,15 +397,12 @@ export const autoCompleteWXJ = async (searchUrl : string,word : string) :Promise
                         names.push(tempTag)
                     })
             }
-            console.log(items)
-        }else{
-            showMessage(`${res.data.msg}`,"error")
         }
 
     }).catch(()=>{
         showMessage('网络错误','error')
     })
-    console.log(names)
+
     return names
 }
 export class tag{
@@ -390,7 +414,7 @@ export class tag{
     }
 }
 export const getAffairNodes = async (affairId : string)=>{
-    const affairNodes = Array<affairNode>()
+    const affairNodesAndEdges = {nodes : Array<affairNode>(),edges:Array<any>()}
     await axios.get('/affair/subs',{
         params:{
             affairId: affairId
@@ -399,18 +423,23 @@ export const getAffairNodes = async (affairId : string)=>{
             'token':store.state.token
         }
     }).then((res) =>{
-        console.log(res.data)
+        console.log('检查获取到的affairNode的position',res.data)
         if(res.data.code==200) {
-            res.data.data.forEach((node: any) => {
-                affairNodes.push(new affairNode(node.id, node.name, node.content, node.contentImg, node.contentVideo))
+            res.data.data.nodes.forEach((node: any) => {
+                affairNodesAndEdges.nodes.push(new affairNode(node.id, node.name, node.content, node.contentImg, node.contentVideo, node.positionX,node.positionY))
             })
+            if(res.data.data.edges) {
+                res.data.data.edges.forEach((edge: any) => {
+                    affairNodesAndEdges.edges.push(edge)
+                })
+            }
         }else{
             showMessage(`${res.data.msg}`,"error")
         }
     }).catch(()=>{
         showMessage('网络错误','error')
     })
-    return affairNodes
+    return affairNodesAndEdges
 }
 
 export const openTalkBar = () => {

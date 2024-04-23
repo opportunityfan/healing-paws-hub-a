@@ -5,14 +5,19 @@ import HButton from "@/components/HButton.vue";
 import HFileUpload from "@/components/HFileUpload.vue";
 import HImage from "@/components/HImage.vue";
 import HRadio from "@/components/HRadio.vue";
-import {reactive, ref} from "vue";
+import {computed, reactive, ref} from "vue";
 import {useRoute} from "vue-router";
 import {goBack, goto, Image as Img, showMessage, tag} from "@/assets/api";
 import HLoading from "@/components/HLoading.vue";
 import axios from "@/assets/axios";
 import store from "@/store";
 import HpageTable from "@/components/HpageTable.vue";
+import HImageUpload from "@/components/HImageUpload.vue";
+import HATable from "@/components/HATable.vue";
+import HPagination from "@/components/HPagination.vue";
 const route = useRoute()
+const imageUpload = ref()
+const staffPage = ref()
 const department = reactive<{
   id : string,
   name : string,
@@ -72,28 +77,9 @@ const itemData = reactive<{
   departmentId : department.id,
   type : 'normal'
 })
-const staffTable = ref()
-const itemTable = ref()
-const picFile = ref()
 
-const isMouseOverAvatar = ref(false)
-const onMouseEnterAvatar = () =>{
-  isMouseOverAvatar.value = true
-}
-const onMouseLeaveAvatar = () => {
-  isMouseOverAvatar.value = false
-}
-const handleImage = (image : File,test : string) =>{
-  console.log('图片文件信息',image)
-  console.log('测试文本',test)
-  let imageFile = new Image()
-  imageFile.src = window.URL.createObjectURL(image)
-  imageFile.onload = () => {
-    department.image = new Img(imageFile.src, imageFile.width, imageFile.height)
-  }
-  department.pic= image.path
-  picFile.value = image
-}
+const itemTable = ref()
+
 const deleteDepartment = async () => {
   axios.delete('/department/'+department.id,{
     headers:{
@@ -129,6 +115,9 @@ const getDepartmentById = async () => {
         department.staff = temp.staffList
         department.pic = temp.pic
         department.image = new Img(temp.pic, 1, 1)
+        staffList.value = department.staff
+        console.log('科室人员检查1',department.staff)
+        console.log('科室人员检查2',department.staff.values())
       }else{
         showMessage(`${res.data.msg}`,'error')
       }
@@ -142,17 +131,22 @@ const getDepartmentById = async () => {
 const onLoad = async () =>{
 
   await getDepartmentById()
+
   return
 }
 const requestStaffs = async (pageNum : number, pageSize : number) => {
-  const currentItems = new Array<tag>()
-  if(department.staff){
-    department.staff.forEach(s=>{
-      currentItems.push(new tag(s.id,s.name))
-    })
-  }
-  return currentItems
+  //staffTable.value = department.staff
+  const startIndex = (pageNum-1)*pageSize
+  staffList.value = department.staff.slice(startIndex, startIndex + pageSize)
+  // const currentItems = new Array<tag>()
+  // if(department.staff){
+  //   department.staff.forEach(s=>{
+  //     currentItems.push(new tag(s.id,s.name))
+  //   })
+  // }
+  // return currentItems
 }
+//有问题
 const requestItems = async (pageNum : number, pageSize : number) =>{
   const currentItems = new Array<tag>()
   await axios.get('/department/getItem/'+department.id,{
@@ -160,7 +154,7 @@ const requestItems = async (pageNum : number, pageSize : number) =>{
       'token':store.state.token
     }
   }).then(res=>{
-    console.log('科室的物品',res.data.data)
+    console.log('科室的物品',res.data)
     if(res.data.code==200) {
       if (res.data.data) {
         for (let item of res.data.data) {
@@ -193,7 +187,7 @@ const createDepartment = () => {
     staffList : department.staff,
   }
   const formdata = new FormData()
-  formdata.append('pic',picFile.value)
+  formdata.append('pic',imageUpload.value.getPicFile())
   formdata.append('department',new Blob([JSON.stringify(jsondata)],{type:"application/json"}))
   axios.post('/department',formdata,{
     headers:{
@@ -211,6 +205,7 @@ const createDepartment = () => {
   })
 }
 const updateDepartment = () => {
+  console.log('检查更新前的staffList',department.staff)
   const jsondata = {
     id : department.id,
     departmentName : department.name,
@@ -219,7 +214,11 @@ const updateDepartment = () => {
     staffList : department.staff,
   }
   const formdata = new FormData()
-  formdata.append('pic',picFile.value)
+  console.log('检查图片文件',imageUpload.value.getPicFile())
+  console.log('检查Image',department.image)
+
+    formdata.append('pic', imageUpload.value.getPicFile())
+
   formdata.append('department',new Blob([JSON.stringify(jsondata)],{type:"application/json"}))
   axios.put('/department',formdata,{
     headers:{
@@ -262,8 +261,10 @@ const editPanel = (index:number) => {
 }
 const addStaff = () =>{
   department.staff.push({id:staffData.id,name:staffData.name,position:staffData.position,phone:staffData.phone})
-  staffTable.value.update()
   staffData.isStaffPanel = false
+  console.log('检查staffPage',staffPage.value)
+  console.log('检查当前页码',staffPage.value.data.currentPage)
+  requestStaffs(staffPage.value.data.currentPage,5)
 }
 const editStaff = () =>{
   console.log('修改成功')
@@ -272,7 +273,7 @@ const editStaff = () =>{
   department.staff[staffData.nowIndex].position = staffData.position
   department.staff[staffData.nowIndex].phone = staffData.phone
   console.log('修改成功')
-  staffTable.value.update()
+
   staffData.isStaffPanel = false
 }
 const itemPanel = () => {
@@ -301,6 +302,41 @@ const addItem = () => {
 const goItemEdit = (id : string) => {
   goto('/instrument-edit/'+id)
 }
+
+const staffList = ref([1])
+const staffCols = [
+  {
+    title:'名称',
+    key:'name',
+    scopedSlots:''
+  },
+  {
+    title:'职位',
+    key:'position',
+    scopedSlots: ''
+  },
+  {
+    title:'电话',
+    key:'phone',
+    scopedSlots: ''
+  }
+]
+const itemList = ref()
+const itemCols = [
+  {
+    title:'名称',
+    key:'name',
+    scopedSlots:''
+  },
+  {
+    title:'用途',
+    key:'usage',
+    scopedSlots:''
+  }
+]
+const staffTotalPages = computed(()=>{
+  return Math.ceil(department.staff.length/5)
+})
 </script>
 
 <template>
@@ -324,15 +360,7 @@ const goItemEdit = (id : string) => {
             <div class="flex-row" style="width: 100%; gap: 20px; margin: 6px 0">
               <div>
                 <div class="text-bold" style="flex-shrink: 0">图片编辑</div>
-                <div style="position: relative; width: fit-content" class="avatar-box"
-                     @mouseenter="onMouseEnterAvatar"
-                     @mouseleave="onMouseLeaveAvatar">
-                  <HImage :image="department.image" :size="100" ></HImage>
-                  <div :style="{opacity : isMouseOverAvatar ? '1' : '0'}"
-                       class="center add-icon" >
-                    <HFileUpload @handleFile="handleImage"></HFileUpload>
-                  </div>
-                </div>
+                <HImageUpload :image="department.image" ref="imageUpload"></HImageUpload>
               </div>
               <div style="width: 100%" >
                 <HButton @click="createDepartment"  v-if="data.isNew" height="30px">创建科室</HButton>
@@ -346,7 +374,9 @@ const goItemEdit = (id : string) => {
       <div class="main-panel">
         <div class="left-panel">
           <div class="text-bold">科室人员</div>
-          <HpageTable :request-items="requestStaffs" totalPages="1" @itemClickIndex="editPanel" ref="staffTable"></HpageTable>
+<!--          <HpageTable :request-items="requestStaffs" totalPages="1" @itemClickIndex="editPanel" ref="staffTable"></HpageTable>-->
+          <HATable :data-list="staffList" :cols="staffCols"></HATable>
+          <HPagination @onPageChange="requestStaffs" ref="staffPage" items-per-page="5" :total-pages="staffTotalPages"></HPagination>
           <HButton height="30px" style="margin-top: 5px" @click="addPanel">添加人员</HButton>
           <div class="staff-add-panel" v-if="staffData.isStaffPanel">
             <div class="flex-row" style="width: 100%; gap: 10px; margin: 4px 0">

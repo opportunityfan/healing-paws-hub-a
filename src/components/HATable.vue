@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<{
 
 <template>
   <div class="main-part">
-    <table class="table-layout">
+    <table>
       <thead>
         <tr >
           <th
@@ -57,26 +57,27 @@ const props = withDefaults(defineProps<{
 <style scoped lang="stylus">
 
 .main-part:hover
-  border-color var(--theme-color)
   transition 0.3s
-
+  table{
+    border-color var(--theme-color)
+  }
 
 .head-row
-  border 2px solid var(--theme-color)
+  border 1.2px solid var(--theme-color)
 
 table{
   width 100%
-  border-collapse collapse
   border-spacing 0
   empty-cells show
-  border-radius 16px
+  border 1.2px solid var(--theme-color-bright)
 }
 table th{
   white-space nowrap
 }
 table td, table th{
-  padding 8px 16px
-  border 1px solid var(--theme-color-bright)
+  padding 6px 12px
+  border 1.2px solid var(--theme-color-bright)
   text-align left
+  font-size 14px
 }
 </style>

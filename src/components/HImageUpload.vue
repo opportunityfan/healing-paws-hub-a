@@ -24,11 +24,11 @@ const data = reactive<{
 const isMouseOverAvatar = ref(false)
 const picFile = ref()
 const getPicFile = ()=>{
-  return picFile
+  return picFile.value
 }
-defineExpose([{
+defineExpose({
   getPicFile
-}])
+})
 
 const onMouseEnterAvatar = () =>{
   isMouseOverAvatar.value = true
@@ -53,8 +53,8 @@ const handleImage = (image : File) =>{
   <div style="position: relative; width: fit-content" class="avatar-box"
        @mouseenter="onMouseEnterAvatar"
        @mouseleave="onMouseLeaveAvatar">
-    <HImage :image="data.image" :size="100" :lazy-load="false" :v-if="data.isHaveImage"></HImage>
-    <div :v-if="!data.isHaveImage">
+    <HImage :image="data.image" :size="100" :lazy-load="false" v-if="data.isHaveImage"></HImage>
+    <div v-if="!data.isHaveImage">
     <i class='bx bxs-camera-plus' ></i>
     </div>
     <div :style="{opacity : isMouseOverAvatar ? '1' : '0'}"
