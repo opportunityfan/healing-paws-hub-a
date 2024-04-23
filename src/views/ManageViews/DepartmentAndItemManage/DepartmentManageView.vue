@@ -137,7 +137,7 @@ const departmentDelete = async () =>{
         </template>
 
         <template #Operation="{row}">
-          <div class="flex-row">
+          <div class="flex-row" style="width: 100%;justify-content: center">
             <HButton style="width: 25px;margin: auto 5px" height="20px" @click="goDepartmentEdit(row['id'])"><i class='bx bx-edit-alt'></i></HButton>
             <HButton style="width: 25px;margin: auto 5px" height="20px" type="danger" @click="onDelete(row['id'])"><i class='bx bx-trash'></i></HButton>
           </div>
@@ -145,7 +145,9 @@ const departmentDelete = async () =>{
       </HATable>
       <HPagination @onPageChange="requestDepartments" :itemsPerPage="pageSize" :total-pages="totalPages" ref="pageNation">
       </HPagination>
-      <HButton height="30px" style="margin-top: 5px" @click="goDepartmentEdit('0')">添加科室</HButton>
+      <div style="display: flex;align-items: center;justify-content: center">
+        <HButton height="30px" style="margin-top: 5px;width: 50%" @click="goDepartmentEdit('0')">添加科室</HButton>
+      </div>
     </div>
   </div>
   </h-loading>

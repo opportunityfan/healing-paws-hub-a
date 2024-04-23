@@ -95,13 +95,22 @@ const onLoad = async () =>{
 
 const onUpdate = async (formdata : FormData) => {
   console.log('ref',imageUpload.value)
+
+
   formdata.append('name',affair.name)
   formdata.append('description',affair.description)
   formdata.append('role',affair.role)
 
   if(data.isNewAffair){//创建
-    formdata.append('pic',imageUpload.value.getPicFile())
-    axios.post('/affair',formdata,{
+    console.log('创建事务中。。。')
+    let formData = new FormData()
+    for(let [key,value] of formdata.entries()){
+      if(key!='id'){
+        formData.append(key,value)
+      }
+    }
+    //formData.append('pic',imageUpload.value.getPicFile())
+    axios.post('/affair',formData,{
       headers:{
         token:store.state.token
       }
@@ -121,6 +130,11 @@ const onUpdate = async (formdata : FormData) => {
       console.log('保存、更新的返回结果', res.data)
       if (res.data.code === 200) {
         showMessage('修改成功!','success')
+      }else{
+        if(res.data.msg!='Error'){
+          showMessage('至少需要一个节点或者边','error')
+        }
+
       }
     }).catch(()=>{
       showMessage('网络错误','error')
@@ -153,8 +167,9 @@ const deleteAffair = () => {
 <template>
   <h-loading :load="onLoad">
     <div class="full" >
+      <div class="subtitle" v-if="data.isNewAffair" style="text-align: left;margin:0 20px">创建事务</div>
       <div class="main-panel">
-        <div class="subtitle" v-if="data.isNewAffair">创建事务</div>
+
         <div class="left-panel">
           <div class="flex-row" style="width: 100%; gap: 20px; margin: 6px 0">
             <div class="text-bold" style="flex-shrink: 0">事务名称</div>
@@ -174,7 +189,7 @@ const deleteAffair = () => {
             <div class="text-bold" style="flex-shrink: 0">封面编辑</div>
 
             <HImageUpload :image="affair.image" ref="imageUpload"></HImageUpload>
-            <HButton @click="deleteAffair" type="danger">删除事务</HButton>
+
           </div>
 
         </div>
