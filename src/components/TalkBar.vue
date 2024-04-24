@@ -81,14 +81,24 @@ import HScroller from "@/components/HScroller.vue";
 import {onMounted, VueElement, ref, reactive} from "vue";
 import HAvatar from "@/components/HAvatar.vue";
 import {sendToGpt, startGptTalk} from "@/assets/api/gpt";
+import axios, {AxiosProgressEvent} from "axios";
 
+const API = axios.create({
+  baseURL: '/api',
+  timeout: 20000
+})
 onMounted(() => {
   startTalk()
 })
 
 const startTalk = async () => {
   data.conversation_id = await startGptTalk()
+  store.state.talkHistories.push({
+    content: '你好，我是小帕瓦,请问有什么能帮助你的吗',
+    selfSend: false
+  })
 }
+
 const data = reactive<{
   conversation_id : string
   text: string
@@ -99,7 +109,7 @@ const data = reactive<{
   loading: false
 })
 
-const onSubmit = () => {
+const onSubmit = async () => {
   if (data.text === '' || data.loading) return
   store.state.talkHistories.push({
     content: data.text,
@@ -114,6 +124,8 @@ const onSubmit = () => {
     store.state.talkHistories[store.state.talkHistories.length - 1].content = res
     data.loading = false
   })
+  // chatToGptStream(data.conversation_id, data.text)
+
   data.text = ''
 }
 
@@ -121,7 +133,35 @@ const onFlush = async () => {
   data.loading = true
   data.conversation_id = await startGptTalk()
   store.state.talkHistories = []
+  store.state.talkHistories.push({
+    content: '你好，我是小帕瓦,请问有什么能帮助你的吗',
+    selfSend: false
+  })
   data.loading = false
+}
+const controller = new AbortController()
+const chatToGptStream = async (conversation_id : string,msg : string) =>{
+
+  const postData = {conversation_id : conversation_id,msg : msg}
+
+  API.post('/streaming_conversation',postData, {
+
+    responseType:'stream',
+    onDownloadProgress: function(progressEvent:AxiosProgressEvent){
+
+      setData(progressEvent.event.currentTarget.responseText)
+    },
+    signal: controller.signal
+  }).then((res)=>{
+    data.loading = false
+    console.log('检查最终返回：',res.data)
+  }).catch(e=>{
+    console.log(e)
+  })
+}
+const setData = (text : string) => {
+  console.log('新的信息：',text)
+  store.state.talkHistories[store.state.talkHistories.length - 1].content += text
 }
 </script>
 

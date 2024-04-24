@@ -49,14 +49,16 @@ const requestNewAffair = async (count : number) => {
   }).then(res=>{
     console.log(res.data.data)
     if(res.data.code==200) {
+      console.log('检查item',res.data)
       for (let item of res.data.data) {
+
         let tempImage
         if (item.pic === null) {
           // eslint-disable-next-line @typescript-eslint/no-var-requires
           const image = new Image(require("@/assets/login-background.png"), 3035, 4299)
           tempImage = image
         } else {
-          const image = new Image(item.pic, item.picSize[0], item.picSize[1])
+          const image = new Image(item.pic, 1, 1)
           tempImage = image
         }
         newPostList.push(new Post(item.id, item.name, item.description, tempImage))
@@ -64,8 +66,9 @@ const requestNewAffair = async (count : number) => {
     }else{
       showMessage(`${res.data.msg}`,'error')
     }
-  }).catch(()=>{
-    showMessage('网络错误','error')
+  }).catch((e)=>{
+    console.log(e)
+    showMessage('网络错误Affair','error')
   })
   return newPostList
 }
@@ -101,7 +104,7 @@ const requestNewInstrument = async (count : number) => {
       showMessage(`${res.data.msg}`,'error')
     }
   }).catch(()=>{
-    showMessage('网络错误','error')
+    showMessage('网络错误Inst','error')
   })
   return newPostList
 }

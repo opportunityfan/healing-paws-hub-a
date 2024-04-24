@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, {AxiosProgressEvent} from "axios";
 const API = axios.create({
     baseURL: '/api',
     timeout: 20000
@@ -25,3 +25,4 @@ export const sendToGpt = async (conversation_id : string,msg : string) => {
     })
     return answer
 }
+

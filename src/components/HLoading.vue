@@ -9,10 +9,10 @@
       <div v-if="data.loading" class="loading center">
         <div class="spinner1" style="background-color: var(--theme-color)"></div>
       </div>
-      <div v-else class="full">
-        <slot name="default"></slot>
-      </div>
     </transition>
+    <div class="full" :style="{opacity: data.loading? 0 : 1}" style="transition: opacity 0.2s">
+      <slot name="default"></slot>
+    </div>
   </div>
 </template>
 

@@ -37,12 +37,14 @@ const props = withDefaults(defineProps<{
         <td
           v-for="(v,k) in cols"
           :key="k"
+          :class="{ operation : v.scopedSlots === 'Operation'}"
         >
           <template v-if="!v.scopedSlots">{{item[v.key]}}</template>
           <template v-else>
             <slot
               :name="v.scopedSlots"
               :row="item"
+              :rowIndex="index"
               :data="item[v.key]"
             >
             </slot>
@@ -77,7 +79,9 @@ table th{
 table td, table th{
   padding 6px 12px
   border 1.2px solid var(--theme-color-bright)
-  text-align left
+  text-align center
   font-size 14px
 }
+.operation
+  width 100px
 </style>
