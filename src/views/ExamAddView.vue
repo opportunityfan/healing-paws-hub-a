@@ -134,10 +134,10 @@ onMounted(()=>{
   <el-dialog v-model="isAdd" title="添加题目" width="1000" class="xdialog" @closed="examList=[]">
       <table class="xtable">
         <colgroup>
-          <col width="25%">
-          <col width="25%">
-          <col width="25%">
-          <col width="25%">
+          <col width="20%">
+          <col width="20%">
+          <col width="40%">
+          <col width="20%">
         </colgroup>
         <thead>
         <tr>
@@ -149,7 +149,7 @@ onMounted(()=>{
         </thead>
         <tbody>
         <tr v-for="item in questiondata" :key="item.id">
-          <td>{{item.id}}</td>
+          <td>{{item.name}}</td>
           <td>{{item.score}}</td>
           <td>{{item.statement}}</td>
           <td>

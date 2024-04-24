@@ -10,10 +10,12 @@ import MarkdownEditor from "@/components/MarkdownEditor.vue";
 const router=useRoute();
 const subjectform=reactive({
   id:router.params.id,
+  name:'',
   statement: '',
   answer:'',
   type:[],
   detail:'',
+  questionType:1,
   score:1,
 });
 const rules=reactive({
@@ -76,7 +78,7 @@ async function getdata(){
     }
   })
   console.log(res.data.data);
-  diseasedata.value=res.data.data;
+  diseasedata.value=res.data.data.listData;
 }
 
 
@@ -107,10 +109,12 @@ async function getdata2(){
 async function ins(){
   if (router.params.id){
     const question2=await getdata2();
+    subjectform.name=question2.name;
     subjectform.statement=question2.statement;
     subjectform.answer=question2.answer;
     subjectform.detail=question2.detail;
     subjectform.score=question2.score;
+    subjectform.questionType=question2.questionType;
     subjectform.type=question2.type ?? [];
     typeList.value=question2.type??[];
   }
@@ -126,6 +130,10 @@ onMounted(()=>{
   <div>
     <!--    {{diseasedata}}-->
     <el-form :model="subjectform" :rules="rules" @submit="submit()" ref="formref">
+      <el-form-item prop="name" label="题目名字">
+        <el-input v-model="subjectform.name">
+        </el-input>
+      </el-form-item>
       <el-form-item prop="statement" label="题目描述">
 <!--        <el-input v-model="subjectform.statement">-->
 <!--        </el-input>-->
@@ -135,8 +143,15 @@ onMounted(()=>{
         <el-input v-model="subjectform.answer">
         </el-input>
       </el-form-item>
-      <el-form-item prop="type" label="添加类型">
+      <el-form-item prop="type" label="添加所属病的类型">
         <el-button @click="isAdd=true">选择病种</el-button>
+      </el-form-item>
+      <el-form-item prop="questionType" label="添加题目类型">
+        <el-select v-model="subjectform.questionType">
+          <el-option :value="1" label="判断题"></el-option>
+          <el-option :value="2" label="选择题"></el-option>
+          <el-option :value="3" label="填空题"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item prop="detail" label="题目答案解析">
 <!--        <el-input v-model="subjectform.detail">-->

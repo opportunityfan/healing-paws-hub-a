@@ -16,7 +16,7 @@ const value2=ref('');
 const tabledata=ref([]);
 const pagenum=ref(1);
 const pagesize=ref(7);
-const sort=ref('');
+const sort=ref(0);
 let c=ref(null);
 let d=ref(null);
 async function getData(){
@@ -32,7 +32,7 @@ async function getData(){
   console.log(choose.value);
   const res=await axios.get('/exam/page/multi',{
     params: {
-      sortTime: sort.value==="sortTime",
+      sortTime: sort.value,
       // // sortScore: sort.value==="sortScore",
       examName: text.value,
       type: choose.value,
@@ -42,10 +42,10 @@ async function getData(){
       pageSize:pagesize.value,
     }
   }).then((result)=>{
-      console.log(result.data)
-        console.log(result.data.data);
-        tabledata.value=result.data.data.listData;
-        console.log(tabledata.value);
+      console.log(result.data);
+      console.log(result.data.data);
+      tabledata.value=result.data.data.listData;
+      console.log(tabledata.value);
       }
   );
 }
@@ -61,12 +61,12 @@ function search(){
   console.log("search");
   getData();
 }
-function operation(order:string){
-  sort.value= order;
+function times(x:number){
+  sort.value=x;
   getData();
 }
 function clearup(){
-  sort.value='';
+  sort.value=0;
   text.value='';
   choose.value='';
   value2.value='';
@@ -111,13 +111,12 @@ function clearup(){
         </div>
       </div>
       <div class="hang">
-        <el-button @click="operation('sortTime')">按时间顺序</el-button>
         <el-button @click="clearup()">清空</el-button>
       </div>
     </div>
 <!--    {{tabledata}}-->
     <div class="xia">
-      <HTableManage :tabledata="tabledata"></HTableManage>
+      <HTableManage :tabledata="tabledata"  @trans="times"></HTableManage>
     </div>
     <el-pagination
         small

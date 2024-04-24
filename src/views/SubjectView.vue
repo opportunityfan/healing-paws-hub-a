@@ -2,22 +2,30 @@
 import HButton from "@/components/HButton.vue";
 import axios from "axios";
 import {onMounted, ref} from "vue";
+import HPagination from "@/components/HPagination.vue";
+import {showMessage} from "@/assets/api";
 // import HDealWith from "@/components/HDealWith.vue";
 
 const questiondata=ref({});
 const text=ref(null);
 const isdelete=ref(false);
 const statement=ref('');
-const pageSize=ref(10);
-const pageNum=ref(1)
-async function getdata(){
+const pageSize=ref(5);
+const pageNum=ref(1);
+const pageNation = ref()
+async function getdata(currentPage:number,pagesize : number){
+
+  console.log('测试getdata',currentPage)
+  console.log('ceshipagesize',pagesize)
   const res = await axios.get('http://150.158.110.63:8080/question/group',{
     params:{
       diseases:text.value,
-      pageNum: pageNum.value,
-      pageSize: pageSize.value,
+      pageNum: currentPage,
+      pageSize: pagesize,
     }
   })
+  console.log('ceshi res.data',res.data)
+  pageNum.value=res.data.data.totalPages;
   questiondata.value=res.data.data.listData;
   console.log(questiondata.value);
 }
@@ -39,16 +47,16 @@ async function delete1() {
 }
 
 function search(){
-  getdata();
+  getdata(pageNation.value.data.currentPage,pageSize.value);
 }
 
 async function  pagechange(page:number){
   pageNum.value=page;
-  await getdata();
+  await  getdata(pageNation.value.data.currentPage,pageSize.value);
 }
 
 onMounted(()=>{
-  getdata();
+  getdata(pageNation.value.data.currentPage,pageSize.value);
 })
 </script>
 
@@ -82,10 +90,15 @@ onMounted(()=>{
           {{item.type.join(',')}}
         </td>
         <td>
-          <router-link :to="`/subjectUpdate/${item.id}`">
-            <el-button>修改</el-button>
-          </router-link>
-          <el-button @click="state2(item.id)">删除</el-button>
+          <el-row justify="center">
+            <div class="flex-row" style="width: 80px">
+              <router-link :to="`/subjectUpdate/${item.id}`">
+                <HButton style="width: 25px;margin: auto 5px" height="20px"><i class='bx bx-edit-alt'></i></HButton>
+              </router-link>
+              <HButton style="width: 25px;margin: auto 5px" height="20px" type="danger" @click="state2(item.id)"><i class='bx bx-trash'></i></HButton>
+              <!--          <el-button @click="state2(item.id)">删除</el-button>-->
+            </div>
+          </el-row>
         </td>
       </tr>
       </tbody>
@@ -98,15 +111,17 @@ onMounted(()=>{
         <el-button color="#5A8100" @click="isdelete=false">取消</el-button>
       </template>
     </el-dialog>
-    <el-pagination
-        small
-        background
-        layout="prev, pager, next"
-        :page-size="pageSize"
-        :total="100"
-        class="mt-4"
-        @current-change="pagechange"
-    />
+<!--    <el-pagination-->
+<!--        small-->
+<!--        background-->
+<!--        layout="prev, pager, next"-->
+<!--        :page-size="pageSize"-->
+<!--        :total="100"-->
+<!--        class="mt-4"-->
+<!--        @current-change="pagechange"-->
+<!--    />-->
+    <HPagination @onPageChange="getdata" :itemsPerPage="pageSize" :total-pages="pageNum" ref="pageNation">
+    </HPagination>
   </div>
 </template>
 

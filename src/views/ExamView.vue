@@ -8,6 +8,7 @@ import {goto} from "@/assets/api";
 import {onMounted, ref} from "vue";
 import axios from "@/assets/axios";
 import {dayjs} from "element-plus";
+import HPagination from "@/components/HPagination.vue";
 
 function ChangeRecord(){
   goto('/examLink');
@@ -18,11 +19,12 @@ const choose=ref(null);
 const value2=ref('');
 const tabledata=ref([]);
 const pagenum=ref(1);
-const pagesize=ref(7);
+const pagesize=ref(5);
 const sort=ref(0);
 let c=ref(null);
 let d=ref(null);
-async function getData(){
+const pageNation = ref();
+async function getData(currentPage:number,pageSize : number){
   console.log("value2=");
   console.log(value2.value);
   const [a,b]= value2.value;
@@ -32,7 +34,10 @@ async function getData(){
     c=null;
     d=null;
   }
-  console.log(choose.value);
+  // console.log(choose.value);
+  console.log(currentPage);
+
+  console.log(pageSize);
   const res=await axios.get('/exam/page/multi',{
     params: {
       sortTime: sort.value,
@@ -41,42 +46,39 @@ async function getData(){
       type: choose.value,
       startTime: c,
       endTime: d,
-      pageNum:pagenum.value,
-      pageSize:pagesize.value,
+      pageNum:currentPage,
+      pageSize:pageSize,
     }
   }).then((result)=>{
-        console.log(result.data.data);
+        console.log(result.data);
         tabledata.value=result.data.data.listData;
+        pagenum.value=result.data.data.totalPages;
       }
   );
 }
 async function  pagechange(page:number){
   pagenum.value=page;
-  await getData();
+  await getData(pageNation.value.data.currentPage,pagesize.value);
 }
 onMounted(()=>{
-  getData();
+  getData(pageNation.value.data.currentPage,pagesize.value);
 })
 
 function search(){
   console.log("search");
-  getData();
-}
-function operation(order:string){
-  sort.value= order;
-  getData();
+  getData(pageNation.value.data.currentPage,pagesize.value);
 }
 function clearup(){
   sort.value=0;
   text.value='';
   choose.value=null;
   value2.value='';
-  getData();
+  getData(pageNation.value.data.currentPage,pagesize.value);
 }
 
 function times(x:number){
   sort.value=x;
-  getData();
+  getData(pageNation.value.data.currentPage,pagesize.value);
 }
 </script>
 
@@ -115,7 +117,6 @@ function times(x:number){
         </div>
       </div>
       <div class="hang">
-        <el-button @click="operation('sortTime')">按时间顺序</el-button>
         <el-button @click="clearup()">清空</el-button>
       </div>
     </div>
@@ -124,14 +125,16 @@ function times(x:number){
     </div>
     <br>
     <el-row justify="center">
-      <el-pagination
-          small
-          layout="prev, pager, next"
-          :page-size="pagesize"
-          :total="100"
-          class="mt-4 fenye"
-          @current-change="pagechange"
-      />
+<!--      <el-pagination-->
+<!--          small-->
+<!--          layout="prev, pager, next"-->
+<!--          :page-size="pagesize"-->
+<!--          :total="100"-->
+<!--          class="mt-4 fenye"-->
+<!--          @current-change="pagechange"-->
+<!--      />-->
+      <HPagination @onPageChange="getData" :itemsPerPage="pagesize" :total-pages="pagenum" ref="pageNation">
+      </HPagination>
     </el-row>
 
   </div>

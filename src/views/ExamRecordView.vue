@@ -25,8 +25,8 @@ async function getData() {
       'token': store.state.token
     }
   })
-  testdata.value=res.data.data;
-  record.value=res.data.data.find(e=> {
+  testdata.value=res.data.data.listData;
+  record.value=res.data.data.listData.find(e=> {
     return e.examId === ID;
   });
   console.log(record.value);

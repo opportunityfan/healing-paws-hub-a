@@ -7,7 +7,7 @@ import store from "@/store";
 import {onMounted, ref} from "vue";
 
 const pagenum=ref(1);
-const pagesize=ref(7);
+const pagesize=ref(5);
 const testdata=ref([]);
 
 function go(){
@@ -24,7 +24,7 @@ async function getData() {
     }
   })
   console.log(res);
-  testdata.value=res.data.data;
+  testdata.value=res.data.data.listData;
 }
 
 
@@ -48,31 +48,26 @@ onMounted(()=>{
   </h3>
   <table class="xtable">
     <colgroup>
-      <col width="20%">
+      <col width="30%">
       <col width="40%">
-      <col width="20%">
-      <col width="20%">
+      <col width="30%">
     </colgroup>
     <thead>
     <tr>
       <th>name</th>
       <th>date</th>
       <th>score</th>
-      <th>attend</th>
     </tr>
     </thead>
     <tbody>
     <tr v-for="(item,index) in testdata" :key="index">
-      <td>{{item.examName}}</td>
-      <td>{{item.time}}</td>
-      <td>{{item.score}}</td>
       <td>
-        <router-link :to="`/examRecord/${item.examId}`">
-          <el-button>
-            进入
-          </el-button>
+        <router-link :to="`/examRecord/${item.examId}`" class="tdlink">
+          {{item.examName}}
         </router-link>
       </td>
+      <td>{{item.time}}</td>
+      <td>{{item.score}}</td>
     </tr>
     </tbody>
   </table>
@@ -91,5 +86,28 @@ onMounted(()=>{
 <style scoped lang="stylus">
 .xtable{
   width: 100%;
+  border-collapse: collapse;
+  td{
+    height :43px;
+    line-height : 43px;
+
+  }
+  tr{
+    &:nth-child(even){
+      td{
+        background-color #7A806E
+        color #d9d9d9
+      }
+    }
+    &:nth-child(odd){
+      td{
+        color #5A8100
+      }
+    }
+  }
+}
+.tdlink{
+  text-decoration: none;
+  color: inherit;
 }
 </style>

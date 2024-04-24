@@ -113,7 +113,7 @@ async function getdata2(){
       id : router.params.id,
     }
   })
-  return res2.data.data.listData;
+  return res2.data.data;
 }
 
 onMounted(()=>{
