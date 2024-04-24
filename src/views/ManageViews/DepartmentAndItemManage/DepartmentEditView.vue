@@ -90,27 +90,6 @@ const itemData = reactive<{
   departmentId : department.id,
   type : 'normal'
 })
-
-
-
-const deleteDepartment = async () => {
-  axios.delete('/department/'+department.id,{
-    headers:{
-      token : store.state.token
-    }
-  }).then(res=>{
-    console.log(res.data)
-    if(res.data.code===200){
-      console.log('删除成功！')
-      showMessage('删除成功!','success')
-      goBack()
-    }else{
-      showMessage(`${res.data.msg}`,'error')
-    }
-  }).catch(()=>{
-    showMessage('网络错误','error')
-  })
-}
 const getDepartmentById = async () => {
 
   if(department.id !== '0') {
@@ -128,7 +107,6 @@ const getDepartmentById = async () => {
         department.staff = temp.staffList
         department.pic = temp.pic
         department.image = new Img(temp.pic, 1, 1)
-
 
         const startIndex = 0
         staffList.value = department.staff.slice(startIndex, startIndex + 5)
@@ -434,7 +412,6 @@ const itemDelete = (id : string)=>{
       <div class="main-panel">
         <div class="left-panel">
           <div class="text-bold">科室人员</div>
-<!--          <HpageTable :request-items="requestStaffs" totalPages="1" @itemClickIndex="editPanel" ref="staffTable"></HpageTable>-->
           <HATable :data-list="staffList" :cols="staffCols">
             <template #Operation="{rowIndex}">
               <div class="flex-row" style="width: 80px">
