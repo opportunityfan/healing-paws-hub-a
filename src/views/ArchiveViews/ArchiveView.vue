@@ -7,6 +7,9 @@ import DiseaseNameButton from "@/views/ArchiveViews/DiseaseNameButton.vue";
 import {goto, gotoArchiveSearchResultsWithNames} from "@/assets/api";
 import axios from "@/assets/axios";
 import store from "@/store";
+import HLoading from "@/components/HLoading.vue";
+import {showMessage, tag} from "@/assets/api";
+
 
 let diseaseTypes = reactive(["传染病","寄生虫病","内科","外产科疾病","常用手术","免疫"])
 let diseaseNamesOrderedByType: Record<string, any> = reactive({})
@@ -22,13 +25,23 @@ function getDiseaseNamesByType(diseaseType: string){
       'token':store.state.token
     }
   }).then((res)=>{
-    diseaseNamesOrderedByType[diseaseType] = res.data.data.listData
+    console.log(res.data)
+    if(res.data.code===200){
+      diseaseNamesOrderedByType[diseaseType] = res.data.data.listData
+    }else{
+      showMessage(`${res.data.msg}`,'error')
+    }
+  }).catch(()=>{
+    showMessage('网络错误','error')
   })
 }
 
-diseaseTypes.forEach((diseaseType)=>{
-  getDiseaseNamesByType(diseaseType)
-})
+const onLoad = async () => {
+  await diseaseTypes.forEach((diseaseType)=>{
+    getDiseaseNamesByType(diseaseType)
+  })
+  return
+}
 
 console.log(diseaseNamesOrderedByType)
 
@@ -66,31 +79,33 @@ function consoleLogToken(){
 
 <template>
   <div class="full">
-    <div class="diseaseChooseBox">
-      <HScroller scroll-direction="column">
-        <div class="flex-column">
-          <div class="diseaseType" v-for="(diseaseType,index) in diseaseTypes" :key="index">
-            <div class="diseaseTypeTitle">
-              {{diseaseType}}
-            </div>
-            <div class="flex-row flex-wrap">
-              <div v-for="diseaseName in diseaseNamesOrderedByType[diseaseType]" :key="diseaseName.id">
-                <DiseaseNameButton
-                    class="diseaseNameButton"
-                    @click="chooseDisease(diseaseName.name)"
-                    :isChosen="chosenDiseases.includes(diseaseName.name)"
-                    height="50px"
-                >{{diseaseName.name}}</DiseaseNameButton>
+    <HLoading :load="onLoad">
+      <div class="diseaseChooseBox">
+        <HScroller scroll-direction="column">
+          <div class="flex-column">
+            <div class="diseaseType" v-for="(diseaseType,index) in diseaseTypes" :key="index">
+              <div class="diseaseTypeTitle">
+                {{diseaseType}}
+              </div>
+              <div class="flex-row flex-wrap">
+                <div v-for="diseaseName in diseaseNamesOrderedByType[diseaseType]" :key="diseaseName.id">
+                  <DiseaseNameButton
+                      class="diseaseNameButton"
+                      @click="chooseDisease(diseaseName.name)"
+                      :isChosen="chosenDiseases.includes(diseaseName.name)"
+                      height="50px"
+                  >{{diseaseName.name}}</DiseaseNameButton>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <br>
-        <br>
-        <br>
-      </HScroller>
-    </div>
-    <HButton @click="searchArchives">确认选择</HButton>
+          <br>
+          <br>
+          <br>
+        </HScroller>
+      </div>
+      <HButton @click="searchArchives">确认选择</HButton>
+    </HLoading>
   </div>
 </template>
 
