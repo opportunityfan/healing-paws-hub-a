@@ -145,9 +145,9 @@ const roleToChinese = (role : string) => {
 <template>
   <h-loading :load="onLoad">
     <div class="main-panel full flex-column" >
-      <HSearchBar style="width: 85%" searchUrl="/affair/fuzzy" @onEnter="goAffairManage"></HSearchBar>
+      <HSearchBar style="width: 80%" searchUrl="/affair/fuzzy" @onEnter="goAffairManage"></HSearchBar>
       <div class="page-table" >
-        <div class="subtitle" style="text-align: left;margin-top:10px; margin-left:3px">事务列表</div>
+        <div class="subtitle" style="text-align: left;margin-top:10px; margin-left:3px">职能学习列表</div>
           <HATable :dataList="dataList" :cols="tableCols">
             <template #Name="{data}">
               <span style="white-space: nowrap" class="text">
@@ -160,7 +160,7 @@ const roleToChinese = (role : string) => {
               </span>
             </template>
             <template #Operation="{row}">
-              <div class="flex-row" style="width: 80px">
+              <div class="flex-row" style="width: 100%;justify-content: center;align-items: center">
               <HButton style="width: 25px;margin: auto 5px" height="20px" @click="goAffairManage(row['id'])"><i class='bx bx-edit-alt'></i></HButton>
               <HButton style="width: 25px;margin: auto 5px" height="20px" type="danger" @click="onDelete(row['id'])"><i class='bx bx-trash'></i></HButton>
               </div>
@@ -168,7 +168,9 @@ const roleToChinese = (role : string) => {
           </HATable>
           <HPagination @onPageChange="requestAffairs" :itemsPerPage="pageSize" :total-pages="totalPages" ref="pageNation">
           </HPagination>
-        <HButton height="30px" style="margin-top: 5px" @click="goAffairManage('0')">添加事务</HButton>
+        <div style="display: flex;align-items: center;justify-content: center">
+          <HButton height="30px" style="margin-top: 5px;width: 50%" @click="goAffairManage('0')">添加事务</HButton>
+        </div>
       </div>
     </div>
   </h-loading>
@@ -184,7 +186,7 @@ const roleToChinese = (role : string) => {
       <div class="text" style="padding-bottom: 20px; width: 100%">你确定删除该事务吗？</div>
       <div class="flex-row" style=" width: 100%;gap: 10px; justify-content: flex-end">
         <h-button type="secondary" height="30px" style="margin: 0; width: 60px; font-size: 12px" id="cancel" @click="cancel">取消</h-button>
-        <h-button type="danger" height="30px" style="margin: 0; width: 60px; font-size: 12px" @click="affairDelete" id="confirm">确认</h-button>
+        <h-button type="danger" height="30px" style="margin: 0; width: 60px; font-size: 12px" @click="affairDelete" id="confirm">删除</h-button>
       </div>
     </div>
   </HAlert>
@@ -197,5 +199,5 @@ const roleToChinese = (role : string) => {
   width 100%
 .page-table
   flex-grow 1
-  width 85%
+  width 80%
 </style>

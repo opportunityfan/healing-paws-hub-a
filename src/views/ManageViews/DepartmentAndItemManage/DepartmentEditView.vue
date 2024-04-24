@@ -15,9 +15,12 @@ import HpageTable from "@/components/HpageTable.vue";
 import HImageUpload from "@/components/HImageUpload.vue";
 import HATable from "@/components/HATable.vue";
 import HPagination from "@/components/HPagination.vue";
+import HAlert from "@/components/HAlert.vue";
+import {string} from "three/examples/jsm/nodes/shadernode/ShaderNode";
 const route = useRoute()
 const imageUpload = ref()
 const staffPage = ref()
+const itemPage = ref()
 const department = reactive<{
   id : string,
   name : string,
@@ -38,22 +41,32 @@ const department = reactive<{
 })
 const data = reactive<{
   isNew : boolean
-
+  staffDeleteAlert : boolean
+  staffEditAlert : boolean
+  itemDeleteAlert : boolean
+  itemAddAlert : boolean
+  curStaffIndex : number
+  curItemId : string
 }>({
   isNew : false,
-
+  staffDeleteAlert : false,
+  staffEditAlert : false,
+  itemDeleteAlert : false,
+  curStaffIndex : -1,
+  curItemId : '',
+  itemAddAlert : false
 })
 const staffData = reactive<{
   editOrAdd : boolean
-  isStaffPanel : boolean
+
   id : string,
   name : string,
   position : string,
   phone : string,
   nowIndex : number
 }>({
-  editOrAdd : false,   //默认false表示add
-  isStaffPanel : false,
+  editOrAdd : false,   //默认false表示edit,true表示add
+
   id : 'id',
   name : '名字',
   position : '职位',
@@ -77,27 +90,6 @@ const itemData = reactive<{
   departmentId : department.id,
   type : 'normal'
 })
-
-const itemTable = ref()
-
-const deleteDepartment = async () => {
-  axios.delete('/department/'+department.id,{
-    headers:{
-      token : store.state.token
-    }
-  }).then(res=>{
-    console.log(res.data)
-    if(res.data.code===200){
-      console.log('删除成功！')
-      showMessage('删除成功!','success')
-      goBack()
-    }else{
-      showMessage(`${res.data.msg}`,'error')
-    }
-  }).catch(()=>{
-    showMessage('网络错误','error')
-  })
-}
 const getDepartmentById = async () => {
 
   if(department.id !== '0') {
@@ -115,7 +107,10 @@ const getDepartmentById = async () => {
         department.staff = temp.staffList
         department.pic = temp.pic
         department.image = new Img(temp.pic, 1, 1)
-        staffList.value = department.staff
+
+        const startIndex = 0
+        staffList.value = department.staff.slice(startIndex, startIndex + 5)
+
         console.log('科室人员检查1',department.staff)
         console.log('科室人员检查2',department.staff.values())
       }else{
@@ -131,43 +126,33 @@ const getDepartmentById = async () => {
 const onLoad = async () =>{
 
   await getDepartmentById()
-
+  await requestItems(1,5)
   return
 }
 const requestStaffs = async (pageNum : number, pageSize : number) => {
-  //staffTable.value = department.staff
   const startIndex = (pageNum-1)*pageSize
   staffList.value = department.staff.slice(startIndex, startIndex + pageSize)
-  // const currentItems = new Array<tag>()
-  // if(department.staff){
-  //   department.staff.forEach(s=>{
-  //     currentItems.push(new tag(s.id,s.name))
-  //   })
-  // }
-  // return currentItems
 }
 //有问题
 const requestItems = async (pageNum : number, pageSize : number) =>{
-  const currentItems = new Array<tag>()
   await axios.get('/department/getItem/'+department.id,{
     headers:{
       'token':store.state.token
+    },
+    params:{
+      pageNum:pageNum,
+      pageSize:pageSize
     }
   }).then(res=>{
     console.log('科室的物品',res.data)
     if(res.data.code==200) {
-      if (res.data.data) {
-        for (let item of res.data.data) {
-          currentItems.push(new tag(item.id, item.name))
-        }
-      }
-    }else{
-      showMessage(`${res.data.msg}`,'error')
+      itemTotalPages.value = res.data.data.totalPages
+      itemList.value = res.data.data.listData
     }
   }).catch(()=>{
     showMessage('网络错误','error')
   })
-  return currentItems
+
 }
 function generateRandomString(length: number): string {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -236,48 +221,16 @@ const updateDepartment = () => {
   })
 }
 const addPanel = () => {
-  if(staffData.isStaffPanel){
-    staffData.isStaffPanel = !staffData.isStaffPanel
-  }else{
-    staffData.editOrAdd = false
-    staffData.id = 'id'
+    staffData.editOrAdd = true
+    staffData.id = generateRandomString(8)
     staffData.name = '名称'
     staffData.position = '职位'
     staffData.phone = '电话'
-    staffData.isStaffPanel = !staffData.isStaffPanel
-  }
-  return;
+    data.staffEditAlert = true
 }
-const editPanel = (index:number) => {
-  staffData.nowIndex = index
-  staffData.editOrAdd = true
-  staffData.id = department.staff[index].id
-  staffData.name = department.staff[index].name
-  staffData.position = department.staff[index].position
-  staffData.phone = department.staff[index].phone
-  if(staffData.isStaffPanel === false){
-    staffData.isStaffPanel = true
-  }
-}
-const addStaff = () =>{
-  department.staff.push({id:staffData.id,name:staffData.name,position:staffData.position,phone:staffData.phone})
-  staffData.isStaffPanel = false
-  console.log('检查staffPage',staffPage.value)
-  console.log('检查当前页码',staffPage.value.data.currentPage)
-  requestStaffs(staffPage.value.data.currentPage,5)
-}
-const editStaff = () =>{
-  console.log('修改成功')
-  department.staff[staffData.nowIndex].id = staffData.id
-  department.staff[staffData.nowIndex].name = staffData.name
-  department.staff[staffData.nowIndex].position = staffData.position
-  department.staff[staffData.nowIndex].phone = staffData.phone
-  console.log('修改成功')
 
-  staffData.isStaffPanel = false
-}
-const itemPanel = () => {
-  itemData.isEditPanel = !itemData.isEditPanel
+const onItemAdd = () => {
+  data.itemAddAlert = true
 }
 const addItem = () => {
   const formdata = new FormData()
@@ -290,7 +243,7 @@ const addItem = () => {
     console.log(res.data)
     if(res.data.code==200){
       showMessage('更新成功!','success')
-      itemTable.value.update()
+      requestItems(itemPage.value.data.currentPage,5)
     }else{
       showMessage(`${res.data.msg}`,'error')
     }
@@ -298,12 +251,13 @@ const addItem = () => {
   }).catch(()=>{
     showMessage('网络错误','error')
   })
+  data.itemAddAlert = false
 }
 const goItemEdit = (id : string) => {
   goto('/instrument-edit/'+id)
 }
 
-const staffList = ref([1])
+const staffList = ref([])
 const staffCols = [
   {
     title:'名称',
@@ -319,9 +273,14 @@ const staffCols = [
     title:'电话',
     key:'phone',
     scopedSlots: ''
+  },
+  {
+    title:'操作',
+    key:'',
+    scopedSlots: 'Operation'
   }
 ]
-const itemList = ref()
+const itemList = ref([])
 const itemCols = [
   {
     title:'名称',
@@ -332,11 +291,90 @@ const itemCols = [
     title:'用途',
     key:'usage',
     scopedSlots:''
+  },
+  {
+    title:'操作',
+    key:'',
+    scopedSlots: 'Operation'
   }
 ]
 const staffTotalPages = computed(()=>{
   return Math.ceil(department.staff.length/5)
 })
+const itemTotalPages = ref()
+const onDeleteStaff = (index : number) => {
+  console.log('删除staff',index)
+  data.curStaffIndex = index
+  data.staffDeleteAlert = true
+}
+const onStaffEdit = (index : number) => {
+  console.log('Edit Staff',index)
+  data.curStaffIndex = index
+  staffData.editOrAdd = false
+  staffData.id = department.staff[index].id
+  staffData.name = department.staff[index].name
+  staffData.position = department.staff[index].position
+  staffData.phone = department.staff[index].phone
+  data.staffEditAlert = true
+}
+const staffDelete = (index : number) => {
+
+  console.log('删除staff',index)
+  department.staff.splice(index,1)
+  if(staffPage.value.data.currentPage>staffTotalPages.value){
+    staffPage.value.data.currentPage--
+  }
+  requestStaffs(staffPage.value.data.currentPage,5)
+  console.log(department.staff)
+  showMessage('人员信息删除成功！', 'info')
+  data.staffDeleteAlert = false
+}
+const staffEdit = (index : number) =>{
+
+  if(staffData.editOrAdd == false) {
+    console.log('修改人员', index)
+    department.staff[index].name = staffData.name
+    department.staff[index].position = staffData.position
+    department.staff[index].phone = staffData.phone
+    requestStaffs(staffPage.value.data.currentPage,5)
+    showMessage('人员信息修改成功', 'info')
+  }else{
+    console.log('添加人员')
+    department.staff.push({id:staffData.id,name:staffData.name,position:staffData.position,phone:staffData.phone})
+
+    console.log('检查staffPage',staffPage.value)
+    console.log('检查当前页码',staffPage.value.data.currentPage)
+    requestStaffs(staffPage.value.data.currentPage,5)
+    showMessage('添加人员成功', 'info')
+  }
+  data.staffEditAlert = false
+  return
+}
+
+const onDeleteItem = (id : string) => {
+  data.curItemId = id
+  data.itemDeleteAlert = true
+
+}
+const itemDelete = (id : string)=>{
+  axios.delete('/item/'+id,{
+    headers:{
+      token:store.state.token
+    }
+  }).then(res=>{
+    if(res.data.code ==200){
+      showMessage('删除成功！','info')
+
+      if(itemList.value.length==1&&itemPage.value.data.currentPage>1) {
+        itemPage.value.data.currentPage--
+      }
+      requestItems(itemPage.value.data.currentPage,5)
+
+
+    }
+  })
+  data.itemDeleteAlert = false
+}
 </script>
 
 <template>
@@ -365,7 +403,7 @@ const staffTotalPages = computed(()=>{
               <div style="width: 100%" >
                 <HButton @click="createDepartment"  v-if="data.isNew" height="30px">创建科室</HButton>
                 <HButton @click="updateDepartment"  v-if="!data.isNew" height="30px">更新科室</HButton>
-                <HButton @click="deleteDepartment" type="danger" height="30px">删除科室</HButton>
+
               </div>
             </div>
         </div>
@@ -374,38 +412,30 @@ const staffTotalPages = computed(()=>{
       <div class="main-panel">
         <div class="left-panel">
           <div class="text-bold">科室人员</div>
-<!--          <HpageTable :request-items="requestStaffs" totalPages="1" @itemClickIndex="editPanel" ref="staffTable"></HpageTable>-->
-          <HATable :data-list="staffList" :cols="staffCols"></HATable>
+          <HATable :data-list="staffList" :cols="staffCols">
+            <template #Operation="{rowIndex}">
+              <div class="flex-row" style="width: 80px">
+                <HButton style="width: 25px;margin: auto 5px" height="20px" @click="onStaffEdit(rowIndex)"><i class='bx bx-edit-alt'></i></HButton>
+                <HButton style="width: 25px;margin: auto 5px" height="20px" type="danger" @click="onDeleteStaff(rowIndex)"><i class='bx bx-trash'></i></HButton>
+              </div>
+            </template>
+          </HATable>
           <HPagination @onPageChange="requestStaffs" ref="staffPage" items-per-page="5" :total-pages="staffTotalPages"></HPagination>
           <HButton height="30px" style="margin-top: 5px" @click="addPanel">添加人员</HButton>
-          <div class="staff-add-panel" v-if="staffData.isStaffPanel">
-            <div class="flex-row" style="width: 100%; gap: 10px; margin: 4px 0">
-              <div class="text-bold" style="flex-shrink: 0; margin-left: 6px">人员id</div>
-              <HFormInput v-model="staffData.id" name="人员id" style="width: 160px"></HFormInput>
-            </div>
 
-            <div class="flex-row" style="width: 100%; gap: 10px; margin: 4px 0">
-              <div class="text-bold" style="flex-shrink: 0; margin-left: 6px">名称</div>
-              <HFormInput v-model="staffData.name" name="名称" style="width: 160px"></HFormInput>
-            </div>
-            <div class="flex-row" style="width: 100%; gap: 10px; margin: 4px 0">
-              <div class="text-bold" style="flex-shrink: 0; margin-left: 6px">职位</div>
-              <HFormInput v-model="staffData.position" name="职位" style="width: 160px"></HFormInput>
-            </div>
-            <div class="flex-row" style="width: 100%; gap: 10px; margin: 4px 0">
-              <div class="text-bold" style="flex-shrink: 0; margin-left: 6px">手机号</div>
-              <HFormInput v-model="staffData.phone" name="手机号" style="width: 160px"></HFormInput>
-            </div>
-            <div class="staff-button-block">
-              <HButton v-if="!staffData.editOrAdd" height="20px" @click="addStaff" class="staff-button">确认添加</HButton>
-              <HButton v-if="staffData.editOrAdd" height="20px" @click="editStaff"  class="staff-button">确认修改</HButton>
-            </div>
-          </div>
         </div>
         <div  class="right-panel">
           <div class="text-bold">科室物品</div>
-          <HpageTable :request-items="requestItems" totalPages="1" @itemClick="goItemEdit" ref="itemTable"></HpageTable>
-          <HButton height="30px" style="margin-top: 5px" @click="itemPanel">添加物品</HButton>
+          <HATable :data-list="itemList" :cols="itemCols">
+            <template #Operation="{row}">
+              <div class="flex-row" style="width: 80px">
+                <HButton style="width: 25px;margin: auto 5px" height="20px" @click="goItemEdit(row['id'])"><i class='bx bx-edit-alt'></i></HButton>
+                <HButton style="width: 25px;margin: auto 5px" height="20px" type="danger" @click="onDeleteItem(row['id'])"><i class='bx bx-trash'></i></HButton>
+              </div>
+            </template>
+          </HATable>
+          <HPagination @onPageChange="requestItems" ref="itemPage" items-per-page="5" :total-pages="itemTotalPages"></HPagination>
+          <HButton height="30px" style="margin-top: 5px" @click="onItemAdd">添加物品</HButton>
 
           <div class="item-add-panel" v-if="itemData.isEditPanel">
             <div class="flex-row" style="width: 100%; gap: 10px; margin: 4px 0">
@@ -424,6 +454,91 @@ const staffTotalPages = computed(()=>{
 
     </div>
   </h-loading>
+<!--  人员删除确认板-->
+  <HAlert v-model="data.staffDeleteAlert">
+    <div class="flex-column" style="gap: 10px; text-align: left">
+      <div class="flex-row" style="width: 100%">
+        <div class="box-icon">
+          <i class='bx bx-trash'></i>
+        </div>
+        <div class="text-bold">删除</div>
+      </div>
+      <div class="text" style="padding-bottom: 20px; width: 100%">你确定删除该事务吗？</div>
+      <div class="flex-row" style=" width: 100%;gap: 10px; justify-content: flex-end">
+        <h-button type="secondary" height="30px" style="margin: 0; width: 60px; font-size: 12px" id="cancel" @click="data.staffDeleteAlert=false">取消</h-button>
+        <h-button type="danger" height="30px" style="margin: 0; width: 60px; font-size: 12px" @click="staffDelete(data.curStaffIndex)" id="confirm">删除</h-button>
+      </div>
+    </div>
+  </HAlert>
+<!--人员编辑板-->
+  <HAlert v-model="data.staffEditAlert">
+    <div class="flex-column" style="gap: 10px; text-align: left">
+      <div class="flex-row" style="width: 100%">
+        <div class="box-icon">
+          <i class='bx bx-edit-alt'></i>
+        </div>
+        <div class="text-bold">人员编辑</div>
+      </div>
+      <div class="flex-row" style="width: 100%; gap: 10px; margin: 4px 0">
+        <div class="text-bold" style="flex-shrink: 0; margin-left: 6px">名称</div>
+        <HFormInput v-model="staffData.name" name="名称" style="width: 160px"></HFormInput>
+      </div>
+      <div class="flex-row" style="width: 100%; gap: 10px; margin: 4px 0">
+        <div class="text-bold" style="flex-shrink: 0; margin-left: 6px">职位</div>
+        <HFormInput v-model="staffData.position" name="职位" style="width: 160px"></HFormInput>
+      </div>
+      <div class="flex-row" style="width: 100%; gap: 10px; margin: 4px 0">
+        <div class="text-bold" style="flex-shrink: 0; margin-left: 6px">手机号</div>
+        <HFormInput v-model="staffData.phone" name="手机号" style="width: 160px"></HFormInput>
+      </div>
+
+      <div class="flex-row" style=" width: 100%;gap: 10px; justify-content: flex-end">
+        <h-button type="secondary" height="30px" style="margin: 0; width: 60px; font-size: 12px" id="cancel" @click="data.staffEditAlert=false">取消</h-button>
+        <h-button  v-if="!staffData.editOrAdd" height="30px" style="margin: 0; width: 60px; font-size: 12px" @click="staffEdit(data.curStaffIndex)" id="confirm">修改</h-button>
+        <h-button  v-if="staffData.editOrAdd" height="30px" style="margin: 0; width: 60px; font-size: 12px" @click="staffEdit(data.curStaffIndex)" id="confirm">添加</h-button>
+      </div>
+    </div>
+  </HAlert>
+<!--item删除确认板-->
+  <HAlert v-model="data.itemDeleteAlert">
+    <div class="flex-column" style="gap: 10px; text-align: left">
+      <div class="flex-row" style="width: 100%">
+        <div class="box-icon">
+          <i class='bx bx-trash'></i>
+        </div>
+        <div class="text-bold">删除</div>
+      </div>
+      <div class="text" style="padding-bottom: 20px; width: 100%">你确定删除该物品吗？(不可回退)</div>
+      <div class="flex-row" style=" width: 100%;gap: 10px; justify-content: flex-end">
+        <h-button type="secondary" height="30px" style="margin: 0; width: 60px; font-size: 12px" id="cancel" @click="data.itemDeleteAlert=false">取消</h-button>
+        <h-button type="danger" height="30px" style="margin: 0; width: 60px; font-size: 12px" @click="itemDelete(data.curItemId)" id="confirm">删除</h-button>
+      </div>
+    </div>
+  </HAlert>
+<!--item添加板-->
+  <HAlert v-model="data.itemAddAlert">
+    <div class="flex-column" style="gap: 10px; text-align: left">
+      <div class="flex-row" style="width: 100%">
+        <div class="box-icon">
+          <i class='bx bx-edit-alt'></i>
+        </div>
+        <div class="text-bold">物品添加</div>
+      </div>
+      <div class="flex-row" style="width: 100%; gap: 10px; margin: 4px 0">
+        <div class="text-bold" style="flex-shrink: 0; margin-left: 6px">名称</div>
+        <HFormInput v-model="itemData.name" name="名称" style="width: 160px"></HFormInput>
+      </div>
+      <div class="flex-row" style="width: 100%; gap: 10px; margin: 4px 0">
+        <div class="text-bold" style="flex-shrink: 0; margin-left: 6px">说明</div>
+        <HFormInput v-model="itemData.introduction" name="说明" style="width: 160px"></HFormInput>
+      </div>
+
+      <div class="flex-row" style=" width: 100%;gap: 10px; justify-content: flex-end">
+        <h-button type="secondary" height="30px" style="margin: 0; width: 60px; font-size: 12px" id="cancel" @click="data.itemAddAlert=false">取消</h-button>
+        <h-button   height="30px" style="margin: 0; width: 60px; font-size: 12px" @click="addItem" id="confirm">添加</h-button>
+      </div>
+    </div>
+  </HAlert>
 </template>
 
 <style scoped lang="stylus">

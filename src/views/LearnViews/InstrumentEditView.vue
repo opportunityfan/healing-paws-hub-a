@@ -14,7 +14,7 @@
                 <HFormInput v-model="data.instrument.introduction" name="器械简述" style="width: 200px"></HFormInput>
               </div>
               <div class="flex-row" style="width: 100%; gap: 20px;">
-                <div class="text-bold">器械简述</div>
+                <div class="text-bold">相关角色</div>
                 <HRadio :options="roles" v-model:value="data.instrument.type"></HRadio>
               </div>
             </div>

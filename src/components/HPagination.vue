@@ -59,7 +59,7 @@ defineExpose({data})
       <HFormInput type="number" name="页码" v-model="data.currentPage" width="24px" height="22px" @keydown.enter="onPageChange"></HFormInput>
         <span style="display: inline-block;line-height: 25px;">/ {{totalPages}}
         </span>
-      <HButton class="box-icon button-hover page-button" height="20px" style="font-size: 20px" @click="nextPage">
+      <HButton class="box-icon button-hover page-button" height="20px" style="font-size: 20px;margin: 3px 12px" @click="nextPage">
           <i class='bx bx-chevron-right' ></i>
         </HButton>
     </div>
