@@ -442,6 +442,46 @@ export const getAffairNodes = async (affairId : string)=>{
     return affairNodesAndEdges
 }
 
+export class DepartmentBrief {
+    id : string;
+    departmentName: string;
+    pic: string;
+    position: {
+        x : number;
+        y : number;
+        z : number;
+    }
+    constructor(id: string, departmentName : string, pic : string, x : number, y : number, z : number) {
+        this.id = id
+        this.departmentName = departmentName
+        this.pic = pic
+        this.position = {
+            x : x,
+            y : y,
+            z : z
+        }
+    }
+}
+
+export const getDepartmentBrief = async () => {
+    let ret : DepartmentBrief[] = []
+    await axios.post('/department/getAll',{},{
+        headers:{
+            'token':store.state.token
+        }
+    }).then((res) => {
+        console.log(res)
+        if(res.data.code==200) {
+            ret = res.data.data
+        } else{
+            showMessage(`${res.data.msg}`,"error")
+        }
+    }).catch(()=>{
+        showMessage('网络错误','error')
+    })
+    return ret
+}
+
 export const openTalkBar = () => {
     store.state.talkBarAppend = true
 }
