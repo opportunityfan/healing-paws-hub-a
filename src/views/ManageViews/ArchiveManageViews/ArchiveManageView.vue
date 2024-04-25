@@ -256,7 +256,7 @@ function updateDiseaseName(diseaseId: string) {
       </HScroller>
     </div>
     <div class="flex-row">
-      <HButton @click="searchArchives" style="margin-right: 10px">搜索符合的病例</HButton>
+      <HButton @click="searchArchives" style="margin-right: 10px">搜索符合病例</HButton>
       <HButton @click="goto('/archiveDetailManage')">新建病例</HButton>
     </div>
   </div>
@@ -265,7 +265,7 @@ function updateDiseaseName(diseaseId: string) {
 <style scoped lang="stylus">
 
 .diseaseChooseBox
-  height 70%
+  height 80%
   border 3px solid var(--theme-color)
 
 .diseaseNameButton
