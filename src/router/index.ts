@@ -42,6 +42,7 @@ import ItemEditView from "@/views/ManageViews/DepartmentAndItemManage/ItemEditVi
 import ArchiveDetailManageView from "@/views/ManageViews/ArchiveManageViews/ArchiveDetailManageView.vue";
 import ArchiveSearchResultsManageView from "@/views/ManageViews/ArchiveManageViews/ArchiveSearchResultsManageView.vue";
 import DepartmentView from "@/views/DepartmentViews/DepartmentView.vue";
+import ExamManageTestView from "@/views/UserView/ExamManageTestView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -222,6 +223,11 @@ const routes: Array<RouteRecordRaw> = [
             path: '/examUpdate/:id',
             name: 'examUpdate',
             component: ExamUpdateView
+          },
+          {
+            path:'/examManageTest/:id',
+            name: 'examManageTest',
+            component: ExamManageTestView
           },
           {
             path: '/subject',

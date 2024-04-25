@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import {onMounted, reactive, ref} from "vue";
 import {string} from "three/examples/jsm/nodes/shadernode/ShaderNode";
-import {dayjs, FormEmits, FormInstance} from "element-plus";
+import {dayjs, ElMessage, FormEmits, FormInstance} from "element-plus";
 import axios from "axios";
 import {goto} from "@/assets/api";
 import {useRoute} from "vue-router";
 import HPagination from "@/components/HPagination.vue";
+import HSearch from "@/components/HSearch.vue";
 
 const router=useRoute();
 const pagenum=ref(1);
 const pagesize=ref(5);
+const text=ref(null);
 const examform=reactive({
   id:router.params.id,
   examName: '',
@@ -61,21 +63,44 @@ async function getsubmit(newexam:object){
   examform.endTime=dayjs(examform.endTime).format('YYYY-MM-DD hh:mm:ss');
   console.log(newexam);
   const result=await axios.put('http://150.158.110.63:8080/exam',examform);
-  console.log(result);
+  console.log('result',result.data);
+  if(result.data.code!=200){
+    ElMessage({
+      showClose: true,
+      message: result.data.data,
+      type: 'error',
+    })
+  }
+  else{
+    ElMessage({
+      showClose: true,
+      message: '修改成功',
+      type: 'success',
+    })
+  }
   goto('/examManage');
 }
+
+function search(){
+  getdata(pageNation.value.data.currentPage,pagesize.value);
+}
+
 async function getdata(currentPage:number,pageSize : number){
-  const res = await axios.get('http://150.158.110.63:8080/question/page',{
+
+  console.log('测试getdata',currentPage)
+  console.log('ceshipagesize',pagesize)
+  const res = await axios.get('http://150.158.110.63:8080/question/group',{
     params:{
+      diseases:text.value,
       pageNum: currentPage,
       pageSize: pageSize,
     }
   })
+  console.log('ceshi res.data',res.data)
   pagenum.value=res.data.data.totalPages;
   questiondata.value=res.data.data.listData;
-  console.log(res);
+  console.log(questiondata.value);
 }
-
 
 function Add(Value:boolean,Id:string){
   console.log(Value);
@@ -124,7 +149,7 @@ onMounted(()=>{
   <div>
     <el-form :model="examform" :rules="rules" @submit="submit()" ref="formref">
       <el-form-item prop="examName" label="考试名称">
-        <el-input v-model="examform.examName">
+        <el-input v-model="examform.examName" style="width: 50%">
         </el-input>
       </el-form-item>
       <el-form-item prop="questionIdList" label="选择题目">
@@ -146,10 +171,10 @@ onMounted(()=>{
         <el-input-number v-model="examform.totalTime" :min="30" :max="180" :controls="false"/>
       </el-form-item>
       <el-form-item label="参与者">
-        <el-select v-model="examform.type">
-          <el-option label="实习生" :value="1"></el-option>
-          <el-option label="兽医" :value="2"></el-option>
-          <el-option label="兽医2" :value="3"></el-option>
+        <el-select v-model="examform.type" style="width: 20%">
+          <el-option label="前台" :value="1"></el-option>
+          <el-option label="医师" :value="2"></el-option>
+          <el-option label="医助" :value="3"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -158,6 +183,7 @@ onMounted(()=>{
       </el-form-item>
     </el-form>
     <el-dialog v-model="isAdd" title="添加题目" width="1000" class="xdialog" @closed="examList=[]">
+      <HSearch v-model="text" @onEnter="search"></HSearch>
       <table class="xtable">
         <colgroup>
           <col width="25%">
@@ -175,9 +201,10 @@ onMounted(()=>{
         </thead>
         <tbody>
         <tr v-for="item in questiondata" :key="item.id">
+
           <td>{{item.name}}</td>
           <td>{{item.score}}</td>
-          <td>{{item.statement}}</td>
+          <td>{{item.type.join(',')}}</td>
           <td>
             <el-checkbox :checked="examList.indexOf(item.id)>=0" @change="(value)=>{Add(value,item.id)}"></el-checkbox>
           </td>

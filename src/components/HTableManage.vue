@@ -3,10 +3,11 @@ import {string} from "three/examples/jsm/nodes/shadernode/ShaderNode";
 import axios from "axios";
 import {CaretBottom, CaretTop, DCaret} from "@element-plus/icons-vue";
 import HButton from "@/components/HButton.vue";
+import {ElMessage} from "element-plus";
 
 export default {
   components: {HButton, CaretBottom, CaretTop, DCaret},
-  emits: ['trans','publish'],
+  emits: ['trans','publish','delete1'],
   props: {
     tabledata: {
       type:Array,
@@ -41,9 +42,20 @@ export default {
           id: this.statement,
         }
       )
-      console.log(res.data.code);
-      console.log(res.data.msg);
-      console.log(res.data.data);
+      if(res.data.code!=200){
+        ElMessage({
+          showClose: true,
+          message: res.data.data,
+          type: 'error',
+        })
+      }
+      else{
+        ElMessage({
+          showClose: true,
+          message: '发布成功',
+          type: 'success',
+        })
+      }
       this.$emit('publish',this.ispublish);
       this.ispublish=false;
     },
@@ -53,9 +65,21 @@ export default {
           id: this.statement,
         }
       })
-      console.log(res.data.code);
-      console.log(res.data.msg);
-      console.log(res.data.data);
+      if(res.data.code!=200){
+        ElMessage({
+          showClose: true,
+          message: res.data.data,
+          type: 'error',
+        })
+      }
+      else{
+        ElMessage({
+          showClose: true,
+          message: '删除成功',
+          type: 'success',
+        })
+      }
+      this.$emit('delete1',this.isdelete);
       this.isdelete=false;
     },
     sort(){
@@ -102,7 +126,11 @@ export default {
     </thead>
     <tbody>
     <tr v-for="(item,index) in tabledata" :key="index">
-      <td>{{item.examName}}</td>
+      <td>
+        <router-link :to="'/examManageTest/'+item.id" class="tdlink">
+          {{item.examName}}
+        </router-link>
+      </td>
       <td>{{item.startTime}}-{{item.endTime}}</td>
       <td>{{item.totalScore}}</td>
       <td>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {onMounted, reactive, ref} from "vue";
 import {string} from "three/examples/jsm/nodes/shadernode/ShaderNode";
-import {dayjs, FormEmits, FormInstance} from "element-plus";
+import {dayjs, ElMessage, FormEmits, FormInstance} from "element-plus";
 import axios from "axios";
 import {goto} from "@/assets/api";
 import store from "@/store";
@@ -63,6 +63,20 @@ async function getsubmit(){
   console.log(subjectform);
   const result=await axios.put('http://150.158.110.63:8080/question',subjectform);
   console.log(result);
+  if(result.data.code!=200){
+    ElMessage({
+      showClose: true,
+      message: result.data.data,
+      type: 'error',
+    })
+  }
+  else{
+    ElMessage({
+      showClose: true,
+      message: '修改成功',
+      type: 'success',
+    })
+  }
   goto('/subject');
 }
 

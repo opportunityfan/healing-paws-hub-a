@@ -72,6 +72,10 @@ function times(x:number){
 function publishes(x:boolean){
    getData(1,pagesize.value);
 }
+
+function deletes(x:boolean){
+  getData(1,pagesize.value);
+}
 function qt(){
   choose.value=1;
   search();
@@ -146,7 +150,7 @@ function clearup(){
     </div>
 <!--    {{tabledata}}-->
     <div class="xia">
-      <HTableManage :tabledata="tabledata"  @trans="times" @publish="publishes"></HTableManage>
+      <HTableManage :tabledata="tabledata"  @trans="times" @publish="publishes" @delete1="deletes"></HTableManage>
     </div>
       <HPagination @onPageChange="getData" :itemsPerPage="pagesize" :total-pages="pagenum" ref="pageNation">
       </HPagination>
