@@ -27,9 +27,7 @@
       <div class="box-icon button-hover" style="font-size: 19px" @click="onMinimize">
         <i class='bx bx-minus'></i>
       </div>
-      <div class="box-icon button-hover" style="font-size: 19px" @click="onMaxMize">
-        <i class='bx bx-minus'></i>
-      </div>
+
       <div class="box-icon button-hover" style="font-size: 21px;margin-right: 3px" @click="onClose">
         <i class='bx bx-x'></i>
       </div>
@@ -42,7 +40,7 @@ import store from "@/store";
 import HBackKey from "@/components/HBackKey.vue";
 import {computed, ref} from "vue";
 import { openTalkBar } from "@/assets/api";
-import {remote} from "electron"
+
 
 const onClose = () => {
   console.log('close');
@@ -52,15 +50,7 @@ const onMinimize = () => {
   window.electronAPI.minimize();
 }
 
-const onMaxMize = () => {
-  window.electronAPI.maxmize()
-  // const win = remote.getCurrentWindow()
-  // if(win.isMaximized()){
-  //   win.restore()
-  // }else{
-  //   win.maximize()
-  // }
-}
+
 
 const isBackKey = computed(()=>{
 
