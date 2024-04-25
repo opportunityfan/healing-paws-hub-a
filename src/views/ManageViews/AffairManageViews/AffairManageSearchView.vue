@@ -14,6 +14,7 @@ import HPagination from "@/components/HPagination.vue";
 import HIconButton from "@/components/HIconButton.vue";
 import {nextTick} from "vue/dist/vue";
 import HAlert from "@/components/HAlert.vue";
+import HSearch from "@/components/HSearch.vue";
 
 const dataList = ref()
 const totalPages=ref(0)
@@ -141,6 +142,10 @@ const roleToChinese = (role : string) => {
     return '前台'
   }
 }
+const text = ref('')
+const testEnter = () => {
+  console.log('测试数据绑定',text.value)
+}
 </script>
 <template>
   <h-loading :load="onLoad">
@@ -172,7 +177,9 @@ const roleToChinese = (role : string) => {
           <HButton height="30px" style="margin-top: 5px;width: 50%" @click="goAffairManage('0')">添加事务</HButton>
         </div>
       </div>
+      <HSearch v-model="text" @onEnter="testEnter"></HSearch>
     </div>
+
   </h-loading>
 
   <HAlert v-model="data.alert">
