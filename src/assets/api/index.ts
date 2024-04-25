@@ -515,35 +515,6 @@ export class Message {
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 let messageId = 0
 
 export const showMessage = (content: string, type: 'error'|'info'|'success'|'warning', duration = 2000) => {

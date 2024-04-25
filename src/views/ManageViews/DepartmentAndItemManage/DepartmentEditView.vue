@@ -14,6 +14,7 @@ import HATable from "@/components/HATable.vue";
 import HPagination from "@/components/HPagination.vue";
 import HAlert from "@/components/HAlert.vue";
 import HDivider from "@/components/HDivider.vue";
+import PositionEditor from "@/components/PositionEditor.vue";
 const route = useRoute()
 const imageUpload = ref()
 const staffPage = ref()
@@ -26,6 +27,11 @@ const department = reactive<{
   staff : Array<{id:string,name:string,position:string,phone:string}>,
   pic : string
   image : Img
+  position : {
+    x : number,
+    y : number,
+    z : number
+  }
 }>({
   id : route.params.id as string,
   name : '科室',
@@ -34,7 +40,12 @@ const department = reactive<{
   staff : [],
   pic : '',
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  image : new Img(require('@/assets/avatar.jpg'),1,1)
+  image : new Img(require('@/assets/avatar.jpg'),1,1),
+  position : {
+    x : 0,
+    y : 0,
+    z : 0
+  }
 })
 const data = reactive<{
   isNew : boolean
@@ -42,6 +53,7 @@ const data = reactive<{
   staffEditAlert : boolean
   itemDeleteAlert : boolean
   itemAddAlert : boolean
+  positionEditAlert : boolean
   curStaffIndex : number
   curItemId : string
 }>({
@@ -49,9 +61,10 @@ const data = reactive<{
   staffDeleteAlert : false,
   staffEditAlert : false,
   itemDeleteAlert : false,
+  positionEditAlert : false,
   curStaffIndex : -1,
   curItemId : '',
-  itemAddAlert : false
+  itemAddAlert : false,
 })
 const staffData = reactive<{
   editOrAdd : boolean
@@ -406,6 +419,9 @@ const itemDelete = (id : string)=>{
 
             </div>
         </div>
+          <div>
+            <div @click="data.positionEditAlert = true">编辑位置</div>
+          </div>
       </div>
 
       <div class="main-panel">
@@ -554,6 +570,11 @@ const itemDelete = (id : string)=>{
         <h-button type="secondary" height="30px" style="margin: 0; width: 60px; font-size: 12px" id="cancel" @click="data.itemAddAlert=false">取消</h-button>
         <h-button   height="30px" style="margin: 0; width: 60px; font-size: 12px" @click="addItem" id="confirm">添加</h-button>
       </div>
+    </div>
+  </HAlert>
+  <HAlert v-model="data.positionEditAlert">
+    <div style="width: 700px; height: 500px">
+      <PositionEditor :id="department.id" v-model="department.position"></PositionEditor>
     </div>
   </HAlert>
 </template>

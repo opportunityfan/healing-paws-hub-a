@@ -210,39 +210,6 @@ class Mark implements GuideObject {
   }
 }
 
-// class Plane implements GuideObject {
-//   static geometry = new Three.PlaneGeometry(1, 1)
-//   static material = new Three.Material()
-//   plane: Three.Mesh;
-//   constructor() {
-//     this.plane = new Three.Mesh(Plane.geometry, Plane.material)
-//     this.plane.receiveShadow = true
-//   }
-//   getObject3D(): Three.Object3D {
-//     return this.plane
-//   }
-// }
-
-class Wall implements GuideObject {
-  static material = new Three.MeshStandardMaterial({
-    color: '#FFFFFF'
-  })
-  static geometry = new Three.BoxGeometry(1, 0.3, 0.02)
-  mesh : Three.Mesh;
-  group : Three.Group
-  constructor() {
-    this.mesh = new Three.Mesh(Wall.geometry, Wall.material)
-    this.group = new Three.Group()
-    this.group.add(this.mesh)
-    this.mesh.position.set(0, 0.15, 0)
-    this.mesh.receiveShadow = true
-    this.mesh.castShadow = true
-  }
-  getObject3D() : Three.Object3D {
-    return this.group
-  }
-}
-
 const scene = new GuideScene()
 
 const loadResources = async () => {
