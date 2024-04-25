@@ -118,6 +118,8 @@ const getDepartmentById = async () => {
         department.pic = temp.pic
         department.image = new Img(temp.pic, 1, 1)
 
+        department.position = temp.position
+
         const startIndex = 0
         staffList.value = department.staff.slice(startIndex, startIndex + 5)
 
@@ -180,6 +182,7 @@ const createDepartment = () => {
     introduction : department.introduction,
     connectID : department.connect,
     staffList : department.staff,
+    position : department.position
   }
   const formdata = new FormData()
   formdata.append('pic',imageUpload.value.getPicFile())
@@ -207,6 +210,7 @@ const updateDepartment = () => {
     introduction : department.introduction,
     connectID : department.connect,
     staffList : department.staff,
+    position : department.position
   }
   const formdata = new FormData()
   console.log('检查图片文件',imageUpload.value.getPicFile())
@@ -416,7 +420,6 @@ const itemDelete = (id : string)=>{
                 <div class="text-bold" style="flex-shrink: 0">图片编辑</div>
                 <HImageUpload :image="department.image" ref="imageUpload"></HImageUpload>
               </div>
-
             </div>
         </div>
           <div>
