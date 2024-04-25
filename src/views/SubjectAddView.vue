@@ -141,8 +141,8 @@ onMounted(()=>{
             </el-form-item>
             <el-form-item prop="questionType" label="添加题目类型">
               <el-select v-model="subjectform.questionType">
-                <el-option :value="1" label="判断题"></el-option>
-                <el-option :value="2" label="选择题"></el-option>
+                <el-option :value="1" label="选择题"></el-option>
+                <el-option :value="2" label="判断题"></el-option>
                 <el-option :value="3" label="填空题"></el-option>
               </el-select>
             </el-form-item>

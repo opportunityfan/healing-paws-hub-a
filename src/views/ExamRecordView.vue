@@ -4,6 +4,8 @@ import {computed, onMounted, ref} from "vue";
 import axios from "@/assets/axios";
 import store from "@/store";
 import {ElMessage} from "element-plus";
+import HButton from "@/components/HButton.vue";
+import MarkdownRenderer from "@/components/MarkdownRenderer.vue";
 
 const router=useRoute();
 const pagenum=ref(1);
@@ -14,6 +16,7 @@ const value2=ref(0);
 const imd = ref<number>(0);
 const ID =  router.params.id;
 const record=ref({});
+const drawer=ref(false);
 
 async function getData() {
   const res = await axios.get('/examrecord/page/id', {
@@ -45,6 +48,12 @@ async function getData2() {
 function select(){
   console.log(imd.value,value2.value);
   imd.value=(value2.value);
+}
+
+function select1(value2:any){
+  console.log(imd.value,value2);
+  drawer.value=false;
+  imd.value=(value2);
 }
 
 function Last(){
@@ -94,50 +103,67 @@ const question = computed(()=>{
 
 <template>
   <div>
-  <div>
-    <el-button>
-      考试题目跳转
-      <el-select v-model="value2" @change="select">
-        <el-option v-for="( s , index) in item.questionList" :label="index+1" :key="index" :value="index">
-        </el-option>
-      </el-select>
-    </el-button>
-  </div>
-  <div class="hang">
-    <div class="zuo">
-      <el-button @click="Last">上一题</el-button>
+    <div>
+      <el-drawer v-model="drawer" title="题目跳转" :with-header="false" size="50%" class="wind">
+        <div class="wind">
+          <span>选择要跳转的题目</span>
+          <el-row>
+            <HButton v-for="( s , index) in item.questionList" :key="index" :value="index" @click="select1(index)" class="quest">
+              {{index+1}}
+            </HButton>
+          </el-row>
+        </div>
+      </el-drawer>
+      <el-row justify="space-between">
+        <el-col :span="6" >
+        </el-col>
+        <el-col :span="6">
+        </el-col>
+        <el-col :span="6">
+        </el-col>
+        <el-col :span="6">
+          <el-row justify="center">
+            <HButton @click="drawer = true" class="butt">题目跳转</HButton>
+          </el-row>
+        </el-col>
+      </el-row>
     </div>
-    <div class="you">
-      <el-button @click="Next">下一题</el-button>
-    </div>
-  </div>
-  <div>
-    <br>
+    <div>
     <div v-if="item.questionList && item.questionList.length>0&&record.result">
-      <h5>
-        题目分数：{{question.score}}
-      </h5>
-      <br>
-      <h3>
-        题目描述
-      </h3>
       <br>
       <div>
-        {{ question.statement }}
-      </div>
-      <br>
-      <div>
-        标准答案：{{question.answer}}
-      </div>
-      <div>
-        您的答案：{{record.result[imd]}}
+        <markdown-renderer :markdown="'#### 题目描述：'"></markdown-renderer>
+        <markdown-renderer :markdown="question.statement" class="full"></markdown-renderer>
+        <markdown-renderer :markdown="'#### 题目分数：'+question.score"></markdown-renderer>
+        <markdown-renderer :markdown="'#### 标准答案：'+question.answer"></markdown-renderer>
+        <markdown-renderer :markdown="'#### 您的答案：'+record.result[imd]"></markdown-renderer>
       </div>
       <br>
     </div>
-  </div>
+    </div>
+    <div>
+      <el-row justify="space-between">
+        <el-col :span="8" >
+          <el-row justify="center">
+            <HButton @click="Last" class="butt" >上一题</HButton>
+          </el-row>
+        </el-col>
+        <el-col :span="8">
+        </el-col>
+        <el-col :span="8">
+          <el-row justify="center">
+            <HButton @click="Next" class="butt">下一题</HButton>
+          </el-row>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
 <style scoped lang="stylus">
-
+.quest{
+  height 50px;
+  width 50px;
+  margin 25px;
+}
 </style>

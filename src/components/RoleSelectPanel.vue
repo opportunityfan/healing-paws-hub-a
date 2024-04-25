@@ -50,7 +50,7 @@ const chooseRole = () => {
     if(res.data.code===200){
       store.state.role = roles[roleSelected.value].role
       console.log(res.data)
-      goBack()
+      goto('/edit')
     }
   })
 }

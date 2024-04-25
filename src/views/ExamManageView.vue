@@ -69,6 +69,9 @@ function times(x:number){
   getData(pageNation.value.data.currentPage,pagesize.value);
 }
 
+function publishes(x:boolean){
+   getData(1,pagesize.value);
+}
 function qt(){
   choose.value=1;
   search();
@@ -143,7 +146,7 @@ function clearup(){
     </div>
 <!--    {{tabledata}}-->
     <div class="xia">
-      <HTableManage :tabledata="tabledata"  @trans="times"></HTableManage>
+      <HTableManage :tabledata="tabledata"  @trans="times" @publish="publishes"></HTableManage>
     </div>
       <HPagination @onPageChange="getData" :itemsPerPage="pagesize" :total-pages="pagenum" ref="pageNation">
       </HPagination>

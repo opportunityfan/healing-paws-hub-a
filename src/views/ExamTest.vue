@@ -18,7 +18,9 @@ const answer = ref('');
 const item1 = ref<any>({});
 const issubmit = ref(false);
 const drawer = ref(false);
-
+const sele=ref<any>([]);
+const pd1=ref(0);
+const contin=ref();
 function state(item2:any){
   issubmit.value=true;
   item1.value=item2;
@@ -36,8 +38,9 @@ async function getData(){
     }
   })
   item.value=res.data.data;
+  gettime();
 }
-getData();
+
 function onCountdownEnd(){
   ElMessage({
     showClose: true,
@@ -85,6 +88,7 @@ function record(){
   ans.value[imd.value]=answer.value;
   console.log(ans.value);
   answer.value='';
+  presubmit(item1.value);
 }
 
 async function submit(item:any){
@@ -106,6 +110,57 @@ async function submit(item:any){
   goto('/exam');
 }
 
+async function presubmit(item:any){
+  console.log(ans);
+  const datasub = {
+    examId : item.id,
+    result : ans.value,
+  }
+  await axios.post('http://150.158.110.63:8080/examrecord/commit',datasub,{
+    headers:{
+      'token' : store.state.token
+    }
+  })
+}
+
+function selectA(){
+  console.log(sele.value[1]);
+  if(sele.value[1]===1) sele.value[1]=0;
+  else if(sele.value[1]!=1) sele.value[1]=1;
+}
+
+function selectB(){
+  if(sele.value[2]===1) sele.value[2]=0;
+  else if(sele.value[2]!=1) sele.value[2]=1;
+}
+
+function selectC(){
+  if(sele.value[3]===1) sele.value[3]=0;
+  else if(sele.value[3]!=1) sele.value[3]=1;
+}
+
+function selectD(){
+  if(sele.value[4]===1) sele.value[4]=0;
+  else if(sele.value[4]!=1) sele.value[4]=1;
+}
+
+function sure(){
+  if(sele.value[1]===1) answer.value=answer.value+'A';
+  if(sele.value[2]===1) answer.value=answer.value+'B';
+  if(sele.value[3]===1) answer.value=answer.value+'C';
+  if(sele.value[4]===1) answer.value=answer.value+'D';
+  record();
+}
+
+function pd(){
+  if(pd1.value===0) pd1.value=1;
+  else pd1.value=0;
+}
+
+function sure1(){
+  if(pd1.value===1) answer.value='T';
+  else answer.value='F';
+}
 
 const question = computed(()=>{
   if (!(item.value.questionList)){
@@ -119,13 +174,25 @@ const question = computed(()=>{
   }
 })
 
+function gettime(){
+  let Now=Date.now();
+  let End=new Date(item.value.endTime).getTime();
+  // console.log(item.value)
+  // console.log(Now);
+  // console.log(End);
+  contin.value=(End-Now);
+  if((item.value.totalTime* 60 * 1000)<contin.value) contin.value=(item.value.totalTime* 60 * 1000);
+}
+
 onMounted(()=>{
   console.log(store.state.token);
+  getData();
 })
 </script>
 
 <template>
   <div class="full0">
+    {{contin}}
     <div class="full1">
       <el-row justify="space-between">
         <el-col :span="8">
@@ -136,7 +203,7 @@ onMounted(()=>{
         <el-col :span="8">
           <div>
             <vue-countdown v-if="item.totalTime" @end="onCountdownEnd"
-                           :time="item.totalTime * 60 * 1000" v-slot="{ hours, minutes, seconds }"
+                           :time="contin" v-slot="{ hours, minutes, seconds }"
                             >
                 <h4 class="dao">
                   {{ hours }} : {{ minutes }} : {{ seconds }}
@@ -170,21 +237,10 @@ onMounted(()=>{
       </div>
       <el-row justify="space-between">
         <el-col :span="6" >
-          <el-row justify="center">
-            <HButton @click="Last" class="butt" >上一题</HButton>
-          </el-row>
         </el-col>
         <el-col :span="6">
-          <el-row justify="center">
-            <HButton @click="state(item) " class="butt">
-              交卷
-            </HButton>
-          </el-row>
         </el-col>
         <el-col :span="6">
-          <el-row justify="center">
-            <HButton @click="Next" class="butt">下一题</HButton>
-          </el-row>
         </el-col>
         <el-col :span="6">
           <el-row justify="center">
@@ -193,7 +249,6 @@ onMounted(()=>{
         </el-col>
       </el-row>
     </div>
-    <br>
     <div class="full2">
       <HScroller scroll-direction="column">
         <div v-if="item.questionList && item.questionList.length>0">
@@ -201,12 +256,73 @@ onMounted(()=>{
           <markdown-renderer :markdown="question.statement" class="full"></markdown-renderer>
           <markdown-renderer :markdown="'#### 题目分数：'+question.score"></markdown-renderer>
           <markdown-renderer :markdown="'#### 请输入答案：'"></markdown-renderer>
-          <span>
-            {{question}}
-            <el-input v-model="answer" @blur="record()" style="width: 80%">
-            </el-input>
-          </span>
-
+          <div v-if="question.questionType===1">
+<!--            {{question}}-->
+<!--            <el-input v-model="answer" @blur="record()" style="width: 80%">-->
+<!--            </el-input>-->
+            <el-row justify="space-between">
+              <el-col :span="6">
+                <el-row justify="center">
+                  <HButton style="width: 60%" @click="selectA" v-if="sele[1]!=1" class="xuanze">A</HButton>
+                  <HButton style="width: 60%" @click="selectA" v-if="sele[1]===1" >A</HButton>
+                </el-row>
+              </el-col>
+              <el-col :span="6">
+                <el-row justify="center">
+                  <HButton style="width: 60%" @click="selectB" v-if="sele[2]!=1" class="xuanze">B</HButton>
+                  <HButton style="width: 60%" @click="selectB" v-if="sele[2]===1">B</HButton>
+                </el-row>
+              </el-col>
+              <el-col :span="6">
+                <el-row justify="center">
+                  <HButton style="width: 60%" @click="selectC" v-if="sele[3]!=1" class="xuanze">C</HButton>
+                  <HButton style="width: 60%" @click="selectB" v-if="sele[3]===1">C</HButton>
+                </el-row>
+              </el-col>
+              <el-col :span="6">
+                <el-row justify="center">
+                  <HButton style="width: 60%" @click="selectD" v-if="sele[4]!=1" class="xuanze">D</HButton>
+                  <HButton style="width: 60%" @click="selectD" v-if="sele[4]===1">D</HButton>
+                </el-row>
+              </el-col>
+            </el-row>
+            <el-row justify="center">
+              <HButton style="width: 30%" @click="sure">确定</HButton>
+            </el-row>
+          </div>
+          <div v-if="question.questionType===2">
+            <el-row justify="center">
+              <HButton style="width: 30%" @click="pd" v-if="pd1!=1" class="xuanze">T</HButton>
+              <HButton style="width: 30%" @click="pd" v-if="pd1===1">F</HButton>
+            </el-row>
+            <el-row justify="center">
+              <HButton style="width: 30%" @click="sure1">确定</HButton>
+            </el-row>
+          </div>
+          <div v-if="question.questionType===3">
+            <el-input v-model="answer" style="width: 80%" @blur="record"></el-input>
+          </div>
+        </div>
+        <div>
+          <el-row justify="space-between">
+            <el-col :span="8" >
+              <el-row justify="center">
+                <HButton @click="Last" class="butt" >上一题</HButton>
+              </el-row>
+            </el-col>
+            <el-col :span="8">
+              <el-row justify="center">
+                <HButton @click="state(item) " class="butt">
+                  交卷
+                </HButton>
+              </el-row>
+            </el-col>
+            <el-col :span="8">
+              <el-row justify="center">
+                <HButton @click="Next" class="butt">下一题</HButton>
+              </el-row>
+            </el-col>
+          </el-row>
         </div>
       </HScroller>
     </div>
@@ -263,5 +379,9 @@ onMounted(()=>{
 }
 .wind{
   background-color #FFF9E9;
+}
+.xuanze{
+  background-color #A7AD9B;
+  color #3A5B22;
 }
 </style>
