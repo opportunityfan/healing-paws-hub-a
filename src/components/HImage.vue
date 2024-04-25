@@ -15,7 +15,7 @@
     >
       <div class="loading-block" v-if="!data.loaded">
         <div class="center">
-          <div class="spinner1"></div>
+          <div class="spinner1" style="background-color: var(--theme-color)"></div>
         </div>
       </div>
     </transition>
@@ -83,6 +83,7 @@ onMounted(() => {
 
 .loading-block
   position absolute
+  background-color var(--background-color)
   width 100%
   height 100%
 

@@ -38,7 +38,7 @@
               <div class="text-bold-inverse">
                 {{ data.departmentList[data.currentDepartmentBriefIndex].departmentName }}
               </div>
-              <div class="box-icon department-goto">
+              <div class="box-icon department-goto" @click="goto('/department/' + data.departmentList[data.currentDepartmentBriefIndex].id)">
                 <i class='bx bx-chevron-right'></i>
               </div>
             </div>
@@ -55,7 +55,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 import {VueElement, ref, reactive, onUnmounted} from "vue";
 import HLoading from "@/components/HLoading.vue";
-import {getDepartmentBrief, DepartmentBrief} from "@/assets/api";
+import {getDepartmentBrief, DepartmentBrief, goto} from "@/assets/api";
 import {Vector3} from "three";
 
 const modelRef = ref<VueElement>();
