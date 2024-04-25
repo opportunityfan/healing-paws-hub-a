@@ -30,16 +30,89 @@ const getAffairList = async (info :any) => {
     if(res.data.code==200) {
       for (let item of res.data.data.listData) {
         let tempImage
-        if (item.pic === null) {
+        if (item.affair.pic === null) {
           // eslint-disable-next-line @typescript-eslint/no-var-requires
           const image = new Image(require("@/assets/login-background.png"), 3035, 4299)
           tempImage = image
         } else {
-          const image = new Image(item.pic, item.picSize[0], item.picSize[1])
+          const image = new Image(item.affair.pic, item.affair.picSize[0], item.affair.picSize[1])
           tempImage = image
         }
+        newPostList.push(new Post(item.affair.id, item.affair.name, item.affair.description, tempImage, item.flag))
+      }
+    }else{
+      showMessage(`${res.data.msg}`,'error')
+    }
+  }).catch(e=>{
+    showMessage('网络错误','error')
+  })
+  info.before_id++
+  return {newInfo : info,newPostList:newPostList}
+}
 
-        newPostList.push(new Post(item.id, item.name, item.description, tempImage))
+const getAffairList0 = async (info :any) => {
+  const newPostList = new Array<Post>()
+  await axios.get('/affair',{
+    params:{
+      pageNum: info.before_id+1,
+      pageSize: info.per_page
+    },
+    headers:{
+      'token':store.state.token
+    }
+  }).then(res=>{
+    console.log(res.data.data)
+    if(res.data.code==200) {
+      for (let item of res.data.data.listData) {
+        let tempImage
+        if (item.affair.pic === null) {
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          const image = new Image(require("@/assets/login-background.png"), 3035, 4299)
+          tempImage = image
+        } else {
+          const image = new Image(item.affair.pic, item.affair.picSize[0], item.affair.picSize[1])
+          tempImage = image
+        }
+        if (item.flag == false) {
+          newPostList.push(new Post(item.affair.id, item.affair.name, item.affair.description, tempImage, item.flag))
+        }
+      }
+    }else{
+      showMessage(`${res.data.msg}`,'error')
+    }
+  }).catch(e=>{
+    showMessage('网络错误','error')
+  })
+  info.before_id++
+  return {newInfo : info,newPostList:newPostList}
+}
+
+const getAffairList1 = async (info :any) => {
+  const newPostList = new Array<Post>()
+  await axios.get('/affair',{
+    params:{
+      pageNum: info.before_id+1,
+      pageSize: info.per_page
+    },
+    headers:{
+      'token':store.state.token
+    }
+  }).then(res=>{
+    console.log(res.data.data)
+    if(res.data.code==200) {
+      for (let item of res.data.data.listData) {
+        let tempImage
+        if (item.affair.pic === null) {
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          const image = new Image(require("@/assets/login-background.png"), 3035, 4299)
+          tempImage = image
+        } else {
+          const image = new Image(item.affair.pic, item.affair.picSize[0], item.affair.picSize[1])
+          tempImage = image
+        }
+        if (item.flag == true) {
+          newPostList.push(new Post(item.affair.id, item.affair.name, item.affair.description, tempImage, item.flag))
+        }
       }
     }else{
       showMessage(`${res.data.msg}`,'error')
@@ -70,7 +143,11 @@ const options = [{
         <HRadio :options="options" v-model:value="data.learned" style="flex-shrink: 0"></HRadio>
       </div>
       <div style="flex-grow: 1;width: 100%; min-height: 0">
-        <post-player-column-infinity :get-post-list="getAffairList" url-prefix="/affair/">
+        <post-player-column-infinity :get-post-list="getAffairList" url-prefix="/affair/" v-if="data.learned === 2">
+        </post-player-column-infinity>
+        <post-player-column-infinity :get-post-list="getAffairList0" url-prefix="/affair/" v-if="data.learned === 0">
+        </post-player-column-infinity>
+        <post-player-column-infinity :get-post-list="getAffairList1" url-prefix="/affair/" v-if="data.learned === 1">
         </post-player-column-infinity>
       </div>
     </div>
