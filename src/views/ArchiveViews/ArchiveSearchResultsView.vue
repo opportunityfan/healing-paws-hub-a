@@ -9,14 +9,16 @@ import {useRoute} from "vue-router";
 import axios from "@/assets/axios";
 import store from "@/store";
 import ArchiveBlock from "@/views/ArchiveViews/ArchiveBlock.vue";
+import HLoading from "@/components/HLoading.vue";
+
 
 const route = useRoute()
 console.log(route.params.diseaseNames)
 
 let archiveInfos: Post[] = reactive([])
 
-function getArchivesByDiseaseNames(){
-  axios.get("/case/group", {
+async function getArchivesByDiseaseNames(){
+  await axios.get("/case/group", {
     params:{
       pageNum: 1,
       pageSize: 10,
@@ -41,9 +43,13 @@ function getArchivesByDiseaseNames(){
     })
     console.log(archiveInfos)
   })
+  return
 }
 
-getArchivesByDiseaseNames()
+const onLoad = async () => {
+  await getArchivesByDiseaseNames()
+  return
+}
 
 function goArchiveDetails(archiveId: string){
   gotoArchiveDetailPageWithId('archiveDetailPage', archiveId)
@@ -55,16 +61,17 @@ function goArchiveDetails(archiveId: string){
 
 <template>
   <div class="full">
-    这是病例查询结果页面
-    <HScroller scroll-direction="column" class="full scroller-view">
-      <div class="flex-column">
-        <div class="flex-row flex-wrap">
-          <div class="archiveBlocks" v-for="(archiveInfo, index) in archiveInfos" :key="index">
-            <ArchiveBlock :archiveInfo = "archiveInfo" @click="goArchiveDetails(archiveInfo.id.toString())"></ArchiveBlock>
+    <HLoading :load="onLoad">
+      <HScroller scroll-direction="column" class="full scroller-view">
+        <div class="flex-column">
+          <div class="flex-row flex-wrap">
+            <div class="archiveBlocks" v-for="(archiveInfo, index) in archiveInfos" :key="index">
+              <ArchiveBlock :archiveInfo = "archiveInfo" @click="goArchiveDetails(archiveInfo.id.toString())"></ArchiveBlock>
+            </div>
           </div>
         </div>
-      </div>
-    </HScroller>
+      </HScroller>
+    </HLoading>
   </div>
 </template>
 

@@ -14,8 +14,8 @@ import {showMessage, tag} from "@/assets/api";
 let diseaseTypes = reactive(["传染病","寄生虫病","内科","外产科疾病","常用手术","免疫"])
 let diseaseNamesOrderedByType: Record<string, any> = reactive({})
 
-function getDiseaseNamesByType(diseaseType: string){
-  axios.get('/disease/belong', {
+async function getDiseaseNamesByType(diseaseType: string) {
+  await axios.get('/disease/belong', {
     params:{
       pageNum: 1,
       pageSize: 50,
@@ -34,12 +34,13 @@ function getDiseaseNamesByType(diseaseType: string){
   }).catch(()=>{
     showMessage('网络错误','error')
   })
+  return
 }
 
 const onLoad = async () => {
-  await diseaseTypes.forEach((diseaseType)=>{
-    getDiseaseNamesByType(diseaseType)
-  })
+  for (let diseaseType of diseaseTypes) {
+    await getDiseaseNamesByType(diseaseType)
+  }
   return
 }
 
@@ -67,6 +68,7 @@ function searchArchives(){
   }
   else {
     console.log("提交失败")
+    showMessage('请选择疾病','warning')
   }
   console.log("多选提交")
 }
@@ -79,8 +81,8 @@ function consoleLogToken(){
 
 <template>
   <div class="full">
-    <HLoading :load="onLoad">
-      <div class="diseaseChooseBox">
+    <div class="diseaseChooseBox">
+      <HLoading :load="onLoad">
         <HScroller scroll-direction="column">
           <div class="flex-column">
             <div class="diseaseType" v-for="(diseaseType,index) in diseaseTypes" :key="index">
@@ -103,9 +105,9 @@ function consoleLogToken(){
           <br>
           <br>
         </HScroller>
-      </div>
-      <HButton @click="searchArchives">确认选择</HButton>
-    </HLoading>
+      </HLoading>
+    </div>
+    <HButton @click="searchArchives">确认选择</HButton>
   </div>
 </template>
 

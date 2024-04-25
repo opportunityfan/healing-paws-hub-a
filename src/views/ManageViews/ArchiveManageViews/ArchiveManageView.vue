@@ -1,13 +1,13 @@
 <script setup lang="ts">
 
-import HScroller from "@/components/HScroller.vue";
-import {ref, reactive} from "vue";
-import HButton from "@/components/HButton.vue";
-import HInput from "@/components/HInput.vue";
-import DiseaseNameButton from "@/views/ArchiveViews/DiseaseNameButton.vue";
-import {goto, gotoArchiveSearchResultsWithNames} from "@/assets/api";
-import axios from "@/assets/axios";
-import store from "@/store";
+import HScroller from "@/components/HScroller.vue"
+import {ref, reactive} from "vue"
+import HButton from "@/components/HButton.vue"
+import HAlert from "@/components/HAlert.vue"
+import DiseaseNameButton from "@/views/ArchiveViews/DiseaseNameButton.vue"
+import {goto, gotoArchiveSearchResultsWithNames} from "@/assets/api"
+import axios from "@/assets/axios"
+import store from "@/store"
 
 let diseaseTypes = reactive(["传染病", "寄生虫病", "内科", "外产科疾病", "常用手术", "免疫"])
 let diseaseNamesOrderedByType: Record<string, any> = reactive({})
@@ -60,6 +60,8 @@ function searchArchives() {
   console.log("多选提交")
 }
 
+let isHover = ref("")
+
 let isClicked = ref("")
 let diseaseNameToAdd = ref("")
 
@@ -91,29 +93,55 @@ function addDisease(diseaseType: string) {
   }
 }
 
-function deleteDiseases() {
-  for (let diseaseId of chosenDiseasesId) {
-    axios.delete('/disease', {
-      params: {
-        'id': diseaseId
-      },
-      headers: {
-        'token': store.state.token
-      }
-    }).then((res)=>{
-      if(res.data.code === 200) {
-        console.log("删除成功")
-        diseaseTypes.forEach((diseaseType) => {
-          getDiseaseNamesByType(diseaseType)
-        })
-      }
-      else {
-        console.log("删除失败")
-        console.log(res.data.msg)
-      }
-    })
-  }
-  chosenDiseasesId.length = 0
+let deleteAlert = ref(false)
+
+function deleteDisease(diseaseId: string) {
+  axios.delete('/disease', {
+    params: {
+      'id': diseaseId
+    },
+    headers: {
+      'token': store.state.token
+    }
+  }).then((res)=>{
+    if(res.data.code === 200) {
+      console.log("删除成功")
+      diseaseTypes.forEach((diseaseType) => {
+        getDiseaseNamesByType(diseaseType)
+      })
+    }
+    else {
+      console.log("删除失败")
+      console.log(res.data.msg)
+    }
+  })
+}
+
+let toUpdate = ref("")
+let diseaseNameToUpdate = ref("")
+
+function updateDiseaseName(diseaseId: string) {
+  axios.put('/disease', {
+    id: diseaseId,
+    name: diseaseNameToUpdate.value
+  }, {
+    headers: {
+      'token': store.state.token
+    }
+  }).then((res)=>{
+    if(res.data.code === 200) {
+      console.log("修改成功")
+      diseaseTypes.forEach((diseaseType) => {
+        getDiseaseNamesByType(diseaseType)
+      })
+      toUpdate.value = ""
+      diseaseNameToUpdate.value = ""
+    }
+    else {
+      console.log("修改失败")
+      console.log(res.data.msg)
+    }
+  })
 }
 
 </script>
@@ -129,34 +157,94 @@ function deleteDiseases() {
             </div>
             <div class="flex-row flex-wrap">
               <div v-for="diseaseName in diseaseNamesOrderedByType[diseaseType]" :key="diseaseName.id">
-                <DiseaseNameButton
-                    :isChosen="chosenDiseases.includes(diseaseName.name)"
-                    height="50px"
-                    class="diseaseNameButton"
-                    @click="chooseDisease(diseaseName)"
-                >{{diseaseName.name}}</DiseaseNameButton>
+                <div
+                    style="display: inline-flex"
+                    @mouseover="isHover=diseaseName.name"
+                    @mouseleave="isHover=''">
+                  <DiseaseNameButton
+                      :isChosen="chosenDiseases.includes(diseaseName.name)"
+                      height="50px"
+                      class="diseaseNameButton"
+                      @click="chooseDisease(diseaseName)">
+                    <input
+                        v-model="diseaseNameToUpdate"
+                        v-show="toUpdate===diseaseName.name"
+                        style="height:30px;width:70px;background-color:var(--background-color);font-color:white">
+                    <div v-show="toUpdate!==diseaseName.name">
+                      {{diseaseName.name}}
+                    </div>
+                  </DiseaseNameButton>
+                  <div v-show="isHover===diseaseName.name&&toUpdate===''">
+                    <HButton
+                        style="width: 20px;margin: 10px 10px 10px 0px"
+                        height="20px"
+                        type="secondary"
+                        @click="diseaseNameToUpdate=toUpdate=diseaseName.name"
+                    ><i class='bx bx-edit-alt'></i>
+                    </HButton>
+                    <HButton
+                        style="width: 20px;margin: 10px 10px 10px 0px"
+                        height="20px"
+                        type="danger"
+                        @click="deleteAlert=true"
+                    ><i class='bx bx-trash'></i>
+                    </HButton>
+                    <HAlert v-model="deleteAlert">
+                      <div class="flex-column" style="gap: 10px; text-align: left">
+                        <div class="flex-row" style="width: 100%">
+                          <div class="box-icon">
+                            <i class='bx bx-trash'></i>
+                          </div>
+                          <div class="text-bold">删除</div>
+                        </div>
+                        <div class="text" style="padding-bottom: 20px; width: 100%">你确定删除该疾病吗？</div>
+                        <div class="flex-row" style=" width: 100%;gap: 10px; justify-content: flex-end">
+                          <h-button type="secondary" height="30px" style="margin: 0; width: 60px; font-size: 12px" id="cancel" @click="deleteAlert=false">取消</h-button>
+                          <h-button type="danger" height="30px" style="margin: 0; width: 60px; font-size: 12px" @click="deleteDisease(diseaseName.id)" id="confirm">删除</h-button>
+                        </div>
+                      </div>
+                    </HAlert>
+                  </div>
+                  <div v-show="toUpdate===diseaseName.name">
+                    <HButton
+                        height="20px"
+                        style="width: 20px; margin: 10px 10px 10px 0px"
+                        @click="updateDiseaseName(diseaseName.id)"
+                        type="secondary"
+                    ><i class='bx bx-check'></i></HButton>
+                    <HButton
+                        height="20px"
+                        style="width: 20px; margin: 10px 10px 10px 0px"
+                        @click="toUpdate=''"
+                        type="secondary"
+                    ><i class='bx bx-x'></i></HButton>
+                  </div>
+                </div>
               </div>
               <div style="display: inline-flex">
                 <DiseaseNameButton @click="()=>{isClicked=diseaseType}" height="50px" class="diseaseNameButton">
-                  <div v-show="isClicked!==diseaseType" style="font-size: 30px">+</div>
-                  <HInput
-                      name=""
+                  <div v-show="isClicked!==diseaseType">
+                    <i class='bx bx-plus' style="font-size: 20px; font-weight: bold"></i>
+                  </div>
+                  <input
+                      placeholder="输入疾病名"
                       v-show="isClicked===diseaseType"
-                      style="display: inline-block"
-                      v-model="diseaseNameToAdd"
-                  ></HInput>
+                      style="height:30px;width:70px;background-color:var(--background-color);font-color:white"
+                      v-model="diseaseNameToAdd">
                 </DiseaseNameButton>
                 <div v-show="isClicked===diseaseType">
-                  <DiseaseNameButton
+                  <HButton
                       height="20px"
-                      style="width: 20px; margin-left: 0px"
+                      style="width: 20px; margin: 10px 10px 10px 0px"
                       @click="addDisease(diseaseType)"
-                  >√</DiseaseNameButton>
-                  <DiseaseNameButton
+                      type="secondary"
+                  ><i class='bx bx-check'></i></HButton>
+                  <HButton
                       height="20px"
-                      style="width: 20px; margin-left: 0px"
-                      @click="()=>{isClicked=''}"
-                  >x</DiseaseNameButton>
+                      style="width: 20px; margin: 10px 10px 10px 0px"
+                      @click="isClicked=''"
+                      type="secondary"
+                  ><i class='bx bx-x'></i></HButton>
                 </div>
               </div>
             </div>
@@ -169,7 +257,6 @@ function deleteDiseases() {
     </div>
     <div class="flex-row">
       <HButton @click="searchArchives" style="margin-right: 10px">搜索符合的病例</HButton>
-      <HButton @click="deleteDiseases" style="margin-right: 10px">删除选中的病种</HButton>
       <HButton @click="goto('/archiveDetailManage')">新建病例</HButton>
     </div>
   </div>
@@ -198,5 +285,6 @@ function deleteDiseases() {
 
 .option-box
   border 1px solid var(--theme-color)
+
 
 </style>
