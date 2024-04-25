@@ -29,7 +29,7 @@
 <script setup lang="ts">
 
 import PostFlow from "@/components/PostFlow.vue";
-import {goAffairSearchView, goInstrumentSearchView, Post, Image, showMessage} from "@/assets/api";
+import {goAffairSearchView, goInstrumentSearchView, Post, Image, showMessage, isFavor} from "@/assets/api";
 
 
 import axios from "@/assets/axios";
@@ -46,12 +46,13 @@ const requestNewAffair = async (count : number) => {
     headers:{
       'token':store.state.token
     }
-  }).then(res=>{
+  }).then(async res => {
     console.log(res.data.data)
-    if(res.data.code==200) {
-      console.log('检查item',res.data)
+    if (res.data.code == 200) {
+      console.log('检查item', res.data)
       for (let item of res.data.data) {
 
+        const isF = await isFavor(item.id, 'affair')
         let tempImage
         if (item.pic === null) {
           // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -61,10 +62,10 @@ const requestNewAffair = async (count : number) => {
           const image = new Image(item.pic, 1, 1)
           tempImage = image
         }
-        newPostList.push(new Post(item.id, item.name, item.description, tempImage))
+        newPostList.push(new Post(item.id, item.name, item.description, tempImage, isF))
       }
-    }else{
-      showMessage(`${res.data.msg}`,'error')
+    } else {
+      showMessage(`${res.data.msg}`, 'error')
     }
   }).catch((e)=>{
     console.log(e)
@@ -72,7 +73,7 @@ const requestNewAffair = async (count : number) => {
   })
   return newPostList
 }
-let instrumentNum = 1
+
 const requestNewInstrument = async (count : number) => {
   const newPostList = new Array<Post>()
 
@@ -85,10 +86,11 @@ const requestNewInstrument = async (count : number) => {
       pageSize : 7
 
     }
-  }).then(res=>{
+  }).then(async res => {
     console.log(res.data)
-    if(res.data.code==200) {
+    if (res.data.code == 200) {
       for (let item of res.data.data.listData) {
+        const isF = await isFavor(item.id, 'item')
         let tempImage
         if (item.pic === null) {
           // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -98,10 +100,10 @@ const requestNewInstrument = async (count : number) => {
           const image = new Image(item.pic, 1, 1)
           tempImage = image
         }
-        newPostList.push(new Post(item.id, item.name, item.introduction, tempImage))
+        newPostList.push(new Post(item.id, item.name, item.introduction, tempImage, isF))
       }
-    }else{
-      showMessage(`${res.data.msg}`,'error')
+    } else {
+      showMessage(`${res.data.msg}`, 'error')
     }
   }).catch(()=>{
     showMessage('网络错误Inst','error')

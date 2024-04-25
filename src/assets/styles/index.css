@@ -188,6 +188,13 @@ textarea:focus-visible {
     mask-composite: intersect;
     animation: s5 1s infinite;
 }
+.tool-bar{
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+
 @keyframes s5 {to{transform: rotate(.5turn)}}
 
 @keyframes fade {

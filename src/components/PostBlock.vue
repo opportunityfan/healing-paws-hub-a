@@ -18,9 +18,9 @@
     <div class="post-info flex-column full">
       <div class="flex-row" style="justify-content: space-between; width: 90%" :style="{justifyContent: props.showDescription? 'space-between' : 'center'}">
         <div class="post-title subtitle-inverse">{{ props.post.title }}</div>
-        <div class="post-state incomplete hint-inverse" v-if="props.showDescription">未学习</div>
+        <div class="post-state hint-inverse" :class="{complete: props.post.isfavor, incomplete: !props.post.isfavor}" v-if="props.showDescription">{{props.post.isfavor?'已':'未'}}学习</div>
       </div>
-      <div class="post-state incomplete hint-inverse" v-if="!props.showDescription">未学习</div>
+      <div class="post-state hint-inverse" :class="{complete: props.post.isfavor, incomplete: !props.post.isfavor}" v-if="!props.showDescription">{{props.post.isfavor?'已':'未'}}学习</div>
       <div class="post-description border-radius-regular text-inverse" style="height: 40%;width: 100%" v-if="props.showDescription">
         {{ props.post.description }}
       </div>
@@ -97,7 +97,7 @@ const onLoad = () => {
   background-color rgba(0 ,0 ,0, 0.1)
 
 .complete
-  background-color var(--theme-color)
+  background-color var(--accent-color)
 
 .incomplete
   background-color var(--error-color)

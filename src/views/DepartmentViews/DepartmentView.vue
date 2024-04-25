@@ -33,7 +33,7 @@ const department = reactive<{
   staff : [],
   pic : '',
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  image : new Img(require('@/assets/avatar.jpg'),1,1),
+  image : '',
   position : {x:0,y:0}
 })
 const data = reactive<{
@@ -150,10 +150,7 @@ const requestItems = async (pageNum : number, pageSize : number) =>{
 const maxImage = () => {
   data.ismaxImage = true
 }
-const minImage = () => {
-  console.log('点击外部！')
-  data.ismaxImage = false
-}
+
 </script>
 
 <template>
@@ -179,7 +176,7 @@ const minImage = () => {
         <div style="text-align: left;margin-top: 20px" class="subtitle">
           科室图片：
         </div>
-        <HImage :image="department.image" size="100" style="margin: 10px" @click="maxImage"></HImage>
+        <HImage :image="department.image" size="100" style="margin: 10px" @click="maxImage" :lazy-load="false"></HImage>
       </div>
       </div>
 
