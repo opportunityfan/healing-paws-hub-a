@@ -67,6 +67,7 @@ function upLoadVideos(video: File, type: string) {
   Object.assign(videos, {
     [type]: video
   })
+  archiveDetailInfo[type] = window.URL.createObjectURL(video)
   console.log(videos)
 }
 
@@ -120,6 +121,11 @@ function postArchiveDetailInfo(){
   }
 }
 
+function clickElement(elementId: string) {
+  document.getElementById(elementId).querySelector('input').click()
+}
+
+
 </script>
 
 <template>
@@ -147,29 +153,70 @@ function postArchiveDetailInfo(){
               v-model="archiveDetailInfo.typesString"
               v-if="archiveDetailInfo.id === ''"
           ></HInput>
-          <HInput
-              name="接诊（基本情况、临床症状）"
-              v-model="archiveDetailInfo.description"
-          ></HInput><br>
+          <select>
+
+          </select>
+          <div class="archive-title">接诊（基本情况、临床症状）</div>
+          <textarea
+              class="text-input"
+              v-model="archiveDetailInfo.description">
+          </textarea>
           <div class="flex-row">
             <div>
-              <div class="subtitle">上传图片</div>
-              <div class="upload-box">
+              <div class="archive-title">上传图片</div>
+              <div v-show="archiveDetailInfo.descriptionImg==null" class="upload-box">
                 <HFileUpload
+                    id="descriptionImg"
                     @handleFile="upLoadImages($event, 'descriptionImg')"
-                    style="position:absolute; top: 25px; left: 25px"
                 ></HFileUpload>
-                <img :src="archiveDetailInfo.descriptionImg" class="upload-image">
+              </div>
+              <div v-show="archiveDetailInfo.descriptionImg!=null" style="display: inline-flex">
+                <img :src="archiveDetailInfo.descriptionImg" class="upload-file">
+                <div>
+                  <HButton
+                      style="width: 20px;margin: 10px 10px 10px 0px"
+                      height="20px"
+                      type="secondary"
+                      @click="clickElement('descriptionImg')"
+                  ><i class='bx bx-edit-alt'></i>
+                  </HButton>
+                  <HButton
+                      style="width: 20px;margin: 10px 10px 10px 0px"
+                      height="20px"
+                      type="danger"
+                      @click="archiveDetailInfo.descriptionImg=null;delete images.descriptionImg"
+                  ><i class='bx bx-trash'></i>
+                  </HButton>
+                </div>
               </div>
             </div>
             <div>
-              <div class="subtitle">上传视频</div>
-              <div class="upload-box">
+              <div class="archive-title">上传视频</div>
+              <div v-show="archiveDetailInfo.descriptionVideo==null" class="upload-box">
                 <HFileUpload
+                    id="descriptionVideo"
                     @handleFile="upLoadVideos($event, 'descriptionVideo')"
-                    style="position:absolute; top: 25px; left: 25px"
                     file-type="video/mp4"
                 ></HFileUpload>
+              </div>
+              <div v-show="archiveDetailInfo.descriptionVideo!=null" style="display: inline-flex">
+                <video :src="archiveDetailInfo.descriptionVideo" class="upload-file" controls></video>
+                <div>
+                  <HButton
+                      style="width: 20px;margin: 10px 10px 10px 0px"
+                      height="20px"
+                      type="secondary"
+                      @click="clickElement('descriptionVideo')"
+                  ><i class='bx bx-edit-alt'></i>
+                  </HButton>
+                  <HButton
+                      style="width: 20px;margin: 10px 10px 10px 0px"
+                      height="20px"
+                      type="danger"
+                      @click="archiveDetailInfo.descriptionVideo=null;delete videos.descriptionVideo"
+                  ><i class='bx bx-trash'></i>
+                  </HButton>
+                </div>
               </div>
             </div>
           </div>
@@ -177,26 +224,63 @@ function postArchiveDetailInfo(){
           <HInput
               name="检查"
               v-model="archiveDetailInfo.checkItem"
-          ></HInput><br>
+          ></HInput>
           <div class="flex-row">
             <div>
-              <div class="subtitle">上传图片</div>
-              <div class="upload-box">
+              <div class="archive-title">上传图片</div>
+              <div v-show="archiveDetailInfo.checkItemImg==null" class="upload-box">
                 <HFileUpload
+                    id="checkItemImg"
                     @handleFile="upLoadImages($event, 'checkItemImg')"
-                    style="position:absolute; top: 25px; left: 25px"
                 ></HFileUpload>
-                <img :src="archiveDetailInfo.checkItemImg" class="upload-image">
+              </div>
+              <div v-show="archiveDetailInfo.checkItemImg!=null" style="display: inline-flex">
+                <img :src="archiveDetailInfo.checkItemImg" class="upload-file">
+                <div>
+                  <HButton
+                      style="width: 20px;margin: 10px 10px 10px 0px"
+                      height="20px"
+                      type="secondary"
+                      @click="clickElement('checkItemImg')"
+                  ><i class='bx bx-edit-alt'></i>
+                  </HButton>
+                  <HButton
+                      style="width: 20px;margin: 10px 10px 10px 0px"
+                      height="20px"
+                      type="danger"
+                      @click="archiveDetailInfo.checkItemImg=null;delete images.checkItemImg"
+                  ><i class='bx bx-trash'></i>
+                  </HButton>
+                </div>
               </div>
             </div>
             <div>
-              <div class="subtitle">上传视频</div>
-              <div class="upload-box">
+              <div class="archive-title">上传视频</div>
+              <div v-show="archiveDetailInfo.checkItemVideo==null" class="upload-box">
                 <HFileUpload
+                    id="checkItemVideo"
                     @handleFile="upLoadVideos($event, 'checkItemVideo')"
-                    style="position:absolute; top: 25px; left: 25px"
                     file-type="video/mp4"
                 ></HFileUpload>
+              </div>
+              <div v-show="archiveDetailInfo.checkItemVideo!=null" style="display: inline-flex">
+                <video :src="archiveDetailInfo.checkItemVideo" class="upload-file" controls></video>
+                <div>
+                  <HButton
+                      style="width: 20px;margin: 10px 10px 10px 0px"
+                      height="20px"
+                      type="secondary"
+                      @click="clickElement('checkItemVideo')"
+                  ><i class='bx bx-edit-alt'></i>
+                  </HButton>
+                  <HButton
+                      style="width: 20px;margin: 10px 10px 10px 0px"
+                      height="20px"
+                      type="danger"
+                      @click="archiveDetailInfo.checkItemVideo=null;delete videos.checkItemVideo"
+                  ><i class='bx bx-trash'></i>
+                  </HButton>
+                </div>
               </div>
             </div>
           </div>
@@ -234,7 +318,7 @@ function postArchiveDetailInfo(){
           ></HInput><br>
           <div class="flex-row">
             <div>
-              <div class="subtitle">上传图片</div>
+              <div class="archive-title">上传图片</div>
               <div class="upload-box">
                 <HFileUpload
                     @handleFile="upLoadImages($event, 'remedyImg')"
@@ -267,14 +351,19 @@ function postArchiveDetailInfo(){
 
 <style scoped lang="stylus">
 
+.text-input
+  border var(--object-unfocus-color) 1.5px solid
+  border-radius 5px
+  height 100px
+  font-color black
+  font-size 14px
+
 .archive-title
   font-size 18px
   color var(--font-title-color)
   font-weight 550
   text-align left
-  padding 20px
-  padding-bottom 0px
-  margin 0
+  margin 20px 20px 10px 0px
 
 .archive-content
   font-size 14px
@@ -283,15 +372,15 @@ function postArchiveDetailInfo(){
   padding 20px
   margin 0
 
-.upload-image
-  width 100%
-  padding-top 20px
-  padding-bottom 10px
+.upload-file
+  height 100px
+  margin 10px 10px 20px 0
+  border 3px solid var(--theme-color)
 
 .upload-box
   border 3px solid var(--theme-color)
-  height 150px
-  width 150px
+  height 100px
+  width 100px
   position relative
-  margin-right 20px
+  margin 20px 20px 20px 0
 </style>
