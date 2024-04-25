@@ -60,7 +60,7 @@ watch(
     }
 )
 const requestAffairs = async (pageNum : number, pageSize : number) => {
-  const currentItems = new Array<tag>()
+
   await axios.get('/affair',{
     params:{
       pageNum : pageNum,
@@ -71,19 +71,16 @@ const requestAffairs = async (pageNum : number, pageSize : number) => {
     }
   }).then(res=>{
     if(res.data.code==200) {
-      dataList.value = res.data.data.listData
+      dataList.value = res.data.data.listData.map((obj:any)=>obj.affair)
       totalPages.value = res.data.data.totalPages
-      for (let item of res.data.data.listData) {
-        currentItems.push(new tag(item.id, item.name))
-      }
+
     }else{
       showMessage(`${res.data.msg}`,'error')
     }
   }).catch(()=>{
     showMessage('网络错误','error')
   })
-  console.log(currentItems)
-  return currentItems
+
 }
 
 const onLoad = async () => {
@@ -99,7 +96,7 @@ const onLoad = async () => {
     console.log(res.data.data)
     console.log('数据表内容',res.data.data.listData)
     if(res.data.code==200) {
-      dataList.value = res.data.data.listData
+      dataList.value = res.data.data.listData.map((obj:any)=>obj.affair)
       totalPages.value = res.data.data.totalPages
       totalItems.value = pageSize.value*totalPages.value
       console.log('总数：',totalItems.value)
