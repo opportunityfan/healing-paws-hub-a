@@ -9,7 +9,32 @@ import HImage from "@/components/HImage.vue";
 import HInput from "@/components/HInput.vue";
 import HButton from "@/components/HButton.vue";
 import HFileUpload from "@/components/HFileUpload.vue";
-import {goBack, Image as Img} from "@/assets/api";
+import {goBack, Image as Img, showMessage} from "@/assets/api";
+
+let diseaseTypes = reactive(["传染病", "寄生虫病", "内科", "外产科疾病", "常用手术", "免疫"])
+let diseaseNames = reactive([])
+
+async function getDiseaseNames() {
+  for (let diseaseType of diseaseTypes) {
+    await axios.get('/disease/belong', {
+      params:{
+        pageNum: 1,
+        pageSize: 50,
+        type: diseaseType
+      },
+      headers:{
+        'token':store.state.token
+      }
+    }).then((res) => {
+      console.log(res.data.data.listData)
+      diseaseNames.push(...res.data.data.listData)
+    })
+  }
+  console.log(diseaseNames)
+  return
+}
+
+getDiseaseNames()
 
 let archiveDetailInfo = reactive({
   id: "",
@@ -18,7 +43,6 @@ let archiveDetailInfo = reactive({
   checkItem: "",
   diagnosis: "",
   remedy: "",
-  typesString: ""
 })
 
 const route = useRoute()
@@ -79,6 +103,9 @@ function postArchiveDetailInfo(){
   formdata.append("checkItem", archiveDetailInfo.checkItem)
   formdata.append("diagnosis", archiveDetailInfo.diagnosis)
   formdata.append("remedy", archiveDetailInfo.remedy)
+  for (let type of archiveDetailInfo.type) {
+    formdata.append("type", type)
+  }
   for (let key in images) {
     formdata.append(key, images[key])
   }
@@ -95,6 +122,7 @@ function postArchiveDetailInfo(){
       if (res.data.code === 200) {
         console.log("修改成功")
         goBack()
+        showMessage("修改成功", 'success')
       }
       else{
         console.log("修改失败")
@@ -103,7 +131,6 @@ function postArchiveDetailInfo(){
     })
   }
   else {
-    formdata.append("type", archiveDetailInfo.typesString)
     axios.post("/case", formdata, {
       headers: {
         'token': store.state.token
@@ -137,24 +164,23 @@ function clickElement(elementId: string) {
           <span v-else>修改病例</span>
         </div>
         <div class="archive-content">
-          <div v-if="archiveDetailInfo.id !== ''">
-            <div>病例编号： {{ archiveDetailInfo.id }}</div>
-            <div class="flex-row" v-for="(diseaseType, index) in archiveDetailInfo.type" :key="index">
-              <span>所患疾病种类：</span>
-              <span class="clickable-text">{{diseaseType + ''}}</span>
-            </div>
-          </div>
           <HInput
               name="病例名称"
               v-model="archiveDetailInfo.name"
           ></HInput>
-          <HInput
-              name="所患疾病种类（空格分隔）"
-              v-model="archiveDetailInfo.typesString"
-              v-if="archiveDetailInfo.id === ''"
-          ></HInput>
-          <select>
-
+          <div class="archive-title">所患疾病种类</div>
+          <span v-for="(type, index) in archiveDetailInfo.type" :key="index">
+            <span class="clickable-text">{{type}}</span>&nbsp;
+          </span><br>
+          <select
+              v-model="archiveDetailInfo.type"
+              style="margin-top: 20px"
+              multiple
+              class="text-input"
+              size="10">
+            <option v-for="(diseaseName, index) in diseaseNames" :key="index">
+              {{diseaseName.name}}
+            </option>
           </select>
           <div class="archive-title">接诊（基本情况、临床症状）</div>
           <textarea
@@ -220,11 +246,11 @@ function clickElement(elementId: string) {
               </div>
             </div>
           </div>
-          <br><br>
-          <HInput
-              name="检查"
-              v-model="archiveDetailInfo.checkItem"
-          ></HInput>
+          <div class="archive-title">检查</div>
+          <textarea
+              class="text-input"
+              v-model="archiveDetailInfo.checkItem">
+          </textarea>
           <div class="flex-row">
             <div>
               <div class="archive-title">上传图片</div>
@@ -284,57 +310,131 @@ function clickElement(elementId: string) {
               </div>
             </div>
           </div>
-          <br><br>
-          <HInput
-              name="诊断结果"
-              v-model="archiveDetailInfo.diagnosis"
-          ></HInput><br>
-          <div class="flex-row">
-            <div>
-              <div class="subtitle">上传图片</div>
-              <div class="upload-box">
-                <HFileUpload
-                    @handleFile="upLoadImages($event, 'diagnosisImg')"
-                    style="position:absolute; top: 25px; left: 25px"
-                ></HFileUpload>
-                <img :src="archiveDetailInfo.diagnosisImg" class="upload-image">
-              </div>
-            </div>
-            <div>
-              <div class="subtitle">上传视频</div>
-              <div class="upload-box">
-                <HFileUpload
-                    @handleFile="upLoadVideos($event, 'diagnosisVideo')"
-                    style="position:absolute; top: 25px; left: 25px"
-                    file-type="video/mp4"
-                ></HFileUpload>
-              </div>
-            </div>
-          </div>
-          <br><br>
-          <HInput
-              name="治疗方案"
-              v-model="archiveDetailInfo.remedy"
-          ></HInput><br>
+          <div class="archive-title">诊断结果</div>
+          <textarea
+              class="text-input"
+              v-model="archiveDetailInfo.diagnosis">
+          </textarea>
           <div class="flex-row">
             <div>
               <div class="archive-title">上传图片</div>
-              <div class="upload-box">
+              <div v-show="archiveDetailInfo.diagnosisImg==null" class="upload-box">
                 <HFileUpload
-                    @handleFile="upLoadImages($event, 'remedyImg')"
-                    style="position:absolute; top: 25px; left: 25px"
+                    id="diagnosis"
+                    @handleFile="upLoadImages($event, 'diagnosisImg')"
                 ></HFileUpload>
-                <img :src="archiveDetailInfo.remedyImg" class="upload-image">
+              </div>
+              <div v-show="archiveDetailInfo.diagnosisImg!=null" style="display: inline-flex">
+                <img :src="archiveDetailInfo.diagnosisImg" class="upload-file">
+                <div>
+                  <HButton
+                      style="width: 20px;margin: 10px 10px 10px 0px"
+                      height="20px"
+                      type="secondary"
+                      @click="clickElement('diagnosisImg')"
+                  ><i class='bx bx-edit-alt'></i>
+                  </HButton>
+                  <HButton
+                      style="width: 20px;margin: 10px 10px 10px 0px"
+                      height="20px"
+                      type="danger"
+                      @click="archiveDetailInfo.diagnosisImg=null;delete images.diagnosisImg"
+                  ><i class='bx bx-trash'></i>
+                  </HButton>
+                </div>
               </div>
             </div>
             <div>
-              <div class="subtitle">上传视频</div>
-              <div class="upload-box">
+              <div class="archive-title">上传视频</div>
+              <div v-show="archiveDetailInfo.diagnosisVideo==null" class="upload-box">
                 <HFileUpload
-                    @handleFile="upLoadVideos($event, 'remedyVideo')"
-                    style="position:absolute; top: 25px; left: 25px"
+                    id="diagnosisVideo"
+                    @handleFile="upLoadVideos($event, 'diagnosisVideo')"
                     file-type="video/mp4"
                 ></HFileUpload>
+              </div>
+              <div v-show="archiveDetailInfo.diagnosisVideo!=null" style="display: inline-flex">
+                <video :src="archiveDetailInfo.diagnosisVideo" class="upload-file" controls></video>
+                <div>
+                  <HButton
+                      style="width: 20px;margin: 10px 10px 10px 0px"
+                      height="20px"
+                      type="secondary"
+                      @click="clickElement('diagnosisVideo')"
+                  ><i class='bx bx-edit-alt'></i>
+                  </HButton>
+                  <HButton
+                      style="width: 20px;margin: 10px 10px 10px 0px"
+                      height="20px"
+                      type="danger"
+                      @click="archiveDetailInfo.diagnosisVideo=null;delete videos.diagnosisVideo"
+                  ><i class='bx bx-trash'></i>
+                  </HButton>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="archive-title">治疗方案</div>
+          <textarea
+              class="text-input"
+              v-model="archiveDetailInfo.remedy">
+          </textarea>
+          <div class="flex-row">
+            <div>
+              <div class="archive-title">上传图片</div>
+              <div v-show="archiveDetailInfo.remedyImg==null" class="upload-box">
+                <HFileUpload
+                    id="remedy"
+                    @handleFile="upLoadImages($event, 'remedyImg')"
+                ></HFileUpload>
+              </div>
+              <div v-show="archiveDetailInfo.remedyImg!=null" style="display: inline-flex">
+                <img :src="archiveDetailInfo.remedyImg" class="upload-file">
+                <div>
+                  <HButton
+                      style="width: 20px;margin: 10px 10px 10px 0px"
+                      height="20px"
+                      type="secondary"
+                      @click="clickElement('remedyImg')"
+                  ><i class='bx bx-edit-alt'></i>
+                  </HButton>
+                  <HButton
+                      style="width: 20px;margin: 10px 10px 10px 0px"
+                      height="20px"
+                      type="danger"
+                      @click="archiveDetailInfo.remedyImg=null;delete images.remedyImg"
+                  ><i class='bx bx-trash'></i>
+                  </HButton>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="archive-title">上传视频</div>
+              <div v-show="archiveDetailInfo.remedyVideo==null" class="upload-box">
+                <HFileUpload
+                    id="remedyVideo"
+                    @handleFile="upLoadVideos($event, 'remedyVideo')"
+                    file-type="video/mp4"
+                ></HFileUpload>
+              </div>
+              <div v-show="archiveDetailInfo.remedyVideo!=null" style="display: inline-flex">
+                <video :src="archiveDetailInfo.remedyVideo" class="upload-file" controls></video>
+                <div>
+                  <HButton
+                      style="width: 20px;margin: 10px 10px 10px 0px"
+                      height="20px"
+                      type="secondary"
+                      @click="clickElement('remedyVideo')"
+                  ><i class='bx bx-edit-alt'></i>
+                  </HButton>
+                  <HButton
+                      style="width: 20px;margin: 10px 10px 10px 0px"
+                      height="20px"
+                      type="danger"
+                      @click="archiveDetailInfo.remedyVideo=null;delete videos.remedyVideo"
+                  ><i class='bx bx-trash'></i>
+                  </HButton>
+                </div>
               </div>
             </div>
           </div>
@@ -354,7 +454,7 @@ function clickElement(elementId: string) {
 .text-input
   border var(--object-unfocus-color) 1.5px solid
   border-radius 5px
-  height 100px
+  height 150px
   font-color black
   font-size 14px
 

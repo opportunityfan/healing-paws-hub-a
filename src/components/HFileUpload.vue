@@ -11,7 +11,7 @@ const clickFileInput = () => {
 }
 
 const props = withDefaults(defineProps<{
-  fileType: string
+  fileType?: string
 }>(), {
   fileType: 'image/*'
 })
