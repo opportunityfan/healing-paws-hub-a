@@ -40,7 +40,7 @@ const department = reactive<{
   staff : [],
   pic : '',
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  image : new Img(require('@/assets/avatar.jpg'),1,1),
+  image : null,
   position : {
     x : 0,
     y : 0,
@@ -419,11 +419,11 @@ const itemDelete = (id : string)=>{
             <div class="flex-row" style="width: 100%; gap: 20px; margin: 6px 0">
               <div>
                 <div class="text-bold" style="flex-shrink: 0;margin:10px">图片编辑</div>
-                <HImageUpload :image="department.image" ref="imageUpload"></HImageUpload>
+                <HImageUpload :image="department.image" ref="imageUpload" v-if="department.image"></HImageUpload>
               </div>
               <div style="margin: 0;">
                 <div @click="data.positionEditAlert = true" class="text-bold" style="flex-shrink: 0;margin:10px">编辑位置</div>
-                <div class="box-icon map-hover " style="font-size: 60px;margin:0 10px" >
+                <div class="box-icon map-hover " style="font-size: 60px;margin:0 10px" @click="data.positionEditAlert = true">
                   <i class='bx bx-map-pin'></i>
                 </div>
               </div>

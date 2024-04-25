@@ -57,7 +57,7 @@ const affair = reactive<{
   pic:'',
   picSize:[],
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  image: new Img(require('@/assets/avatar.jpg'),1,1)
+  image:null
 })
 const imageUpload = ref()
 
@@ -188,7 +188,7 @@ const deleteAffair = () => {
           <div class="flex-row" style="width: 100%; gap: 20px; margin: 6px 0">
             <div class="text-bold" style="flex-shrink: 0">封面编辑</div>
 
-            <HImageUpload :image="affair.image" ref="imageUpload"></HImageUpload>
+            <HImageUpload :image="affair.image" ref="imageUpload" v-if="affair.image"></HImageUpload>
 
           </div>
 
