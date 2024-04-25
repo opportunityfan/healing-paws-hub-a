@@ -5,36 +5,35 @@ import {goto} from "@/assets/api";
 import axios from "@/assets/axios";
 import store from "@/store";
 import {onMounted, ref} from "vue";
+import HPagination from "@/components/HPagination.vue";
 
 const pagenum=ref(1);
-const pagesize=ref(7);
+const pagesize=ref(5);
 const testdata=ref([]);
+const pageNation = ref();
 
 function go(){
   goto('/exam');
 }
-async function getData() {
+async function getData(currentPage:number,pageSize : number) {
   const res = await axios.get('/examrecord/page/id', {
     params: {
-      pageNum: pagenum.value,
-      pageSize: pagesize.value,
+      pageNum: currentPage,
+      pageSize: pageSize,
     },
     headers: {
       'token': store.state.token
     }
   })
   console.log(res);
-  testdata.value=res.data.data;
+  pagenum.value=res.data.data.totalPages;
+  testdata.value=res.data.data.listData;
 }
 
 
-async function  pagechange(page:number){
-  pagenum.value=page;
-  await getData();
-}
 
 onMounted(()=>{
-  getData();
+  getData(pageNation.value.data.currentPage,pagesize.value);
 })
 </script>
 
@@ -48,48 +47,59 @@ onMounted(()=>{
   </h3>
   <table class="xtable">
     <colgroup>
-      <col width="20%">
+      <col width="30%">
       <col width="40%">
-      <col width="20%">
-      <col width="20%">
+      <col width="30%">
     </colgroup>
     <thead>
     <tr>
       <th>name</th>
       <th>date</th>
       <th>score</th>
-      <th>attend</th>
     </tr>
     </thead>
     <tbody>
     <tr v-for="(item,index) in testdata" :key="index">
-      <td>{{item.examName}}</td>
-      <td>{{item.time}}</td>
-      <td>{{item.score}}</td>
       <td>
-        <router-link :to="`/examRecord/${item.examId}`">
-          <el-button>
-            进入
-          </el-button>
+        <router-link :to="`/examRecord/${item.examId}`" class="tdlink">
+          {{item.examName}}
         </router-link>
       </td>
+      <td>{{item.time}}</td>
+      <td>{{item.score}}</td>
     </tr>
     </tbody>
   </table>
-  <el-pagination
-      small
-      background
-      layout="prev, pager, next"
-      :page-size="pagesize"
-      :total="7"
-      class="mt-4"
-      @current-change="pagechange"
-  />
+  <HPagination @onPageChange="getData" :itemsPerPage="pagesize" :total-pages="pagenum" ref="pageNation">
+  </HPagination>
 </div>
 </template>
 
 <style scoped lang="stylus">
 .xtable{
   width: 100%;
+  border-collapse: collapse;
+  td{
+    height :43px;
+    line-height : 43px;
+
+  }
+  tr{
+    &:nth-child(even){
+      td{
+        background-color #7A806E
+        color #d9d9d9
+      }
+    }
+    &:nth-child(odd){
+      td{
+        color #5A8100
+      }
+    }
+  }
+}
+.tdlink{
+  text-decoration: none;
+  color: inherit;
 }
 </style>

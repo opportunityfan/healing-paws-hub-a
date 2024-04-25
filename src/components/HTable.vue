@@ -82,20 +82,19 @@ export default defineComponent({
     line-height : 43px;
 
   }
-  tr{
-    &:nth-child(even){
-      td{
-        background-color #5A8100
-        color #FFF9E9
-      }
-    }
-    &:nth-child(odd){
-      td{
-        color #5A8100
-      }
-    }
-  }
-
+  //tr{
+  //  &:nth-child(even){
+  //    td{
+  //      background-color #7A806E
+  //      color #d9d9d9
+  //    }
+  //  }
+  //  &:nth-child(odd){
+  //    td{
+  //      color #5A8100
+  //    }
+  //  }
+  //}
 }
 .tabletitle{
   color:#5A8100;

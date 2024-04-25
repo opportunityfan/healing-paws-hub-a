@@ -4,6 +4,7 @@ import {string} from "three/examples/jsm/nodes/shadernode/ShaderNode";
 import {dayjs, FormEmits, FormInstance} from "element-plus";
 import axios from "axios";
 import {goto} from "@/assets/api";
+import HPagination from "@/components/HPagination.vue";
 
 const examform=reactive({
   examName: '',
@@ -41,7 +42,8 @@ const isAdd=ref(false);
 const questiondata=ref([]);
 const examList=ref<string[]>([]);
 const pagenum=ref(1);
-const pagesize=ref(7);
+const pagesize=ref(5);
+const pageNation = ref();
 function submit(){
   formref.value?.validate((valid)=>{
     if(valid){
@@ -59,19 +61,15 @@ async function getsubmit(newexam:object){
   console.log(result);
   goto('/examManage');
 }
-async function getdata(){
+async function getdata(currentPage:number,pageSize : number){
   const res = await axios.get('http://150.158.110.63:8080/question/page',{
     params:{
-      pageNum: pagenum.value,
-      pageSize: pagesize.value,
+      pageNum: currentPage,
+      pageSize: pageSize,
     }
   })
+  pagenum.value=res.data.data.totalPages;
   questiondata.value=res.data.data.listData;
-}
-
-async function  pagechange(page:number){
-  pagenum.value=page;
-  await getdata();
 }
 
 function Add(Value:boolean,Id:string){
@@ -90,14 +88,14 @@ function insured(){
 }
 
 onMounted(()=>{
-  getdata();
+  getdata(1,pagesize.value);
 })
 </script>
 
 <template>
   <div>
   <el-form :model="examform" :rules="rules" @submit="submit()" ref="formref">
-    <el-form-item prop="examName" label="考试名称">
+    <el-form-item prop="examName" label="考试名称" style="width: 50%">
       <el-input v-model="examform.examName">
       </el-input>
     </el-form-item>
@@ -120,7 +118,7 @@ onMounted(()=>{
       <el-input-number v-model="examform.totalTime" :min="30" :max="180" :controls="false"/>
     </el-form-item>
     <el-form-item label="参与者">
-      <el-select v-model="examform.type">
+      <el-select v-model="examform.type" style="width: 100px">
         <el-option label="实习生" :value="1"></el-option>
         <el-option label="兽医" :value="2"></el-option>
         <el-option label="兽医2" :value="3"></el-option>
@@ -134,10 +132,10 @@ onMounted(()=>{
   <el-dialog v-model="isAdd" title="添加题目" width="1000" class="xdialog" @closed="examList=[]">
       <table class="xtable">
         <colgroup>
-          <col width="25%">
-          <col width="25%">
-          <col width="25%">
-          <col width="25%">
+          <col width="20%">
+          <col width="20%">
+          <col width="40%">
+          <col width="20%">
         </colgroup>
         <thead>
         <tr>
@@ -149,7 +147,7 @@ onMounted(()=>{
         </thead>
         <tbody>
         <tr v-for="item in questiondata" :key="item.id">
-          <td>{{item.id}}</td>
+          <td>{{item.name}}</td>
           <td>{{item.score}}</td>
           <td>{{item.statement}}</td>
           <td>
@@ -162,15 +160,8 @@ onMounted(()=>{
       <el-button @click="insured()">确认</el-button>
       <el-button @click="isAdd=false">取消</el-button>
     </template>
-    <el-pagination
-        small
-        background
-        layout="prev, pager, next"
-        :page-size="pagesize"
-        :total="100"
-        class="mt-4"
-        @current-change="pagechange"
-    />
+    <HPagination @onPageChange="getdata" :itemsPerPage="pagesize" :total-pages="pagenum" ref="pageNation">
+    </HPagination>
   </el-dialog>
   </div>
 </template>

@@ -53,23 +53,22 @@ function consoleLogArchiveDetailInfo(){
         </div>
         <div class="archive-title">接诊（基本情况、临床症状）</div>
         <div class="archive-content">
-          {{archiveDetailInfo.description}}
-          <br>
+          <div v-html="archiveDetailInfo.description"></div><br>
           <img :src="archiveDetailInfo.descriptionImg" class="archive-image">
         </div>
         <div class="archive-title">检查</div>
         <div class="archive-content">
-          {{archiveDetailInfo.checkItem}}
+          <div v-html="archiveDetailInfo.checkItem"></div><br>
           <img :src="archiveDetailInfo.checkItemImg" class="archive-image">
         </div>
         <div class="archive-title">诊断结果</div>
         <div class="archive-content">
-          {{archiveDetailInfo.diagnosis}}
+          <div v-html="archiveDetailInfo.diagnosis"></div><br>
           <img :src="archiveDetailInfo.diagnosisImg" class="archive-image">
         </div>
         <div class="archive-title">治疗方案</div>
         <div class="archive-content">
-          {{archiveDetailInfo.remedy}}
+          <div v-html="archiveDetailInfo.remedy"></div><br>
           <img :src="archiveDetailInfo.remedyImg" class="archive-image">
         </div>
       </div>

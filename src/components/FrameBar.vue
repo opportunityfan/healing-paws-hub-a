@@ -27,6 +27,7 @@
       <div class="box-icon button-hover" style="font-size: 19px" @click="onMinimize">
         <i class='bx bx-minus'></i>
       </div>
+
       <div class="box-icon button-hover" style="font-size: 21px;margin-right: 3px" @click="onClose">
         <i class='bx bx-x'></i>
       </div>
@@ -40,6 +41,7 @@ import HBackKey from "@/components/HBackKey.vue";
 import {computed, ref} from "vue";
 import { openTalkBar } from "@/assets/api";
 
+
 const onClose = () => {
   console.log('close');
   window.electronAPI.close();
@@ -47,6 +49,8 @@ const onClose = () => {
 const onMinimize = () => {
   window.electronAPI.minimize();
 }
+
+
 
 const isBackKey = computed(()=>{
 

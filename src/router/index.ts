@@ -41,6 +41,7 @@ import ItemManageView from "@/views/ManageViews/DepartmentAndItemManage/ItemMana
 import ItemEditView from "@/views/ManageViews/DepartmentAndItemManage/ItemEditView.vue";
 import ArchiveDetailManageView from "@/views/ManageViews/ArchiveManageViews/ArchiveDetailManageView.vue";
 import ArchiveSearchResultsManageView from "@/views/ManageViews/ArchiveManageViews/ArchiveSearchResultsManageView.vue";
+import DepartmentView from "@/views/DepartmentViews/DepartmentView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -110,6 +111,13 @@ const routes: Array<RouteRecordRaw> = [
         component: AffairNodeEditView,
         props: true
       },
+      {
+        path:'/department/:departmentId',
+        name:'departmentPage',
+        component: DepartmentView,
+        props: true
+      }
+      ,
       {
         path: '/instrumentSearch',
         name: 'instrumentSearchPage',

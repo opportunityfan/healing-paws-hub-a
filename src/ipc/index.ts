@@ -7,6 +7,7 @@ const InitIpcMain = (win : BrowserWindow) => {
     ipcMain.on('window-minimize', () => {
         win.minimize();
     })
+
 }
 
 export default InitIpcMain
