@@ -8,15 +8,16 @@ import axios from "@/assets/axios";
 import store from "@/store";
 import router from "@/router";
 import HLoading from "@/components/HLoading.vue";
-import {reactive, ref} from "vue";
+import {onMounted, onUnmounted, reactive, ref, watch} from "vue";
 import HATable from "@/components/HATable.vue";
 import HPagination from "@/components/HPagination.vue";
 import HAlert from "@/components/HAlert.vue";
 
 const pageSize = ref(7)
-const dataList = ref()
+const dataList = ref([])
 const totalPages=ref(0)
 const pageNation = ref()
+const topDiv = ref()
 const data = reactive<{
   curDepartmentId : string
   alert : boolean
@@ -24,11 +25,42 @@ const data = reactive<{
   alert : false,
   curDepartmentId :''
 })
+let pageSizeCalc : any = null
+onMounted(()=>{
+  //const rect = bottomDiv.value.getBoundingClientRect()
+  calcPageSize()
+  pageSizeCalc = setInterval(()=>{
+    calcPageSize()
+  },1000)
+  //console.log(rect)
+})
+onUnmounted(()=>{
+  clearInterval(pageSizeCalc)
+  pageSizeCalc = null
+})
+const calcPageSize = () => {
+  const rect = topDiv.value.getBoundingClientRect()
+  console.log('检查rect',rect)
+
+  const bottomGap = rect.bottom
+
+  const gap = document.documentElement.clientHeight - bottomGap
+  console.log('检查距离',gap)
+  pageSize.value = Math.ceil((gap-100)/45)
+
+  console.log('检查pageSize',pageSize.value)
+}
+watch(
+    ()=>pageSize.value,
+    (val,preval)=>{
+      requestDepartments(pageNation.value.data.currentPage,pageSize.value)
+    }
+)
 const goDepartmentEdit = async (id:string) =>{
   await router.push({name:'departmentEditPage',params:{id:id}})
 }
 const requestDepartments = async (pageNum : number, pageSize : number) =>{
-  const currentItems = new Array<tag>()
+
   await axios.get('/department/page',{
     params:{
       pageNum : pageNum,
@@ -41,17 +73,14 @@ const requestDepartments = async (pageNum : number, pageSize : number) =>{
     console.log(res.data)
     if(res.data.code==200) {
       dataList.value = res.data.data.listData
-      for (let item of res.data.data.listData) {
-        currentItems.push(new tag(item.id, item.departmentName))
-      }
+      totalPages.value = res.data.data.totalPages
     }else{
       showMessage(`${res.data.msg}`,'error')
     }
   }).catch(()=>{
     showMessage('网络错误','error')
   })
-  console.log(currentItems)
-  return currentItems
+
 }
 
 const onLoad = async () => {
@@ -128,7 +157,7 @@ const departmentDelete = async () =>{
     <HSearchBar style="width: 85%" searchUrl="/department/search" @onEnter="goDepartmentEdit"></HSearchBar>
 
     <div class="page-table" >
-      <div class="subtitle" style="text-align: left;margin-top:10px; margin-left:3px">事务列表</div>
+      <div class="subtitle" style="text-align: left;margin-top:10px; margin-left:3px" ref="topDiv">事务列表</div>
       <HATable :dataList="dataList" :cols="tableCols">
         <template #Name="{data}">
               <span style="white-space: nowrap" class="text">
@@ -140,6 +169,12 @@ const departmentDelete = async () =>{
           <div class="flex-row" style="width: 100%;justify-content: center">
             <HButton style="width: 25px;margin: auto 5px" height="20px" @click="goDepartmentEdit(row['id'])"><i class='bx bx-edit-alt'></i></HButton>
             <HButton style="width: 25px;margin: auto 5px" height="20px" type="danger" @click="onDelete(row['id'])"><i class='bx bx-trash'></i></HButton>
+          </div>
+        </template>
+        <template #empty>
+          <i class='bx bx-file-blank' style="font-size: 36px;padding:20px" ></i>
+          <div class="text-bold" style="padding-bottom: 20px">
+            暂时没有科室哦
           </div>
         </template>
       </HATable>

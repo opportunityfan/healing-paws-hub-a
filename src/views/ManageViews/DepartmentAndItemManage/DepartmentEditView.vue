@@ -2,21 +2,18 @@
 
 import HFormInput from "@/components/HFormInput.vue";
 import HButton from "@/components/HButton.vue";
-import HFileUpload from "@/components/HFileUpload.vue";
-import HImage from "@/components/HImage.vue";
-import HRadio from "@/components/HRadio.vue";
 import {computed, reactive, ref} from "vue";
 import {useRoute} from "vue-router";
 import {goBack, goto, Image as Img, showMessage, tag} from "@/assets/api";
 import HLoading from "@/components/HLoading.vue";
 import axios from "@/assets/axios";
 import store from "@/store";
-import HpageTable from "@/components/HpageTable.vue";
+
 import HImageUpload from "@/components/HImageUpload.vue";
 import HATable from "@/components/HATable.vue";
 import HPagination from "@/components/HPagination.vue";
 import HAlert from "@/components/HAlert.vue";
-import {string} from "three/examples/jsm/nodes/shadernode/ShaderNode";
+import HDivider from "@/components/HDivider.vue";
 const route = useRoute()
 const imageUpload = ref()
 const staffPage = ref()
@@ -380,7 +377,13 @@ const itemDelete = (id : string)=>{
 <template>
   <h-loading :load="onLoad">
     <div  class="full">
-      <div class="subtitle" >{{ data.isNew? '创建科室':'编辑科室' }}</div>
+      <div class="flex-row" style="margin: 0px 20px;width: 90%;flex-wrap: nowrap;gap:20px" >
+        <div class="title" style="text-align: left">
+          {{ data.isNew? '创建科室':'编辑科室' }}
+        </div>
+
+      </div>
+      <HDivider style="width: 90%;margin: 0 20px"></HDivider>
         <div class="main-panel">
 
           <div class="left-panel">
@@ -400,11 +403,7 @@ const itemDelete = (id : string)=>{
                 <div class="text-bold" style="flex-shrink: 0">图片编辑</div>
                 <HImageUpload :image="department.image" ref="imageUpload"></HImageUpload>
               </div>
-              <div style="width: 100%" >
-                <HButton @click="createDepartment"  v-if="data.isNew" height="30px">创建科室</HButton>
-                <HButton @click="updateDepartment"  v-if="!data.isNew" height="30px">更新科室</HButton>
 
-              </div>
             </div>
         </div>
       </div>
@@ -419,10 +418,17 @@ const itemDelete = (id : string)=>{
                 <HButton style="width: 25px;margin: auto 5px" height="20px" type="danger" @click="onDeleteStaff(rowIndex)"><i class='bx bx-trash'></i></HButton>
               </div>
             </template>
+            <template #empty>
+              <i class='bx bx-file-blank' style="font-size: 36px;padding:20px" ></i>
+              <div class="text-bold" style="padding-bottom: 20px">
+                该科室暂无人员哦
+              </div>
+            </template>
           </HATable>
-          <HPagination @onPageChange="requestStaffs" ref="staffPage" items-per-page="5" :total-pages="staffTotalPages"></HPagination>
-          <HButton height="30px" style="margin-top: 5px" @click="addPanel">添加人员</HButton>
-
+          <HPagination @onPageChange="requestStaffs" ref="staffPage" items-per-page="5" :total-pages="staffTotalPages" v-if="staffList.length>0"></HPagination>
+          <div style="display: flex;align-items: center;justify-content: center" >
+            <HButton height="30px" style="margin-top: 5px;width: 35%" @click="addPanel">添加人员</HButton>
+          </div>
         </div>
         <div  class="right-panel">
           <div class="text-bold">科室物品</div>
@@ -433,10 +439,17 @@ const itemDelete = (id : string)=>{
                 <HButton style="width: 25px;margin: auto 5px" height="20px" type="danger" @click="onDeleteItem(row['id'])"><i class='bx bx-trash'></i></HButton>
               </div>
             </template>
+            <template #empty>
+              <i class='bx bx-file-blank' style="font-size: 36px;padding:20px" ></i>
+              <div class="text-bold" style="padding-bottom: 20px">
+                该科室暂无物品哦
+              </div>
+            </template>
           </HATable>
-          <HPagination @onPageChange="requestItems" ref="itemPage" items-per-page="5" :total-pages="itemTotalPages"></HPagination>
-          <HButton height="30px" style="margin-top: 5px" @click="onItemAdd">添加物品</HButton>
-
+          <HPagination @onPageChange="requestItems" ref="itemPage" items-per-page="5" :total-pages="itemTotalPages" v-if="itemList.length>0"></HPagination>
+          <div style="display: flex;align-items: center;justify-content: center" >
+            <HButton height="30px" style="margin-top: 5px;width: 35%" @click="onItemAdd">添加物品</HButton>
+          </div>
           <div class="item-add-panel" v-if="itemData.isEditPanel">
             <div class="flex-row" style="width: 100%; gap: 10px; margin: 4px 0">
               <div class="text-bold" style="flex-shrink: 0; margin-left: 6px">名称</div>
@@ -452,6 +465,10 @@ const itemDelete = (id : string)=>{
         </div>
       </div>
 
+      <div class="bottom-div">
+        <HButton @click="createDepartment"  v-if="data.isNew" style="width: 80px" height="40px" >创建</HButton>
+        <HButton @click="updateDepartment"  v-if="!data.isNew" style="width: 80px" height="40px">保存</HButton>
+      </div>
     </div>
   </h-loading>
 <!--  人员删除确认板-->
@@ -568,4 +585,10 @@ const itemDelete = (id : string)=>{
 .item-add-panel
   border 1px solid var(--theme-color)
   border-radius 16px
+
+.bottom-div
+  position absolute
+  bottom 0
+  right 0
+  margin-right 20px
 </style>

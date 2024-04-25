@@ -17,6 +17,7 @@ const props = withDefaults(defineProps<{
 <template>
   <div class="main-part">
     <table>
+      <template v-if="props.dataList.length>0">
       <thead>
         <tr >
           <th
@@ -52,6 +53,14 @@ const props = withDefaults(defineProps<{
         </td>
 
       </tr>
+      </template>
+      <template v-else>
+
+          <slot name="empty">
+
+          </slot>
+
+      </template>
     </table>
   </div>
 </template>
@@ -81,6 +90,9 @@ table td, table th{
   border 1.2px solid var(--theme-color-bright)
   text-align center
   font-size 14px
+}
+tr{
+  width 100%
 }
 .operation
   width 100px
