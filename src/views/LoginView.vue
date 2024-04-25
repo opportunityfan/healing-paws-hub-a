@@ -1,9 +1,9 @@
 <template>
   <div class="login-panel">
-    <div class="title">Sign in</div>
-    <div class="hint">Please login in to continue to your account</div>
+    <div class="title">登录</div>
+    <div class="hint">登录账号以继续你的Healp学习之旅</div>
     <HInput
-        name="Email"
+        name="邮箱"
         v-model="data.account"
         :state="correct.account? 'default' : 'error'"
         :information="information.account"
@@ -12,17 +12,17 @@
     ></HInput>
     <HInput
         :password="true"
-        name="Password"
+        name="密码"
         v-model="data.password"
         :state="correct.password? 'default' : 'error'"
         :information="information.password"
         style="margin: 16px 0"
     ></HInput>
-    <HButton @click="onSignIn">Sign In</HButton>
+    <HButton @click="onSignIn">登录</HButton>
     <HDivider>Or</HDivider>
     <div style="text-align: center">
-      <span class="hint">Need an account? </span>
-      <span class="clickable-text" @click="goRegistry">Sign up</span>
+      <span class="hint">还没有账号? </span>
+      <span class="clickable-text" @click="goRegistry">注册</span>
     </div>
   </div>
 </template>

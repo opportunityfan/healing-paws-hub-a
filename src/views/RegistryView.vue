@@ -1,15 +1,15 @@
 <template>
   <div class="registry-panel">
-    <div class="title">Sign up</div>
-    <div class="hint">Sign up to enjoy the feature of Paw</div>
-    <HInput name="NickName" v-model="data.nickname" style="margin:16px 0"></HInput>
-    <HInput name="Email" v-model="data.email" style="margin:16px 0"></HInput>
-    <HInput :password="true" v-model="data.password" name="password" style="margin:16px 0"></HInput>
-    <HButton @click="onSignUp">Sign Up</HButton>
+    <div class="title">注册</div>
+    <div class="hint">注册账号以开始你的Healp学习之旅</div>
+    <HInput name="昵称" v-model="data.nickname" style="margin:16px 0"></HInput>
+    <HInput name="邮箱" v-model="data.email" style="margin:16px 0"></HInput>
+    <HInput :password="true" v-model="data.password" name="密码" style="margin:16px 0"></HInput>
+    <HButton @click="onSignUp">注册</HButton>
     <HDivider>Or</HDivider>
     <div style="text-align: center">
-      <span class="hint">Already have an account? </span>
-      <span class="clickable-text" @click="backSignIn">Sign in</span>
+      <span class="hint">已经拥有账号? </span>
+      <span class="clickable-text" @click="backSignIn">登录</span>
     </div>
   </div>
 </template>

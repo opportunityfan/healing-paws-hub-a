@@ -25,7 +25,7 @@
                 <div class="box-icon">
                   <i class='bx bx-book'></i>
                 </div>
-                <div class="foldable">Study</div>
+                <div class="foldable">职能学习</div>
               </div>
             </side-bar-item>
             <side-bar-item name="archive" @click="goto('/archive')">
@@ -33,7 +33,7 @@
                 <div class="box-icon">
                   <i class='bx bx-archive'></i>
                 </div>
-                <div class="foldable">Archive</div>
+                <div class="foldable">病例查询</div>
               </div>
             </side-bar-item>
             <side-bar-item name="guide" @click="goto('/guide')">
@@ -41,7 +41,7 @@
                 <div class="box-icon">
                   <i class='bx bxs-analyse'></i>
                 </div>
-                <div class="foldable">Guide</div>
+                <div class="foldable">科室导览</div>
               </div>
             </side-bar-item>
             <side-bar-item name="exam" @click="goto('/exam')">
@@ -49,7 +49,7 @@
                 <div class="box-icon">
                   <i class='bx bx-spreadsheet' ></i>
                 </div>
-                <div class="foldable">Exam</div>
+                <div class="foldable">能力测试</div>
               </div>
             </side-bar-item>
             <side-bar-item name="manage" @click="goto('/manageMain')">
@@ -57,7 +57,7 @@
                 <div class="box-icon">
                   <i class='bx bx-command' ></i>
                 </div>
-                <div class="foldable">Manage</div>
+                <div class="foldable">管理</div>
               </div>
             </side-bar-item>
           </side-bar-item-group>
@@ -126,13 +126,13 @@
                 <div class="box-icon" style="font-size: 15px">
                   <i class='bx bx-edit' ></i>
                 </div>
-                <div class="foldable-small" style="font-size: 10px">Edit</div>
+                <div class="foldable-small" style="font-size: 11px">编辑</div>
               </div>
               <div class="flex-row button-hover-inverse" style="gap: 5px"  @click="onSignOut">
                 <div class="box-icon">
                   <i class='bx bx-exit' style="font-size: 15px"></i>
                 </div>
-                <div class="foldable-small" style="font-size: 10px">Sign Out</div>
+                <div class="foldable-small" style="font-size: 11px">登出</div>
               </div>
             </div>
             <div v-else class="function-bar-column flex-column" style="gap: 20px; padding: 10px 0">
