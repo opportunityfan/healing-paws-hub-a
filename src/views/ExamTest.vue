@@ -192,6 +192,7 @@ async function submit(item:any){
     }
   })
   goto(`/examRecord/${item.id}`);
+  store.state.isTesting = false
 }
 
 async function presubmit(item:any){

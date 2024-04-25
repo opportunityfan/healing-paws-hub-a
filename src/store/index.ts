@@ -18,6 +18,7 @@ export default createStore({
     talkHistories: new Array<TalkHistory>(),
     messageList: new Array<Message>(),
     isAdmin: false,
+    isTesting: false,
     beforeBack: async () : Promise<boolean> => {
       return true
     }

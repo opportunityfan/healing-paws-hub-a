@@ -541,7 +541,12 @@ export const getDepartmentBrief = async () => {
 }
 
 export const openTalkBar = () => {
-    store.state.talkBarAppend = true
+    if(store.state.isTesting){
+        showMessage('不可以在考试中拜访小帕瓦哦~','warning')
+    }else{
+        store.state.talkBarAppend = true
+    }
+
 }
 
 export const closeTalkBar = () => {

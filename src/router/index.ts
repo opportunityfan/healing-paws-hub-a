@@ -290,6 +290,9 @@ router.beforeEach((to,from,next)=>{
     }else {
       store.state.ifBackKey = true
     }
+    if(from.name==='examTest'){
+      store.state.isTesting=false
+    }
 
     console.log(from.path)
     next()

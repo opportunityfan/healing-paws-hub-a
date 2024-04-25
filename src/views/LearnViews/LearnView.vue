@@ -47,12 +47,15 @@ const requestNewAffair = async (count : number) => {
       'token':store.state.token
     }
   }).then(async res => {
-    console.log(res.data.data)
+    console.log('检查res',res.data)
+
     if (res.data.code == 200) {
       console.log('检查item', res.data)
-      for (let item of res.data.data) {
 
-        const isF = await isFavor(item.id, 'affair')
+      for (let en of res.data.data) {
+        let item = en.affair
+
+        // const isF = await isFavor(item.id, 'affair')
         let tempImage
         if (item.pic === null) {
           // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -62,7 +65,7 @@ const requestNewAffair = async (count : number) => {
           const image = new Image(item.pic, 1, 1)
           tempImage = image
         }
-        newPostList.push(new Post(item.id, item.name, item.description, tempImage, isF))
+        newPostList.push(new Post(item.id, item.name, item.description, tempImage, en.flag))
       }
     } else {
       showMessage(`${res.data.msg}`, 'error')

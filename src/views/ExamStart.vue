@@ -3,6 +3,7 @@ import {useRoute} from "vue-router";
 import axios from "axios";
 import {onMounted, ref} from "vue";
 import HButton from "@/components/HButton.vue";
+import store from "@/store";
 
 const router=useRoute();
 const item = ref<any>({});
@@ -14,6 +15,9 @@ async function getData(){
     }
   })
   item.value=res.data.data;
+}
+const enterExam = () => {
+  store.state.isTesting = true
 }
 
 onMounted(()=>{
@@ -41,7 +45,7 @@ onMounted(()=>{
       2.不得作弊
     </div>
     <router-link :to="`/examTest/${item.id}`">
-      <HButton>
+      <HButton @click="enterExam">
         开始考试
       </HButton>
     </router-link>
