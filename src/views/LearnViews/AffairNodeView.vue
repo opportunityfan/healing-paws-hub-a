@@ -25,13 +25,7 @@
               :icon-size="18"
               @click="scrollRef.toTop()"
           ></HIconButton>
-          <HIconButton
-              :name="data.star? '取消收藏' : '收藏'"
-              :icon-class="data.star? 'bxs-star' : 'bx-star'"
-              :color="data.star? 'var(--accent-color)' : 'var(--grey-color)'"
-              :hover-color="data.star? 'var(--accent-color-dark)' : 'var(--grey-color-dark)'"
-              @click="onStar"
-          ></HIconButton>
+
           <HIconButton
               name="完成学习"
               :icon-class="data.complete? 'bxs-trophy' : 'bx-check'"
@@ -48,7 +42,7 @@
 
 <script setup lang="ts">
 import {onMounted, onUnmounted, reactive, VueElement, ref} from "vue";
-import {affairNode, getAffairNode, goto} from "@/assets/api";
+import {affairNode, getAffairNode, goto, isFavor, markFavor, unMarkFavor} from "@/assets/api";
 import MarkdownRenderer from "@/components/MarkdownRenderer.vue";
 import store from "@/store";
 import HScroller from "@/components/HScroller.vue";
@@ -76,7 +70,13 @@ const onStar = () => {
 }
 
 const onComplete = () => {
-  data.complete = true
+  if(!data.complete){
+    markFavor(props.nodeId,'affairNode')
+    data.complete = true
+  }else{
+    unMarkFavor(props.nodeId)
+    data.complete = false
+  }
 }
 
 const onLoad = async () => {
@@ -85,6 +85,9 @@ const onLoad = async () => {
     data.affairNode = res
     // store.state.back_title = '返回事务'
   })
+  if(await isFavor(props.nodeId,'affairNode')){
+    data.complete = true
+  }
   return
 }
 

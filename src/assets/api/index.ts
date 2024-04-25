@@ -18,11 +18,13 @@ export class Post {
     title: string
     backgroundImage: Image
     description: string
-    constructor(id: string, title: string, description: string , backgroundImage: Image) {
+    isfavor : boolean
+    constructor(id: string, title: string, description: string , backgroundImage: Image, isfavor : boolean) {
         this.id = id
         this.title = title
         this.description = description
         this.backgroundImage = backgroundImage
+        this.isfavor = isfavor
     }
 }
 
@@ -79,7 +81,61 @@ export class instrument {
         this.image = new Image('', 1, 1)
     }
 }
-
+export const isFavor = async (id : string, objType : string) => {
+    let ans = false
+    await axios.get('/favorite/favored',{
+        headers:{
+            token:store.state.token
+        },
+        params:{
+            objectType : objType,
+            objectId : id
+        }
+    }).then(res=>{
+        console.log('返回是否收藏',res.data)
+        if(res.data.code==200){
+            if(res.data.data==true) {
+                ans = true
+            }
+            else {
+                ans = false
+            }
+        }
+    }).catch(e=>{
+        console.log('返回收藏报错：',e)
+    })
+    return ans
+}
+export const markFavor = async (id : string, type : string) => {
+    const jsonData = {objectType : type, objectId : id}
+    axios.post('/favorite',jsonData,{
+        headers:{
+            token: store.state.token
+        }
+    }).then(res=>{
+        console.log('检查标记收藏',res.data)
+        if(res.data.code==200){
+            showMessage('成功完成学习！',"success")
+        }
+    }).catch(e=>{
+        console.log('标记收藏报错：',e)
+    })
+}
+export const unMarkFavor = async (id : string) => {
+    axios.delete('/favorite',{
+        headers:{
+            token:store.state.token
+        },
+        params:{
+            id : id
+        }
+    }).then(res=>{
+        console.log('检查取消收藏',res.data)
+        if(res.data.code == 200){
+            showMessage('取消学习成功！','info')
+        }
+    })
+}
 export const changeTheme = (theme : string) => {
     window.document.documentElement.setAttribute("data-theme", theme);
 }
