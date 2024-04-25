@@ -140,8 +140,10 @@ export const signIn = (data:any) => {
                  goto('/manageMain').then()
              }else{
                  goto('/main').then()
+                 console.log('检查是否为新',res.data.msg)
+                 console.log('检查substring',res.data.msg.substring(0,3))
                  if(res.data.msg.substring(0,3) === 'NEW'){
-                     goto('/RoleSelectView').then()
+                     goRoleSelect()
                  }
              }
          } else {

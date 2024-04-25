@@ -302,6 +302,7 @@ const removeSelected = () => {
 .edit-panel
   display flex
   flex-direction row
+  justify-content space-evenly
   .button-block
     width 180px
     margin 10px 20px

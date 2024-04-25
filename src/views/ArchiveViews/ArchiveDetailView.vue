@@ -1,10 +1,11 @@
 <script setup lang="ts">
 
-import {reactive, ref} from "vue";
+import {reactive, ref, onMounted} from "vue";
 import {useRoute} from "vue-router";
 import axios from "@/assets/axios";
 import store from "@/store";
 import HScroller from "@/components/HScroller.vue";
+import HLoading from "@/components/HLoading.vue";
 import {Image} from "@/assets/api";
 
 const route = useRoute()
@@ -15,8 +16,8 @@ let archiveDetailInfo = reactive({})
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const altImage = new Image(require("@/assets/login-background.png"), 1280, 720)
 
-function getArchiveDetailsById() {
-  axios.get("/case", {
+async function getArchiveDetailsById() {
+  await axios.get("/case", {
     params: {
       id: route.params.archiveId
     },
@@ -28,9 +29,13 @@ function getArchiveDetailsById() {
     Object.assign(archiveDetailInfo, res.data.data)
     console.log(archiveDetailInfo)
   })
+  return
 }
 
-getArchiveDetailsById()
+const onLoad = async () => {
+  await getArchiveDetailsById()
+  return
+}
 
 function consoleLogArchiveDetailInfo(){
   console.log(archiveDetailInfo)
@@ -40,39 +45,45 @@ function consoleLogArchiveDetailInfo(){
 
 <template>
   <div class="full">
-    <HScroller scroll-direction="column" class="full scroller-view">
-      <div class="flex-column">
-        <div class="archive-title">基本信息</div>
-        <div class="archive-content">
-          <div>病例编号： {{ archiveDetailInfo.id }}</div>
-          <div>病例名称： {{ archiveDetailInfo.name }}</div>
-          <div class="flex-row" v-for="(diseaseType, index) in archiveDetailInfo.type" :key="index">
-            <span>所患疾病种类：</span>
-            <span class="clickable-text">{{diseaseType + ''}}</span>
+    <HLoading :load="onLoad">
+      <HScroller scroll-direction="column" class="full scroller-view">
+        <div class="flex-column">
+          <div class="archive-title">基本信息</div>
+          <div class="archive-content">
+            <div>病例编号： {{ archiveDetailInfo.id }}</div>
+            <div>病例名称： {{ archiveDetailInfo.name }}</div>
+            <div class="flex-row" v-for="(diseaseType, index) in archiveDetailInfo.type" :key="index">
+              <span>所患疾病种类：</span>
+              <span class="clickable-text">{{diseaseType + ''}}</span>
+            </div>
+          </div>
+          <div class="archive-title">接诊（基本情况、临床症状）</div>
+          <div class="archive-content">
+            <div v-html="archiveDetailInfo.description"></div><br>
+            <img :src="archiveDetailInfo.descriptionImg" class="archive-image">
+            <video width="100%" controls v-show="archiveDetailInfo.descriptionVideo != null" :src="archiveDetailInfo.descriptionVideo"></video>
+          </div>
+          <div class="archive-title">检查</div>
+          <div class="archive-content">
+            <div v-html="archiveDetailInfo.checkItem"></div><br>
+            <img :src="archiveDetailInfo.checkItemImg" class="archive-image">
+            <video width="100%" controls v-show="archiveDetailInfo.checkItemVideo != null" :src="archiveDetailInfo.checkItemVideo"></video>
+          </div>
+          <div class="archive-title">诊断结果</div>
+          <div class="archive-content">
+            <div v-html="archiveDetailInfo.diagnosis"></div><br>
+            <img :src="archiveDetailInfo.diagnosisImg" class="archive-image">
+            <video width="100%" controls v-show="archiveDetailInfo.diagnosisVideo != null" :src="archiveDetailInfo.diagnosisVideo"></video>
+          </div>
+          <div class="archive-title">治疗方案</div>
+          <div class="archive-content">
+            <div v-html="archiveDetailInfo.remedy"></div><br>
+            <img :src="archiveDetailInfo.remedyImg" class="archive-image">
+            <video width="100%" controls v-show="archiveDetailInfo.remedyVideo != null" :src="archiveDetailInfo.remedyVideo"></video>
           </div>
         </div>
-        <div class="archive-title">接诊（基本情况、临床症状）</div>
-        <div class="archive-content">
-          <div v-html="archiveDetailInfo.description"></div><br>
-          <img :src="archiveDetailInfo.descriptionImg" class="archive-image">
-        </div>
-        <div class="archive-title">检查</div>
-        <div class="archive-content">
-          <div v-html="archiveDetailInfo.checkItem"></div><br>
-          <img :src="archiveDetailInfo.checkItemImg" class="archive-image">
-        </div>
-        <div class="archive-title">诊断结果</div>
-        <div class="archive-content">
-          <div v-html="archiveDetailInfo.diagnosis"></div><br>
-          <img :src="archiveDetailInfo.diagnosisImg" class="archive-image">
-        </div>
-        <div class="archive-title">治疗方案</div>
-        <div class="archive-content">
-          <div v-html="archiveDetailInfo.remedy"></div><br>
-          <img :src="archiveDetailInfo.remedyImg" class="archive-image">
-        </div>
-      </div>
-    </HScroller>
+      </HScroller>
+    </HLoading>
   </div>
 </template>
 

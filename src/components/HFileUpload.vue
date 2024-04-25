@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {ref,defineEmits} from "vue";
+import {ref,defineEmits,withDefaults, defineProps} from "vue";
 import axios from "@/assets/axios";
 import store from "@/store";
 
@@ -9,6 +9,12 @@ const emit = defineEmits(['handleFile'])
 const clickFileInput = () => {
   fileInput.value?.click()
 }
+
+const props = withDefaults(defineProps<{
+  fileType: string
+}>(), {
+  fileType: 'image/*'
+})
 
 const selectedFile = ref()
 const handleImage = (event : any) =>{
@@ -23,7 +29,7 @@ const handleImage = (event : any) =>{
 
 <template>
   <div style="display: flex">
-    <input type="file" accept="image/*" @change="handleImage" ref="fileInput" style="display: none"/>
+    <input type="file" :accept="fileType" @change="handleImage" ref="fileInput" style="display: none"/>
     <div  class="file-input">
       <i class='bx bx-plus file-select' @click="clickFileInput"></i>
     </div>
