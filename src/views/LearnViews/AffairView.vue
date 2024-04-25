@@ -85,9 +85,7 @@ const onComplete = () => {
     <div class="full flex-column">
       <div class="subtitle" style="padding: 15px 0;position: relative">
         <span>{{ affair.name }}</span>
-        <div class="box-icon button-hover" style="position: absolute; top: 15px;height: 26px;right: -40px;display: inline-block" @click="goto('/affairManage/' + affair.id)">
-          <i class='bx bxs-edit center'></i>
-        </div>
+
       </div>
       <HStatistic></HStatistic>
       <div class="full" style="height: 400px">

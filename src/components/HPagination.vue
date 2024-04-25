@@ -45,6 +45,16 @@ const onPageChange = () => {
   }
   emit('onPageChange',data.currentPage,props.itemsPerPage)
 }
+
+watch(
+    ()=>data.currentPage,
+    (val,preval) => {
+      if(val<1){
+        data.currentPage = 1
+      }
+    }
+)
+
 const emit = defineEmits(['onPageChange'])
 defineExpose({data})
 </script>

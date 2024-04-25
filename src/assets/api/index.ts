@@ -343,7 +343,7 @@ export const setInstrument = async (instrument : instrument, image? : File) => {
     }).then((res) => {
         console.log(res)
         if (res.data.code === 200) {
-            console.log('update instrument node success')
+            showMessage('保存成功！','success')
         }
     }).catch(()=>{
         showMessage('网络错误','error')

@@ -7,9 +7,7 @@
             <div>
               <div class="subtitle" style="padding: 15px 0;position: relative">
                 <span>{{ data.instrument ? '器械:' + data.instrument?.name : '' }}</span>
-                <div class="box-icon button-hover" style="position: absolute; top: 15px;height: 26px;right: -40px;display: inline-block" @click="goto('/instrument-edit/' + data.instrument?.id)">
-                  <i class='bx bxs-edit center'></i>
-                </div>
+
               </div>
             </div>
             <HStatistic></HStatistic>

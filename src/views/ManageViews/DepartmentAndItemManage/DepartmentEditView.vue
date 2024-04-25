@@ -160,6 +160,8 @@ const requestItems = async (pageNum : number, pageSize : number) =>{
     if(res.data.code==200) {
       itemTotalPages.value = res.data.data.totalPages
       itemList.value = res.data.data.listData
+    }else{
+      itemList.value = []
     }
   }).catch(()=>{
     showMessage('网络错误','error')
@@ -368,7 +370,6 @@ const staffEdit = (index : number) =>{
 const onDeleteItem = (id : string) => {
   data.curItemId = id
   data.itemDeleteAlert = true
-
 }
 const itemDelete = (id : string)=>{
   axios.delete('/item/'+id,{
@@ -444,7 +445,7 @@ const itemDelete = (id : string)=>{
               </div>
             </template>
           </HATable>
-          <HPagination @onPageChange="requestStaffs" ref="staffPage" items-per-page="5" :total-pages="staffTotalPages" v-if="staffList.length>0"></HPagination>
+          <HPagination @onPageChange="requestStaffs" ref="staffPage" items-per-page="5" :total-pages="staffTotalPages" v-show="staffList.length>0"></HPagination>
           <div style="display: flex;align-items: center;justify-content: center" >
             <HButton height="30px" style="margin-top: 5px;width: 35%" @click="addPanel">添加人员</HButton>
           </div>
@@ -465,7 +466,7 @@ const itemDelete = (id : string)=>{
               </div>
             </template>
           </HATable>
-          <HPagination @onPageChange="requestItems" ref="itemPage" items-per-page="5" :total-pages="itemTotalPages" v-if="itemList.length>0"></HPagination>
+          <HPagination @onPageChange="requestItems" ref="itemPage" items-per-page="5" :total-pages="itemTotalPages" v-show="itemList.length>0"></HPagination>
           <div style="display: flex;align-items: center;justify-content: center" >
             <HButton height="30px" style="margin-top: 5px;width: 35%" @click="onItemAdd">添加物品</HButton>
           </div>
