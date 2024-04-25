@@ -6,7 +6,7 @@ import HButton from "@/components/HButton.vue";
 
 export default {
   components: {HButton, CaretBottom, CaretTop, DCaret},
-  emits: ['trans'],
+  emits: ['trans','publish'],
   props: {
     tabledata: {
       type:Array,
@@ -44,6 +44,7 @@ export default {
       console.log(res.data.code);
       console.log(res.data.msg);
       console.log(res.data.data);
+      this.$emit('publish',this.ispublish);
       this.ispublish=false;
     },
     async delete1() {

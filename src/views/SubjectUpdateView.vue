@@ -8,6 +8,7 @@ import store from "@/store";
 import {useRoute} from "vue-router";
 import MarkdownEditor from "@/components/MarkdownEditor.vue";
 import HScroller from "@/components/HScroller.vue";
+import HPagination from "@/components/HPagination.vue";
 const router=useRoute();
 const subjectform=reactive({
   id:router.params.id,
@@ -48,6 +49,7 @@ const diseasedata=ref([]);
 const typeList=ref<string[]>([]);
 const pageSize=ref(10);
 const pageNum=ref(1);
+const pageNation = ref();
 function submit(){
   formref.value?.validate((valid)=>{
     if(valid){
@@ -64,21 +66,18 @@ async function getsubmit(){
   goto('/subject');
 }
 
-async function  pagechange(page:number){
-  pageNum.value=page;
-  await getdata();
-}
-async function getdata(){
+async function getdata(currentPage:number,pagesize : number){
   const res = await axios.get('http://150.158.110.63:8080/disease',{
     params:{
-      pageNum: pageNum.value,
-      pageSize: pageSize.value,
+      pageNum: currentPage,
+      pageSize: pagesize,
     },
     headers: {
       'token': store.state.token
     }
   })
   console.log(res.data.data);
+  pageNum.value=res.data.data.totalPages;
   diseasedata.value=res.data.data.listData;
 }
 
@@ -95,7 +94,7 @@ function Add(Value:boolean,Id:string){
 
 function insured(){
   (subjectform.type as string[])=typeList.value;
-  getdata();
+  getdata(pageNation.value.data.currentPage,pageSize.value);
   isAdd.value=false;
 }
 
@@ -119,7 +118,7 @@ async function ins(){
     subjectform.type=question2.type ?? [];
     typeList.value=question2.type??[];
   }
-  await getdata();
+  await getdata(1,pageSize.value);
 }
 
 onMounted(()=>{
@@ -200,15 +199,8 @@ onMounted(()=>{
         </tr>
         </tbody>
       </table>
-      <el-pagination
-          small
-          background
-          layout="prev, pager, next"
-          :page-size="pageSize"
-          :total="61"
-          class="mt-4"
-          @current-change="pagechange"
-      />
+      <HPagination @onPageChange="getdata" :itemsPerPage="pageSize" :total-pages="pageNum" ref="pageNation">
+      </HPagination>
       <template #footer>
         <el-button @click="insured()">确认</el-button>
         <el-button @click="isAdd=false">取消</el-button>

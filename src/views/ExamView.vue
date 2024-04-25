@@ -10,6 +10,7 @@ import axios from "@/assets/axios";
 import {dayjs} from "element-plus";
 import HPagination from "@/components/HPagination.vue";
 import HSearchBar from "@/components/HSearchBar.vue";
+import store from "../store";
 
 function ChangeRecord(){
   goto('/examLink');
@@ -38,9 +39,11 @@ async function getData(currentPage:number,pageSize : number){
   }
   // console.log(choose.value);
   console.log(currentPage);
-
   console.log(pageSize);
-  const res=await axios.get('/exam/page/multi',{
+  if(store.state.role==='前台') choose.value=1;
+  if(store.state.role==='医师') choose.value=2;
+  if(store.state.role==='医助') choose.value=3;
+  const res=await axios.get('/exam/page/multi/release',{
     params: {
       sortTime: sort.value,
       // // sortScore: sort.value==="sortScore",
@@ -57,9 +60,11 @@ async function getData(currentPage:number,pageSize : number){
         pagenum.value=result.data.data.totalPages;
       }
   );
+
 }
 onMounted(()=>{
   getData(pageNation.value.data.currentPage,pagesize.value);
+  console.log(store.state.role);
 })
 
 function search(){
@@ -103,7 +108,10 @@ function times(x:number){
       <el-row justify="center">
         <HButton @click="ChangeRecord" style="width: 100%">前往考试记录</HButton>
       </el-row>
-      <HSearch style="width: 80%" v-model="text" @onEnter="search"></HSearch>
+      <el-row justify="space-between">
+        <HSearch style="width: 80%" v-model="text" @onEnter="search"></HSearch>
+      </el-row>
+
 <!--      <el-input v-model="text" @blur="search">-->
 <!--      </el-input>-->
       <!--      <HSearch></HSearch>-->
@@ -122,20 +130,7 @@ function times(x:number){
         </div>
       </div>
       <div class="hang">
-        <div class="zuo">
-          <HButton @click="drawer = true">考试身份选择</HButton>
-        </div>
-        <div class="you">
-<!--          <el-select v-model="choose" @change="search">-->
-<!--            <el-option :value="1" label="实习生">-->
-<!--            </el-option>-->
-<!--            <el-option :value="2" label="教师">-->
-<!--            </el-option>-->
-<!--            <el-option :value="3" label="兽医">-->
-<!--            </el-option>-->
-<!--          </el-select>-->
-          <HButton  @click="clearup()">清空条件</HButton>
-        </div>
+        <HButton  @click="clearup()" style="width: 30%">清空条件</HButton>
       </div>
 
 <!--      <div class="hang">-->

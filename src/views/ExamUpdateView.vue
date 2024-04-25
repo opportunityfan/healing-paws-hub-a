@@ -5,10 +5,11 @@ import {dayjs, FormEmits, FormInstance} from "element-plus";
 import axios from "axios";
 import {goto} from "@/assets/api";
 import {useRoute} from "vue-router";
+import HPagination from "@/components/HPagination.vue";
 
 const router=useRoute();
 const pagenum=ref(1);
-const pagesize=ref(10);
+const pagesize=ref(5);
 const examform=reactive({
   id:router.params.id,
   examName: '',
@@ -45,6 +46,7 @@ const formref=ref<FormInstance>();
 const isAdd=ref(false);
 const questiondata=ref([]);
 const examList=ref<string[]>([]);
+const pageNation = ref();
 function submit(){
   formref.value?.validate((valid)=>{
     if(valid){
@@ -62,14 +64,15 @@ async function getsubmit(newexam:object){
   console.log(result);
   goto('/examManage');
 }
-async function getdata(){
+async function getdata(currentPage:number,pageSize : number){
   const res = await axios.get('http://150.158.110.63:8080/question/page',{
     params:{
-      pageNum: pagenum.value,
-      pageSize: pagesize.value,
+      pageNum: currentPage,
+      pageSize: pageSize,
     }
   })
-  questiondata.value=res.data.data;
+  pagenum.value=res.data.data.totalPages;
+  questiondata.value=res.data.data.listData;
   console.log(res);
 }
 
@@ -89,10 +92,6 @@ function insured(){
   isAdd.value=false;
 }
 
-async function  pagechange(page:number){
-  pagenum.value=page;
-  await getdata();
-}
 
 async function ins(){
   if (router.params.id){
@@ -105,7 +104,7 @@ async function ins(){
     examform.questionIdList=exam2.questionIdList?? [];
     examList.value=exam2.questionIdList ?? [];
   }
-  await getdata();
+  await getdata(1,pagesize.value);
 }
 async function getdata2(){
   const res2=await axios.get('http://150.158.110.63:8080/exam',{
@@ -168,7 +167,7 @@ onMounted(()=>{
         </colgroup>
         <thead>
         <tr>
-          <th>ID</th>
+          <th>Name</th>
           <th>score</th>
           <th>statement</th>
           <th>operation</th>
@@ -176,7 +175,7 @@ onMounted(()=>{
         </thead>
         <tbody>
         <tr v-for="item in questiondata" :key="item.id">
-          <td>{{item.id}}</td>
+          <td>{{item.name}}</td>
           <td>{{item.score}}</td>
           <td>{{item.statement}}</td>
           <td>
@@ -185,15 +184,8 @@ onMounted(()=>{
         </tr>
         </tbody>
       </table>
-      <el-pagination
-          small
-          background
-          layout="prev, pager, next"
-          :page-size="pagesize"
-          :total="20"
-          class="mt-4"
-          @current-change="pagechange"
-      />
+      <HPagination @onPageChange="getdata" :itemsPerPage="pagesize" :total-pages="pagenum" ref="pageNation">
+      </HPagination>
       <template #footer>
         <el-button @click="insured()">确认</el-button>
         <el-button @click="isAdd=false">取消</el-button>

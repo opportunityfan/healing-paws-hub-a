@@ -4,6 +4,7 @@ import {string} from "three/examples/jsm/nodes/shadernode/ShaderNode";
 import {dayjs, FormEmits, FormInstance} from "element-plus";
 import axios from "axios";
 import {goto} from "@/assets/api";
+import HPagination from "@/components/HPagination.vue";
 
 const examform=reactive({
   examName: '',
@@ -41,7 +42,8 @@ const isAdd=ref(false);
 const questiondata=ref([]);
 const examList=ref<string[]>([]);
 const pagenum=ref(1);
-const pagesize=ref(7);
+const pagesize=ref(5);
+const pageNation = ref();
 function submit(){
   formref.value?.validate((valid)=>{
     if(valid){
@@ -59,19 +61,15 @@ async function getsubmit(newexam:object){
   console.log(result);
   goto('/examManage');
 }
-async function getdata(){
+async function getdata(currentPage:number,pageSize : number){
   const res = await axios.get('http://150.158.110.63:8080/question/page',{
     params:{
-      pageNum: pagenum.value,
-      pageSize: pagesize.value,
+      pageNum: currentPage,
+      pageSize: pageSize,
     }
   })
+  pagenum.value=res.data.data.totalPages;
   questiondata.value=res.data.data.listData;
-}
-
-async function  pagechange(page:number){
-  pagenum.value=page;
-  await getdata();
 }
 
 function Add(Value:boolean,Id:string){
@@ -90,7 +88,7 @@ function insured(){
 }
 
 onMounted(()=>{
-  getdata();
+  getdata(1,pagesize.value);
 })
 </script>
 
@@ -162,15 +160,8 @@ onMounted(()=>{
       <el-button @click="insured()">确认</el-button>
       <el-button @click="isAdd=false">取消</el-button>
     </template>
-    <el-pagination
-        small
-        background
-        layout="prev, pager, next"
-        :page-size="pagesize"
-        :total="100"
-        class="mt-4"
-        @current-change="pagechange"
-    />
+    <HPagination @onPageChange="getdata" :itemsPerPage="pagesize" :total-pages="pagenum" ref="pageNation">
+    </HPagination>
   </el-dialog>
   </div>
 </template>

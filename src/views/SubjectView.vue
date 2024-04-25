@@ -4,6 +4,7 @@ import axios from "axios";
 import {onMounted, ref} from "vue";
 import HPagination from "@/components/HPagination.vue";
 import {showMessage} from "@/assets/api";
+import HSearch from "@/components/HSearch.vue";
 // import HDealWith from "@/components/HDealWith.vue";
 
 const questiondata=ref({});
@@ -65,8 +66,8 @@ onMounted(()=>{
     <router-link to="/subjectAdd">
       <HButton>前往添加题目</HButton>
     </router-link>
-    <el-input v-model="text" @blur="search">
-    </el-input>
+    <HSearch v-model="text" @onEnter="search">
+    </HSearch>
     <table class="xtable">
       <colgroup>
         <col width="20%">
