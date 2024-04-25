@@ -418,14 +418,18 @@ const itemDelete = (id : string)=>{
           <div class="right-panel">
             <div class="flex-row" style="width: 100%; gap: 20px; margin: 6px 0">
               <div>
-                <div class="text-bold" style="flex-shrink: 0">图片编辑</div>
+                <div class="text-bold" style="flex-shrink: 0;margin:10px">图片编辑</div>
                 <HImageUpload :image="department.image" ref="imageUpload"></HImageUpload>
+              </div>
+              <div style="margin: 0;">
+                <div @click="data.positionEditAlert = true" class="text-bold" style="flex-shrink: 0;margin:10px">编辑位置</div>
+                <div class="box-icon map-hover " style="font-size: 60px;margin:0 10px" >
+                  <i class='bx bx-map-pin'></i>
+                </div>
               </div>
             </div>
         </div>
-          <div>
-            <div @click="data.positionEditAlert = true">编辑位置</div>
-          </div>
+
       </div>
 
       <div class="main-panel">
@@ -500,7 +504,7 @@ const itemDelete = (id : string)=>{
         </div>
         <div class="text-bold">删除</div>
       </div>
-      <div class="text" style="padding-bottom: 20px; width: 100%">你确定删除该事务吗？</div>
+      <div class="text" style="padding-bottom: 20px; width: 100%">你确定删除该人员吗？</div>
       <div class="flex-row" style=" width: 100%;gap: 10px; justify-content: flex-end">
         <h-button type="secondary" height="30px" style="margin: 0; width: 60px; font-size: 12px" id="cancel" @click="data.staffDeleteAlert=false">取消</h-button>
         <h-button type="danger" height="30px" style="margin: 0; width: 60px; font-size: 12px" @click="staffDelete(data.curStaffIndex)" id="confirm">删除</h-button>
@@ -616,4 +620,12 @@ const itemDelete = (id : string)=>{
   bottom 0
   right 0
   margin-right 20px
+
+.map-hover {
+  transition: color 0.1s;
+  cursor: pointer;
+}
+.map-hover:hover {
+  color: var(--accent-color)
+}
 </style>
