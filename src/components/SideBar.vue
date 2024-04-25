@@ -227,7 +227,7 @@ const onSignOut = () => {
   height 100%
 
 .locked-sidebar-background
-  background-image url('../assets/login-background.png')
+  background-image url('../assets/dogImg.png')
   background-repeat no-repeat
   background-size cover
   background-position center
