@@ -88,6 +88,7 @@ function record(){
   ans.value[imd.value]=answer.value;
   console.log(ans.value);
   answer.value='';
+  presubmit(item1.value);
 }
 
 async function submit(item:any){
@@ -107,6 +108,19 @@ async function submit(item:any){
     }
   })
   goto('/exam');
+}
+
+async function presubmit(item:any){
+  console.log(ans);
+  const datasub = {
+    examId : item.id,
+    result : ans.value,
+  }
+  await axios.post('http://150.158.110.63:8080/examrecord/commit',datasub,{
+    headers:{
+      'token' : store.state.token
+    }
+  })
 }
 
 function selectA(){
