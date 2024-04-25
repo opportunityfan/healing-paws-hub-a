@@ -172,7 +172,7 @@ export default {
   tr{
     &:nth-child(even){
       td{
-        background-color #5A8100
+        background-color #C6CCBA
         color #FFF9E9
       }
     }

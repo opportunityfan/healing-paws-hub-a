@@ -9,6 +9,7 @@ import {onMounted, ref} from "vue";
 import axios from "@/assets/axios";
 import {dayjs} from "element-plus";
 import HTableManage from "@/components/HTableManage.vue";
+import HPagination from "@/components/HPagination.vue";
 
 const text=ref('');
 const choose=ref(null);
@@ -19,7 +20,9 @@ const pagesize=ref(7);
 const sort=ref(0);
 let c=ref(null);
 let d=ref(null);
-async function getData(){
+const pageNation = ref();
+const drawer=ref(false);
+async function getData(currentPage:number,pageSize : number){
   console.log("value2=");
   console.log(value2.value);
   const [a,b]= value2.value;
@@ -38,8 +41,8 @@ async function getData(){
       type: choose.value,
       startTime: c,
       endTime: d,
-      pageNum:pagenum.value,
-      pageSize:pagesize.value,
+      pageNum:currentPage,
+      pageSize:pageSize,
     }
   }).then((result)=>{
       console.log(result.data);
@@ -51,26 +54,43 @@ async function getData(){
 }
 async function  pagechange(page:number){
   pagenum.value=page;
-  await getData();
+  await getData(pageNation.value.data.currentPage,pagesize.value);
 }
 onMounted(()=>{
-  getData();
+  getData(pageNation.value.data.currentPage,pagesize.value);
 })
 
 function search(){
   console.log("search");
-  getData();
+  getData(pageNation.value.data.currentPage,pagesize.value);
 }
 function times(x:number){
   sort.value=x;
-  getData();
+  getData(pageNation.value.data.currentPage,pagesize.value);
+}
+
+function qt(){
+  choose.value=1;
+  search();
+  drawer.value=false;
+}
+function ys(){
+  choose.value=2;
+  search();
+  drawer.value=false;
+}
+
+function yz(){
+  choose.value=3;
+  search();
+  drawer.value=false;
 }
 function clearup(){
   sort.value=0;
   text.value='';
-  choose.value='';
+  choose.value=null;
   value2.value='';
-  getData();
+  getData(pageNation.value.data.currentPage,pagesize.value);
 }
 </script>
 
@@ -80,24 +100,26 @@ function clearup(){
       <router-link to="/examAdd">
         <HButton>前往添加考试</HButton>
       </router-link>
+      <HSearch style="width: 80%" v-model="text" @onEnter="search"></HSearch>
+      <br>
       <!--      <HSearch></HSearch>-->
       <!--      <HTimePicker></HTimePicker>-->
-      <div class="hang">
-        <div class="zuo">
-          <el-input v-model="text" @blur="search">
-          </el-input>
-        </div>
-        <div class="you">
-          <el-select v-model="choose" @change="search">
-            <el-option :value="1" label="实习生">
-            </el-option>
-            <el-option :value="2" label="教师">
-            </el-option>
-            <el-option :value="3" label="兽医">
-            </el-option>
-          </el-select>
-        </div>
-      </div>
+<!--      <div class="hang">-->
+<!--        <div class="zuo">-->
+<!--          <el-input v-model="text" @blur="search">-->
+<!--          </el-input>-->
+<!--        </div>-->
+<!--        <div class="you">-->
+<!--          <el-select v-model="choose" @change="search">-->
+<!--            <el-option :value="1" label="实习生">-->
+<!--            </el-option>-->
+<!--            <el-option :value="2" label="教师">-->
+<!--            </el-option>-->
+<!--            <el-option :value="3" label="兽医">-->
+<!--            </el-option>-->
+<!--          </el-select>-->
+<!--        </div>-->
+<!--      </div>-->
       <div class="flex-row">
         <div class="hang">
           <el-date-picker
@@ -111,22 +133,32 @@ function clearup(){
         </div>
       </div>
       <div class="hang">
-        <el-button @click="clearup()">清空</el-button>
+        <div class="zuo">
+          <HButton @click="drawer = true">考试身份选择</HButton>
+        </div>
+        <div class="you">
+          <HButton  @click="clearup()">清空条件</HButton>
+        </div>
       </div>
     </div>
 <!--    {{tabledata}}-->
     <div class="xia">
       <HTableManage :tabledata="tabledata"  @trans="times"></HTableManage>
     </div>
-    <el-pagination
-        small
-        background
-        layout="prev, pager, next"
-        :page-size="pagesize"
-        :total="100"
-        class="mt-4"
-        @current-change="pagechange"
-    />
+      <HPagination @onPageChange="getData" :itemsPerPage="pagesize" :total-pages="pagenum" ref="pageNation">
+      </HPagination>
+    <div>
+      <el-drawer v-model="drawer" title="选择你的考试身份" :with-header="false" size="50%" class="wind">
+        <div class="wind">
+          <span>选择你的考试身份</span>
+          <el-row>
+            <HButton  @click="qt()" class="quest">前台</HButton>
+            <HButton  @click="ys()" class="quest">医师</HButton>
+            <HButton  @click="yz()" class="quest">医助</HButton>
+          </el-row>
+        </div>
+      </el-drawer>
+    </div>
   </div>
 </template>
 

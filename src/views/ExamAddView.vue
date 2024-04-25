@@ -97,7 +97,7 @@ onMounted(()=>{
 <template>
   <div>
   <el-form :model="examform" :rules="rules" @submit="submit()" ref="formref">
-    <el-form-item prop="examName" label="考试名称">
+    <el-form-item prop="examName" label="考试名称" style="width: 50%">
       <el-input v-model="examform.examName">
       </el-input>
     </el-form-item>
@@ -120,7 +120,7 @@ onMounted(()=>{
       <el-input-number v-model="examform.totalTime" :min="30" :max="180" :controls="false"/>
     </el-form-item>
     <el-form-item label="参与者">
-      <el-select v-model="examform.type">
+      <el-select v-model="examform.type" style="width: 100px">
         <el-option label="实习生" :value="1"></el-option>
         <el-option label="兽医" :value="2"></el-option>
         <el-option label="兽医2" :value="3"></el-option>

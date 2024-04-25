@@ -5,36 +5,35 @@ import {goto} from "@/assets/api";
 import axios from "@/assets/axios";
 import store from "@/store";
 import {onMounted, ref} from "vue";
+import HPagination from "@/components/HPagination.vue";
 
 const pagenum=ref(1);
 const pagesize=ref(5);
 const testdata=ref([]);
+const pageNation = ref();
 
 function go(){
   goto('/exam');
 }
-async function getData() {
+async function getData(currentPage:number,pageSize : number) {
   const res = await axios.get('/examrecord/page/id', {
     params: {
-      pageNum: pagenum.value,
-      pageSize: pagesize.value,
+      pageNum: currentPage,
+      pageSize: pageSize,
     },
     headers: {
       'token': store.state.token
     }
   })
   console.log(res);
+  pagenum.value=res.data.data.totalPages;
   testdata.value=res.data.data.listData;
 }
 
 
-async function  pagechange(page:number){
-  pagenum.value=page;
-  await getData();
-}
 
 onMounted(()=>{
-  getData();
+  getData(pageNation.value.data.currentPage,pagesize.value);
 })
 </script>
 
@@ -71,15 +70,8 @@ onMounted(()=>{
     </tr>
     </tbody>
   </table>
-  <el-pagination
-      small
-      background
-      layout="prev, pager, next"
-      :page-size="pagesize"
-      :total="7"
-      class="mt-4"
-      @current-change="pagechange"
-  />
+  <HPagination @onPageChange="getData" :itemsPerPage="pagesize" :total-pages="pagenum" ref="pageNation">
+  </HPagination>
 </div>
 </template>
 

@@ -44,6 +44,7 @@ function onCountdownEnd(){
     message: '时间到，交卷.',
     type: 'warning',
   })
+  issubmit.value=true;
 }
 function Last(){
   if(imd.value==0){
@@ -200,8 +201,12 @@ onMounted(()=>{
           <markdown-renderer :markdown="question.statement" class="full"></markdown-renderer>
           <markdown-renderer :markdown="'#### 题目分数：'+question.score"></markdown-renderer>
           <markdown-renderer :markdown="'#### 请输入答案：'"></markdown-renderer>
-          <el-input v-model="answer" @blur="record()">
-          </el-input>
+          <span>
+            {{question}}
+            <el-input v-model="answer" @blur="record()" style="width: 80%">
+            </el-input>
+          </span>
+
         </div>
       </HScroller>
     </div>
