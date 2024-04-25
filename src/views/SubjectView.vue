@@ -5,6 +5,7 @@ import {onMounted, ref} from "vue";
 import HPagination from "@/components/HPagination.vue";
 import {showMessage} from "@/assets/api";
 import HSearch from "@/components/HSearch.vue";
+import {ElMessage} from "element-plus";
 // import HDealWith from "@/components/HDealWith.vue";
 
 const questiondata=ref({});
@@ -44,6 +45,20 @@ async function delete1() {
     }
   })
   console.log(res.data);
+  if(res.data.code!=200){
+    ElMessage({
+      showClose: true,
+      message: res.data.data,
+      type: 'error',
+    })
+  }
+  else{
+    ElMessage({
+      showClose: true,
+      message: '删除成功',
+      type: 'success',
+    })
+  }
   isdelete.value=false;
 }
 

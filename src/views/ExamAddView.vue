@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import {onMounted, reactive, ref} from "vue";
 import {string} from "three/examples/jsm/nodes/shadernode/ShaderNode";
-import {dayjs, FormEmits, FormInstance} from "element-plus";
+import {dayjs, ElMessage, FormEmits, FormInstance} from "element-plus";
 import axios from "axios";
 import {goto} from "@/assets/api";
 import HPagination from "@/components/HPagination.vue";
+import HSearch from "@/components/HSearch.vue";
 
 const examform=reactive({
   examName: '',
@@ -44,6 +45,7 @@ const examList=ref<string[]>([]);
 const pagenum=ref(1);
 const pagesize=ref(5);
 const pageNation = ref();
+const text=ref(null);
 function submit(){
   formref.value?.validate((valid)=>{
     if(valid){
@@ -59,19 +61,42 @@ async function getsubmit(newexam:object){
   console.log(newexam);
   const result=await axios.post('http://150.158.110.63:8080/exam',examform);
   console.log(result);
+  if(result.data.code!=200){
+    ElMessage({
+      showClose: true,
+      message: result.data.data,
+      type: 'error',
+    })
+  }
+  else{
+    ElMessage({
+      showClose: true,
+      message: '添加成功',
+      type: 'success',
+    })
+  }
   goto('/examManage');
 }
 async function getdata(currentPage:number,pageSize : number){
-  const res = await axios.get('http://150.158.110.63:8080/question/page',{
+
+  console.log('测试getdata',currentPage)
+  console.log('ceshipagesize',pagesize)
+  const res = await axios.get('http://150.158.110.63:8080/question/group',{
     params:{
+      diseases:text.value,
       pageNum: currentPage,
       pageSize: pageSize,
     }
   })
+  console.log('ceshi res.data',res.data)
   pagenum.value=res.data.data.totalPages;
   questiondata.value=res.data.data.listData;
+  console.log(questiondata.value);
 }
 
+function search(){
+  getdata(pageNation.value.data.currentPage,pagesize.value);
+}
 function Add(Value:boolean,Id:string){
   console.log(Value);
   if(Value){
@@ -130,6 +155,7 @@ onMounted(()=>{
     </el-form-item>
   </el-form>
   <el-dialog v-model="isAdd" title="添加题目" width="1000" class="xdialog" @closed="examList=[]">
+    <HSearch v-model="text" @onEnter="search"></HSearch>
       <table class="xtable">
         <colgroup>
           <col width="20%">
@@ -149,7 +175,7 @@ onMounted(()=>{
         <tr v-for="item in questiondata" :key="item.id">
           <td>{{item.name}}</td>
           <td>{{item.score}}</td>
-          <td>{{item.statement}}</td>
+          <td>{{item.type.join(',')}}</td>
           <td>
             <el-checkbox @change="(value)=>{Add(value,item.id)}"></el-checkbox>
           </td>

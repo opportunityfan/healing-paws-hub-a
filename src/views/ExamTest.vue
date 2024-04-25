@@ -9,6 +9,7 @@ import store from "@/store";
 import MarkdownRenderer from "@/components/MarkdownRenderer.vue";
 import HButton from "@/components/HButton.vue";
 import HScroller from "@/components/HScroller.vue";
+import HRadio from "@/components/HRadio.vue";
 
 const router=useRoute();
 const item = ref<any>({});
@@ -21,7 +22,28 @@ const drawer = ref(false);
 const sele=ref<any>([]);
 const pd1=ref(0);
 const contin=ref();
+const answer1=ref('');
+const answer2=ref('');
+const pd = ref([{
+  label: 'T',
+  value: 'T'
+},{
+  label: 'F',
+  value: 'F'
+}])
 function state(item2:any){
+  issubmit.value=true;
+  item1.value=item2;
+}
+
+function state1(item2:any){
+  sure();
+  issubmit.value=true;
+  item1.value=item2;
+}
+
+function state2(item2:any){
+  sure1();
   issubmit.value=true;
   item1.value=item2;
 }
@@ -63,6 +85,35 @@ function Last(){
   }
 }
 
+function Last1(){
+  sure();
+  if(imd.value==0){
+    ElMessage({
+      showClose: true,
+      message: '已经是第一题了',
+      type: 'warning',
+    })
+  }
+  else{
+    answer.value='';
+    imd.value=imd.value-1;
+  }
+}
+
+function Last2(){
+  sure1();
+  if(imd.value==0){
+    ElMessage({
+      showClose: true,
+      message: '已经是第一题了',
+      type: 'warning',
+    })
+  }
+  else{
+    answer.value='';
+    imd.value=imd.value-1;
+  }
+}
 function Next(){
   if(imd.value>=(item.value.questionList.length-1)){
     ElMessage({
@@ -77,12 +128,45 @@ function Next(){
   }
 }
 
+function Next1(){
+  sure();
+  if(imd.value>=(item.value.questionList.length-1)){
+    ElMessage({
+      showClose: true,
+      message: '已经是最后一题了',
+      type: 'warning',
+    })
+  }
+  else{
+    imd.value=imd.value+1;
+    answer.value='';
+  }
+}
+
+function Next2(){
+  sure1();
+  if(imd.value>=(item.value.questionList.length-1)){
+    ElMessage({
+      showClose: true,
+      message: '已经是最后一题了',
+      type: 'warning',
+    })
+  }
+  else{
+    imd.value=imd.value+1;
+    answer.value='';
+  }
+}
 function select(value2:any){
   console.log(imd.value,value2);
   drawer.value=false;
   imd.value=(value2);
 }
 
+function record1(){
+  answer.value=answer1.value;
+  record();
+}
 function record(){
   console.log(answer.value);
   ans.value[imd.value]=answer.value;
@@ -94,8 +178,8 @@ function record(){
 async function submit(item:any){
   ElMessage({
     showClose: true,
-    message: '交卷后不可修改',
-    type: 'warning',
+    message: '提交后不可更改，提交成功',
+    type: 'success',
   })
   console.log(ans);
   const datasub = {
@@ -107,7 +191,7 @@ async function submit(item:any){
       'token' : store.state.token
     }
   })
-  goto('/exam');
+  goto(`/examRecord/${item.id}`);
 }
 
 async function presubmit(item:any){
@@ -124,7 +208,6 @@ async function presubmit(item:any){
 }
 
 function selectA(){
-  console.log(sele.value[1]);
   if(sele.value[1]===1) sele.value[1]=0;
   else if(sele.value[1]!=1) sele.value[1]=1;
 }
@@ -152,14 +235,9 @@ function sure(){
   record();
 }
 
-function pd(){
-  if(pd1.value===0) pd1.value=1;
-  else pd1.value=0;
-}
-
 function sure1(){
-  if(pd1.value===1) answer.value='T';
-  else answer.value='F';
+  answer.value=answer2.value;
+  record();
 }
 
 const question = computed(()=>{
@@ -192,7 +270,6 @@ onMounted(()=>{
 
 <template>
   <div class="full0">
-    {{contin}}
     <div class="full1">
       <el-row justify="space-between">
         <el-col :span="8">
@@ -276,7 +353,7 @@ onMounted(()=>{
               <el-col :span="6">
                 <el-row justify="center">
                   <HButton style="width: 60%" @click="selectC" v-if="sele[3]!=1" class="xuanze">C</HButton>
-                  <HButton style="width: 60%" @click="selectB" v-if="sele[3]===1">C</HButton>
+                  <HButton style="width: 60%" @click="selectC" v-if="sele[3]===1">C</HButton>
                 </el-row>
               </el-col>
               <el-col :span="6">
@@ -286,43 +363,78 @@ onMounted(()=>{
                 </el-row>
               </el-col>
             </el-row>
-            <el-row justify="center">
-              <HButton style="width: 30%" @click="sure">确定</HButton>
-            </el-row>
+            <div>
+              <el-row justify="space-between">
+                <el-col :span="8" >
+                  <el-row justify="center">
+                    <HButton @click="Last1" class="butt" >上一题</HButton>
+                  </el-row>
+                </el-col>
+                <el-col :span="8">
+                  <el-row justify="center">
+                    <HButton @click="state1(item) " class="butt">
+                      交卷
+                    </HButton>
+                  </el-row>
+                </el-col>
+                <el-col :span="8">
+                  <el-row justify="center">
+                    <HButton @click="Next1" class="butt">下一题</HButton>
+                  </el-row>
+                </el-col>
+              </el-row>
+            </div>
           </div>
           <div v-if="question.questionType===2">
             <el-row justify="center">
-              <HButton style="width: 30%" @click="pd" v-if="pd1!=1" class="xuanze">T</HButton>
-              <HButton style="width: 30%" @click="pd" v-if="pd1===1">F</HButton>
+              <HRadio :options="pd" v-model:value="answer2"  style="flex-shrink: 0"></HRadio>
             </el-row>
-            <el-row justify="center">
-              <HButton style="width: 30%" @click="sure1">确定</HButton>
-            </el-row>
+            <div>
+              <el-row justify="space-between">
+                <el-col :span="8" >
+                  <el-row justify="center">
+                    <HButton @click="Last2" class="butt" >上一题</HButton>
+                  </el-row>
+                </el-col>
+                <el-col :span="8">
+                  <el-row justify="center">
+                    <HButton @click="state2(item) " class="butt">
+                      交卷
+                    </HButton>
+                  </el-row>
+                </el-col>
+                <el-col :span="8">
+                  <el-row justify="center">
+                    <HButton @click="Next2" class="butt">下一题</HButton>
+                  </el-row>
+                </el-col>
+              </el-row>
+            </div>
           </div>
           <div v-if="question.questionType===3">
-            <el-input v-model="answer" style="width: 80%" @blur="record"></el-input>
+            <el-input v-model="answer1" style="width: 200%;height: 200%" @blur="record1"></el-input>
+            <div>
+              <el-row justify="space-between">
+                <el-col :span="8" >
+                  <el-row justify="center">
+                    <HButton @click="Last" class="butt">上一题</HButton>
+                  </el-row>
+                </el-col>
+                <el-col :span="8">
+                  <el-row justify="center">
+                    <HButton @click="state(item) " class="butt">
+                      交卷
+                    </HButton>
+                  </el-row>
+                </el-col>
+                <el-col :span="8">
+                  <el-row justify="center">
+                    <HButton @click="Next" class="butt">下一题</HButton>
+                  </el-row>
+                </el-col>
+              </el-row>
+            </div>
           </div>
-        </div>
-        <div>
-          <el-row justify="space-between">
-            <el-col :span="8" >
-              <el-row justify="center">
-                <HButton @click="Last" class="butt" >上一题</HButton>
-              </el-row>
-            </el-col>
-            <el-col :span="8">
-              <el-row justify="center">
-                <HButton @click="state(item) " class="butt">
-                  交卷
-                </HButton>
-              </el-row>
-            </el-col>
-            <el-col :span="8">
-              <el-row justify="center">
-                <HButton @click="Next" class="butt">下一题</HButton>
-              </el-row>
-            </el-col>
-          </el-row>
         </div>
       </HScroller>
     </div>
@@ -382,6 +494,6 @@ onMounted(()=>{
 }
 .xuanze{
   background-color #A7AD9B;
-  color #3A5B22;
+  color #FFF9E9
 }
 </style>

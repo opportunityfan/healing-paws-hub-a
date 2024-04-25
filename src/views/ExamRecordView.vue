@@ -6,6 +6,7 @@ import store from "@/store";
 import {ElMessage} from "element-plus";
 import HButton from "@/components/HButton.vue";
 import MarkdownRenderer from "@/components/MarkdownRenderer.vue";
+import HScroller from "@/components/HScroller.vue";
 
 const router=useRoute();
 const pagenum=ref(1);
@@ -128,35 +129,40 @@ const question = computed(()=>{
         </el-col>
       </el-row>
     </div>
-    <div>
-    <div v-if="item.questionList && item.questionList.length>0&&record.result">
-      <br>
-      <div>
-        <markdown-renderer :markdown="'#### 题目描述：'"></markdown-renderer>
-        <markdown-renderer :markdown="question.statement" class="full"></markdown-renderer>
-        <markdown-renderer :markdown="'#### 题目分数：'+question.score"></markdown-renderer>
-        <markdown-renderer :markdown="'#### 标准答案：'+question.answer"></markdown-renderer>
-        <markdown-renderer :markdown="'#### 您的答案：'+record.result[imd]"></markdown-renderer>
-      </div>
-      <br>
-    </div>
-    </div>
-    <div>
-      <el-row justify="space-between">
-        <el-col :span="8" >
-          <el-row justify="center">
-            <HButton @click="Last" class="butt" >上一题</HButton>
+    <div class="full2">
+      <HScroller scroll-direction="column">
+        <div>
+          <div v-if="item.questionList && item.questionList.length>0&&record.result">
+            <br>
+            <div>
+              <markdown-renderer :markdown="'#### 题目描述：'"></markdown-renderer>
+              <markdown-renderer :markdown="question.statement" class="full"></markdown-renderer>
+              <markdown-renderer :markdown="'#### 题目分数：'+question.score"></markdown-renderer>
+              <markdown-renderer :markdown="'#### 标准答案：'+question.answer"></markdown-renderer>
+              <markdown-renderer :markdown="'#### 您的答案：'+record.result[imd]"></markdown-renderer>
+            </div>
+            <br>
+          </div>
+        </div>
+        <div>
+          <el-row justify="space-between">
+            <el-col :span="8" >
+              <el-row justify="center">
+                <HButton @click="Last" class="butt" >上一题</HButton>
+              </el-row>
+            </el-col>
+            <el-col :span="8">
+            </el-col>
+            <el-col :span="8">
+              <el-row justify="center">
+                <HButton @click="Next" class="butt">下一题</HButton>
+              </el-row>
+            </el-col>
           </el-row>
-        </el-col>
-        <el-col :span="8">
-        </el-col>
-        <el-col :span="8">
-          <el-row justify="center">
-            <HButton @click="Next" class="butt">下一题</HButton>
-          </el-row>
-        </el-col>
-      </el-row>
+        </div>
+      </HScroller>
     </div>
+
   </div>
 </template>
 
@@ -165,5 +171,9 @@ const question = computed(()=>{
   height 50px;
   width 50px;
   margin 25px;
+}
+.full2{
+  height 600px;
+  overflow auto;
 }
 </style>

@@ -18,7 +18,7 @@ let archiveDetailInfo = reactive({
   checkItem: "",
   diagnosis: "",
   remedy: "",
-  typesString: "",
+  typesString: ""
 })
 
 const route = useRoute()
@@ -61,14 +61,29 @@ function upLoadImages(image: File, type: string) {
   console.log(images)
 }
 
+let videos = reactive({})
+
+function upLoadVideos(video: File, type: string) {
+  Object.assign(videos, {
+    [type]: video
+  })
+  console.log(videos)
+}
+
 function postArchiveDetailInfo(){
   const formdata = new FormData
   formdata.append("name", archiveDetailInfo.name)
   formdata.append("description", archiveDetailInfo.description)
-  formdata.append("descriptionImg", images.descriptionImg)
+  // formdata.append("descriptionVideo", videos.descriptionVideo)
   formdata.append("checkItem", archiveDetailInfo.checkItem)
   formdata.append("diagnosis", archiveDetailInfo.diagnosis)
   formdata.append("remedy", archiveDetailInfo.remedy)
+  for (let key in images) {
+    formdata.append(key, images[key])
+  }
+  for (let key in videos) {
+    formdata.append(key, videos[key])
+  }
   if (archiveDetailInfo.id !== ''){
     formdata.append("id", archiveDetailInfo.id)
     axios.put("/case", formdata, {
@@ -111,8 +126,10 @@ function postArchiveDetailInfo(){
   <div class="full">
     <HScroller scroll-direction="column" class="full scroller-view">
       <div class="flex-column">
-        <div v-if="archiveDetailInfo.id === ''" class="title">新建病例</div>
-        <div v-if="archiveDetailInfo.id !== ''" class="title">修改病例</div>
+        <div class="title">
+          <span v-if="archiveDetailInfo.id === ''">新建病例</span>
+          <span v-else>修改病例</span>
+        </div>
         <div class="archive-content">
           <div v-if="archiveDetailInfo.id !== ''">
             <div>病例编号： {{ archiveDetailInfo.id }}</div>
@@ -133,45 +150,115 @@ function postArchiveDetailInfo(){
           <HInput
               name="接诊（基本情况、临床症状）"
               v-model="archiveDetailInfo.description"
-          ></HInput>
-          <div class="upload-box">
-            <HFileUpload
-                @handleFile="upLoadImages($event, 'descriptionImg')"
-                style="position:absolute; top: 25px; left: 25px"
-            ></HFileUpload>
-            <img :src="archiveDetailInfo.descriptionImg" class="upload-image">
+          ></HInput><br>
+          <div class="flex-row">
+            <div>
+              <div class="subtitle">上传图片</div>
+              <div class="upload-box">
+                <HFileUpload
+                    @handleFile="upLoadImages($event, 'descriptionImg')"
+                    style="position:absolute; top: 25px; left: 25px"
+                ></HFileUpload>
+                <img :src="archiveDetailInfo.descriptionImg" class="upload-image">
+              </div>
+            </div>
+            <div>
+              <div class="subtitle">上传视频</div>
+              <div class="upload-box">
+                <HFileUpload
+                    @handleFile="upLoadVideos($event, 'descriptionVideo')"
+                    style="position:absolute; top: 25px; left: 25px"
+                    file-type="video/mp4"
+                ></HFileUpload>
+              </div>
+            </div>
           </div>
+          <br><br>
           <HInput
               name="检查"
               v-model="archiveDetailInfo.checkItem"
-          ></HInput>
-          <div class="upload-box">
-            <HFileUpload
-                @handleFile="upLoadImages($event, 'checkItemImg')"
-                style="position:absolute; top: 25px; left: 25px"
-            ></HFileUpload>
+          ></HInput><br>
+          <div class="flex-row">
+            <div>
+              <div class="subtitle">上传图片</div>
+              <div class="upload-box">
+                <HFileUpload
+                    @handleFile="upLoadImages($event, 'checkItemImg')"
+                    style="position:absolute; top: 25px; left: 25px"
+                ></HFileUpload>
+                <img :src="archiveDetailInfo.checkItemImg" class="upload-image">
+              </div>
+            </div>
+            <div>
+              <div class="subtitle">上传视频</div>
+              <div class="upload-box">
+                <HFileUpload
+                    @handleFile="upLoadVideos($event, 'checkItemVideo')"
+                    style="position:absolute; top: 25px; left: 25px"
+                    file-type="video/mp4"
+                ></HFileUpload>
+              </div>
+            </div>
           </div>
+          <br><br>
           <HInput
               name="诊断结果"
               v-model="archiveDetailInfo.diagnosis"
-          ></HInput>
-          <div class="upload-box">
-            <HFileUpload
-                @handleFile="upLoadImages($event, 'diagnosisImg')"
-                style="position:absolute; top: 25px; left: 25px"
-            ></HFileUpload>
+          ></HInput><br>
+          <div class="flex-row">
+            <div>
+              <div class="subtitle">上传图片</div>
+              <div class="upload-box">
+                <HFileUpload
+                    @handleFile="upLoadImages($event, 'diagnosisImg')"
+                    style="position:absolute; top: 25px; left: 25px"
+                ></HFileUpload>
+                <img :src="archiveDetailInfo.diagnosisImg" class="upload-image">
+              </div>
+            </div>
+            <div>
+              <div class="subtitle">上传视频</div>
+              <div class="upload-box">
+                <HFileUpload
+                    @handleFile="upLoadVideos($event, 'diagnosisVideo')"
+                    style="position:absolute; top: 25px; left: 25px"
+                    file-type="video/mp4"
+                ></HFileUpload>
+              </div>
+            </div>
           </div>
+          <br><br>
           <HInput
               name="治疗方案"
               v-model="archiveDetailInfo.remedy"
-          ></HInput>
-          <div class="upload-box">
-            <HFileUpload
-                @handleFile="upLoadImages($event, 'remedyImg')"
-                style="position:absolute; top: 25px; left: 25px"
-            ></HFileUpload>
+          ></HInput><br>
+          <div class="flex-row">
+            <div>
+              <div class="subtitle">上传图片</div>
+              <div class="upload-box">
+                <HFileUpload
+                    @handleFile="upLoadImages($event, 'remedyImg')"
+                    style="position:absolute; top: 25px; left: 25px"
+                ></HFileUpload>
+                <img :src="archiveDetailInfo.remedyImg" class="upload-image">
+              </div>
+            </div>
+            <div>
+              <div class="subtitle">上传视频</div>
+              <div class="upload-box">
+                <HFileUpload
+                    @handleFile="upLoadVideos($event, 'remedyVideo')"
+                    style="position:absolute; top: 25px; left: 25px"
+                    file-type="video/mp4"
+                ></HFileUpload>
+              </div>
+            </div>
           </div>
-          <HButton @click="postArchiveDetailInfo">确认</HButton>
+          <br><br>
+          <HButton @click="postArchiveDetailInfo">
+            <span v-if="archiveDetailInfo.id!==''">确认修改</span>
+            <span v-else>新建病例</span>
+          </HButton>
         </div>
       </div>
     </HScroller>
@@ -206,5 +293,5 @@ function postArchiveDetailInfo(){
   height 150px
   width 150px
   position relative
-
+  margin-right 20px
 </style>
