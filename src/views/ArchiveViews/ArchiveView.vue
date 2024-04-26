@@ -68,7 +68,7 @@ function searchArchives(){
   }
   else {
     console.log("提交失败")
-    showMessage('请选择疾病','warning')
+    showMessage('请至少选择一种疾病','warning')
   }
   console.log("多选提交")
 }

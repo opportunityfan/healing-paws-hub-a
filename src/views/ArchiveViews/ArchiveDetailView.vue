@@ -50,12 +50,11 @@ function consoleLogArchiveDetailInfo(){
         <div class="flex-column">
           <div class="archive-title">基本信息</div>
           <div class="archive-content">
-            <div>病例编号： {{ archiveDetailInfo.id }}</div>
             <div>病例名称： {{ archiveDetailInfo.name }}</div>
-            <div class="flex-row" v-for="(diseaseType, index) in archiveDetailInfo.type" :key="index">
-              <span>所患疾病种类：</span>
-              <span class="clickable-text">{{diseaseType + ''}}</span>
-            </div>
+            <span>所患疾病：</span>
+            <span v-for="(type, index) in archiveDetailInfo.type" :key="index">
+              <span class="clickable-text">{{type}}</span>&nbsp;
+            </span>
           </div>
           <div class="archive-title">接诊（基本情况、临床症状）</div>
           <div class="archive-content">
@@ -65,13 +64,13 @@ function consoleLogArchiveDetailInfo(){
           </div>
           <div class="archive-title">检查</div>
           <div class="archive-content">
-            <div v-html="archiveDetailInfo.checkItem"></div><br>
+            <div v-html="archiveDetailInfo.checkItem"></div>
             <img :src="archiveDetailInfo.checkItemImg" class="archive-image">
             <video width="100%" controls v-show="archiveDetailInfo.checkItemVideo != null" :src="archiveDetailInfo.checkItemVideo"></video>
           </div>
           <div class="archive-title">诊断结果</div>
           <div class="archive-content">
-            <div v-html="archiveDetailInfo.diagnosis"></div><br>
+            <div v-html="archiveDetailInfo.diagnosis"></div>
             <img :src="archiveDetailInfo.diagnosisImg" class="archive-image">
             <video width="100%" controls v-show="archiveDetailInfo.diagnosisVideo != null" :src="archiveDetailInfo.diagnosisVideo"></video>
           </div>
